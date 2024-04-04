@@ -17,8 +17,9 @@ public class KhachHangDAO {
 		Statement st = conn.createStatement();
 		ResultSet rs = st.executeQuery(SQL);
 		while (rs.next()) {
-			String maKH = rs.get;
+			String maKH = rs.getString(0);
 		}
 		return dsKH;
 	}
 }
+
