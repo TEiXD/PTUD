@@ -1,13 +1,14 @@
 package entity;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Objects;
 
 public class NhanVien {
     private String MaNV, HoTen, CCCD, GioiTinh, SDT, Email, TrinhDo, MaNhaGa;
-    private LocalDate NgaySinh;
+    private Date NgaySinh;
 
-    public NhanVien(String MaNV, String HoTen, String CCCD, String GioiTinh, String SDT, String Email, LocalDate NgaySinh, String TrinhDo, String MaNhaGa) {
+    public NhanVien(String MaNV, String HoTen, String CCCD, String GioiTinh, String SDT, String Email, Date NgaySinh, String TrinhDo, String MaNhaGa) {
         this.MaNV = MaNV;
         this.HoTen = HoTen;
         this.CCCD = CCCD;
