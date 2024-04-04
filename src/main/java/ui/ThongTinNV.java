@@ -255,31 +255,7 @@ public class ThongTinNV extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_ThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ThemActionPerformed
-       try {
-        conn = DriverManager.getConnection(url ,username, password);
-        pst = conn.prepareStatement("INSERT INTO dbo.NhanVien (MaNV, HoTen, CCCD, GioiTinh, SDT, Email, NamSinh, TrinhDo, MaNhaGa) VALUES(?,?,?,?,?,?,?,?,?)");
-        pst.setString(1, txt_MaNV.getText());
-        pst.setString(2, txt_HoTen.getText());
-        pst.setString(3, txt_CCCD.getText());
-        pst.setString(4, (String) cbb_GioiTinh.getSelectedItem());
-        pst.setString(5, txt_SDT.getText());
-        pst.setString(6, txt_Email.getText());
-        pst.setString(7, txt_NgaySinh.getText());
-        pst.setString(8, (String) cbb_TrinhDO.getSelectedItem());
-        pst.setString(9, txt_MaNhaGa.getText());
-        
-        pst.executeUpdate();
-        JOptionPane.showMessageDialog(this, "Thêm thành công");
-        SuaDB();
-    } catch (SQLException ex) {
-    if (ex.getSQLState().equals("23000")) {
-        JOptionPane.showMessageDialog(this, "Data already exists");
-    } else {
-        java.util.logging.Logger.getLogger(ThongTinTau.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    }
-} catch (ClassNotFoundException ex) {
-    java.util.logging.Logger.getLogger(ThongTinTau.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-}
+       
     }//GEN-LAST:event_btn_ThemActionPerformed
 
     private void btn_SuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SuaActionPerformed
