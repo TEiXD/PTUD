@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import connectDB.ConnectDB;
 import entity.NhanVien;
@@ -62,6 +61,7 @@ public class NhanVienDAO {
 		}
 		return n>0;
 	}
+	//xoa NV
 	public boolean xoaNV(String maNV) {
 		ConnectDB.getInstance();
 		Connection conn = ConnectDB.getConnection();

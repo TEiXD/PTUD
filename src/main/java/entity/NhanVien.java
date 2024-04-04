@@ -1,7 +1,6 @@
 package entity;
 
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.Objects;
 
 public class NhanVien {
@@ -68,11 +67,11 @@ public class NhanVien {
         this.Email = email;
     }
 
-    public LocalDate getNgaySinh() {
+    public Date getNgaySinh() {
         return NgaySinh;
     }
 
-    public void setNgaySinh(LocalDate ngaySinh) {
+    public void setNgaySinh(Date ngaySinh) {
         this.NgaySinh = ngaySinh;
     }
 
