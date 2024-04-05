@@ -1,79 +1,98 @@
 package entity;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class ChuyenTau {
-    private String MaChuyenTau, GaDi, GaDen, MaTau, MaNhaGa;
+    private String maChuyenTau;
+    private Tau mTau;
+    private NhaGa nhaGa;
+    private String gaDi, gaDen;
     private LocalDateTime GioDi, GioDen;
+    
+    
+    public ChuyenTau(String maChuyenTau, Tau mTau, NhaGa nhaGa, String gaDi, String gaDen, LocalDateTime gioDi,
+			LocalDateTime gioDen) {
+		this.maChuyenTau = maChuyenTau;
+		this.mTau = mTau;
+		this.nhaGa = nhaGa;
+		this.gaDi = gaDi;
+		this.gaDen = gaDen;
+		GioDi = gioDi;
+		GioDen = gioDen;
+	}
 
-    public ChuyenTau(String MaChuyenTau, String GaDi, String GaDen, LocalDateTime GioDi, LocalDateTime GioDen, String MaTau, String MaNhaGa) {
-        this.MaChuyenTau = MaChuyenTau;
-        this.GaDi = GaDi;
-        this.GaDen = GaDen;
-        this.GioDi = GioDi;
-        this.GioDen = GioDen;
-        this.MaTau = MaTau;
-        this.MaNhaGa = MaNhaGa;
+
+
+	public ChuyenTau(String maChuyenTau) {
+		this.maChuyenTau = maChuyenTau;
+	}
+
+
+
+	public String getMaChuyenTau() {
+		return maChuyenTau;
+	}
+
+	public void setMaChuyenTau(String maChuyenTau) {
+		maChuyenTau = maChuyenTau;
+	}
+
+	public Tau getmTau() {
+		return mTau;
+	}
+
+	public void setmTau(Tau mTau) {
+		this.mTau = mTau;
+	}
+
+	public NhaGa getNhaGa() {
+		return nhaGa;
+	}
+
+	public void setNhaGa(NhaGa nhaGa) {
+		this.nhaGa = nhaGa;
+	}
+
+	public String getGaDi() {
+		return gaDi;
+	}
+
+	public void setGaDi(String gaDi) {
+		this.gaDi = gaDi;
+	}
+
+	public String getGaDen() {
+		return gaDen;
+	}
+
+	public void setGaDen(String gaDen) {
+		this.gaDen = gaDen;
+	}
+
+	public LocalDateTime getGioDi() {
+		return GioDi;
+	}
+
+	public void setGioDi(LocalDateTime gioDi) {
+		GioDi = gioDi;
+	}
+
+	public LocalDateTime getGioDen() {
+		return GioDen;
+	}
+
+	public void setGioDen(LocalDateTime gioDen) {
+		GioDen = gioDen;
+	}
+
+	@Override
+    public int hashCode() {
+        return Objects.hash(maChuyenTau);
     }
 
-    public String getMaChuyenTau() {
-        return MaChuyenTau;
-    }
-
-    public void setMaChuyenTau(String maChuyenTau) {
-        this.MaChuyenTau = maChuyenTau;
-    }
-
-    public String getGaDi() {
-        return GaDi;
-    }
-
-    public void setGaDi(String gaDi) {
-        this.GaDi = gaDi;
-    }
-
-    public String getGaDen() {
-        return GaDen;
-    }
-
-    public void setGaDen(String gaDen) {
-        this.GaDen = gaDen;
-    }
-
-    public LocalDateTime getGioDi() {
-        return GioDi;
-    }
-
-    public void setGioDi(LocalDateTime gioDi) {
-        this.GioDi = gioDi;
-    }
-
-    public LocalDateTime getGioDen() {
-        return GioDen;
-    }
-
-    public void setGioDen(LocalDateTime gioDen) {
-        this.GioDen = gioDen;
-    }
-
-    public String getMaTau() {
-        return MaTau;
-    }
-
-    public void setMaTau(String maTau) {
-        this.MaTau = maTau;
-    }
-
-    public String getMaNhaGa() {
-        return MaNhaGa;
-    }
-
-    public void setMaNhaGa(String maNhaGa) {
-        this.MaNhaGa = maNhaGa;
-    }
-
-    @Override
+	@Override
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
@@ -82,11 +101,14 @@ public class ChuyenTau {
         if (getClass() != obj.getClass())
             return false;
         ChuyenTau other = (ChuyenTau) obj;
-        return Objects.equals(MaChuyenTau, other.MaChuyenTau);
+        return Objects.equals(maChuyenTau, other.maChuyenTau);
     }
 
-    @Override
-    public String toString() {
-        return "ChuyenTau [MaChuyenTau=" + MaChuyenTau + ", GaDi=" + GaDi + ", GaDen=" + GaDen + ", GioDi=" + GioDi + ", GioDen=" + GioDen + ", MaTau=" + MaTau + ", MaNhaGa=" + MaNhaGa + "]";
-    }
+	@Override
+	public String toString() {
+		return "ChuyenTau [maChuyenTau=" + maChuyenTau + ", mTau=" + mTau + ", nhaGa=" + nhaGa + ", gaDi=" + gaDi
+				+ ", gaDen=" + gaDen + ", GioDi=" + GioDi + ", GioDen=" + GioDen + "]";
+	}
+	
+    
 }

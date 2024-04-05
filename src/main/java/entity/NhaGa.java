@@ -7,6 +7,9 @@ public class NhaGa {
         this.MaNhaGa = MaNhaGa;
         this.TenNhaGa = TenNhaGa;
     }
+    public NhaGa (String maNhaGa) {
+		this.MaNhaGa=maNhaGa;
+	}
 
     public String getMaNhaGa() {
         return MaNhaGa;

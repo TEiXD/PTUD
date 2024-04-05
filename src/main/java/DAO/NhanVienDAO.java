@@ -7,94 +7,101 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
-
 import connectDB.ConnectDB;
+import entity.NhaGa;
 import entity.NhanVien;
 
-public class NhanVienDAO{
-	
-	//Them DS
-	public List<NhanVien> layThongTin() {
-	    List<NhanVien> dsNhanVien = new ArrayList<>();
-	    ConnectDB.getInstance();
-		try (Connection conn = ConnectDB.getConnection();
-	         Statement st = conn.createStatement();
-	         ResultSet rs = st.executeQuery("SELECT * FROM dbo.NhanVien")) {
-	        while (rs.next()) {
-	        	String maNV = rs.getString(1);
-	            String hoTen = rs.getString(2);
-	            String CCCD = rs.getString(3);
-	            String gioiTinh = rs.getString(4);
-	            String SDT = rs.getString(5);
-	            String email = rs.getString(6);
-	            Date ngaySinh = rs.getDate(7);
-	            String trinhDo = rs.getString(8);
-	            String maNhaGa = rs.getString(9);
-	            NhanVien nv = new NhanVien(maNV, hoTen, CCCD, gioiTinh, SDT, email, ngaySinh, trinhDo, maNhaGa);
-	            dsNhanVien.add(nv);
-	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-	    return dsNhanVien;
+public class NhanVienDAO {
+	//Add DS
+	public ArrayList<NhanVien> layThongTin(){
+		ArrayList<NhanVien> dsNhanVien = new ArrayList<NhanVien>();
+		try {
+			ConnectDB.getInstance().connect();
+			Connection conn = ConnectDB.getConnection();
+			String SQL = "SELECT nv.maNV, nv.hoTen, nv.CCCD, nv.gioiTinh, nv.SDT, nv.email, nv.ngaySinh, nv.trinhDo, ng.NhaGa " +
+	                "FROM NhanVien nv  " +
+	                "INNER JOIN NhaGa ng ON nv.maNhaGa = ng.maNhaGa " ;
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery(SQL);
+			while(rs.next()) {
+				String maNV = rs.getString(1);
+				String hoten = rs.getString(2);
+				String CCCD = rs.getString(3);
+				String gioiTinh = rs.getString(4);
+				String SDT = rs.getString(5);
+				String email = rs.getString(6);
+				Date ngaySinh = rs.getDate(7);
+				String trinhDo = rs.getString(8);
+				String maNhaGa = rs.getString(9);
+                NhaGa ng = new NhaGa(maNhaGa);
+                                
+				NhanVien nv = new NhanVien(maNV, hoten, CCCD, gioiTinh, SDT, email, ngaySinh, trinhDo, ng);
+				dsNhanVien.add(nv);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dsNhanVien;
 	}
-	
 	//Them NV
-	public boolean themNhanVien(NhanVien nhanVien) {
-	    ConnectDB.getInstance();
-		try (Connection conn = ConnectDB.getConnection();
-	         PreparedStatement statement = conn.prepareStatement("INSERT INTO dbo.NhanVien (maNV, hoTen, CCCD, gioiTinh, SDT, email, namSinh, trinhDo, maNhaGa) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
-	        statement.setString(1, nhanVien.getMaNV().trim());
-	        statement.setString(2, nhanVien.getHoTen().trim());
-	        statement.setString(3, nhanVien.getCCCD().trim());
-	        statement.setString(4, nhanVien.getGioiTinh().trim());
-	        statement.setString(5, nhanVien.getSDT().trim());
-	        statement.setString(6, nhanVien.getEmail().trim());
-	        statement.setObject(7, nhanVien.getNgaySinh());
-	        statement.setString(8, nhanVien.getTrinhDo().trim());
-	        statement.setString(9, nhanVien.getMaNhaGa().trim());
-	        int rowsAff = statement.executeUpdate();
-	        return rowsAff > 0;
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        return false;
-	    }
-	}
-	
-	//xoa NV
-	public boolean xoaNhanVien(String maNV) {
+	public boolean addNV(NhanVien nhanVien) {
 		ConnectDB.getInstance();
-		try (Connection conn = ConnectDB.getConnection();
-	         PreparedStatement statement = conn.prepareStatement("DELETE FROM dbo.NhanVien WHERE maNV = ?")) {
-	        statement.setString(1, maNV);
-	        int rowsAff = statement.executeUpdate();
-	        return rowsAff > 0;
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        return false;
-	    }
+		Connection conn = ConnectDB.getConnection();
+		PreparedStatement st = null;
+		String SQL = "INSERT INTO dbo.NhanVien (MaNV, HoTen, CCCD, GioiTinh, SDT, Email, NamSinh, TrinhDo, MaNhaGa) VALUES(?,?,?,?,?,?,?,?,?)";
+		int n = 0;
+		try {
+			st = conn.prepareStatement(SQL);
+			st.setString(1, nhanVien.getMaNV().trim());
+			st.setString(2, nhanVien.getHoTen().trim());
+			st.setString(3, nhanVien.getCCCD().trim());
+			st.setString(4, nhanVien.getGioiTinh().trim());
+			st.setString(5, nhanVien.getSDT().trim());
+			st.setString(6, nhanVien.getEmail().trim());
+			st.setObject(7, nhanVien.getNgaySinh());
+			st.setString(8, nhanVien.getTrinhDo().trim());
+			st.setString(9, nhanVien.getNhaGa().getMaNhaGa().trim());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return n>0;
 	}
-	
+	//xoa NV
+	public boolean xoaNV(String maNV) {
+		ConnectDB.getInstance();
+		Connection conn = ConnectDB.getConnection();
+		PreparedStatement st = null;
+		int n = 0;
+		try {
+			String SQL = "Delete from dbo.NhanVien where maNV = ?";
+			st = conn.prepareStatement(SQL);
+			st.setString(1, maNV);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return n>0;
+	}
 	//Sua NV
-	public boolean suaNhanVien(NhanVien nhanVien) {
-	    ConnectDB.getInstance();
-		try (Connection conn = ConnectDB.getConnection();
-	         PreparedStatement statement = conn.prepareStatement("UPDATE dbo.NhanVien SET HoTen = ?, CCCD = ?, GioiTinh = ?, SDT = ?, Email = ?, NgaySinh = ?, TrinhDo = ?, MaNhaGa = ? WHERE maNV = ?")) {
-	        statement.setString(1, nhanVien.getHoTen());
-	        statement.setString(2, nhanVien.getCCCD());
-	        statement.setString(3, nhanVien.getGioiTinh());
-	        statement.setString(4, nhanVien.getSDT());
-	        statement.setString(5, nhanVien.getEmail());
-	        statement.setObject(6, nhanVien.getNgaySinh());
-	        statement.setString(7, nhanVien.getTrinhDo());
-	        statement.setString(8, nhanVien.getMaNhaGa());
-	        statement.setString(9, nhanVien.getMaNV());
-	        int rowsAff = statement.executeUpdate();
-	        return rowsAff > 0;
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        return false;
-	    }
+	public boolean SuaNV(NhanVien nhanVien){
+		ConnectDB.getInstance();
+		Connection conn = ConnectDB.getConnection();
+		PreparedStatement st = null;
+		int n = 0;
+		try {
+			String SQL = "Update dbo.NhanVien set SET maNV = ?, HoTen = ?, CCCD = ?, GioiTinh = ?, SDT = ?, Email = ?, NgaySinh = ?, TrinhDo = ?, MaNhaGa = ? WHERE maNV = ?";
+			st = conn.prepareStatement(SQL);
+			st.setString(1, nhanVien.getMaNV());
+			st.setString(2, nhanVien.getHoTen());
+			st.setString(3, nhanVien.getCCCD());
+			st.setString(4, nhanVien.getGioiTinh());
+			st.setString(5, nhanVien.getSDT());
+			st.setString(6, nhanVien.getEmail());
+			st.setObject(7, nhanVien.getNgaySinh());
+			st.setString(8, nhanVien.getTrinhDo());
+			st.setString(9, nhanVien.getNhaGa().getMaNhaGa().trim());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return n>0;
 	}
 }

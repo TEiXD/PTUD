@@ -4,96 +4,124 @@ import java.sql.Date;
 import java.util.Objects;
 
 public class NhanVien {
-    private String MaNV, HoTen, CCCD, GioiTinh, SDT, Email, TrinhDo, MaNhaGa;
-    private Date NgaySinh;
+    private String maNV, hoTen, CCCD, GioiTinh, SDT, email;
+    private Date ngaySinh;
+    private String trinhDo;
+    private NhaGa nhaGa;
 
-    public NhanVien(String MaNV, String HoTen, String CCCD, String GioiTinh, String SDT, String Email, Date NgaySinh, String TrinhDo, String MaNhaGa) {
-        this.MaNV = MaNV;
-        this.HoTen = HoTen;
-        this.CCCD = CCCD;
-        this.GioiTinh = GioiTinh;
-        this.SDT = SDT;
-        this.Email = Email;
-        this.NgaySinh = NgaySinh;
-        this.TrinhDo = TrinhDo;
-        this.MaNhaGa = MaNhaGa;
+    
+    public NhanVien(String maNV, String hoTen, String cCCD, String gioiTinh, String sDT, String email, Date ngaySinh,
+			String trinhDo, NhaGa nhaGa) {
+		super();
+		this.maNV = maNV;
+		this.hoTen = hoTen;
+		CCCD = cCCD;
+		GioiTinh = gioiTinh;
+		SDT = sDT;
+		this.email = email;
+		this.ngaySinh = ngaySinh;
+		this.trinhDo = trinhDo;
+		this.nhaGa = nhaGa;
+	}
+    
+    public NhanVien(String maNV) {
+    	this.maNV = maNV;
     }
+    
 
-    public String getMaNV() {
-        return MaNV;
-    }
+	public String getMaNV() {
+		return maNV;
+	}
 
-    public void setMaNV(String maNV) {
-        this.MaNV = maNV;
-    }
 
-    public String getHoTen() {
-        return HoTen;
-    }
+	public void setMaNV(String maNV) {
+		this.maNV = maNV;
+	}
 
-    public void setHoTen(String hoTen) {
-        this.HoTen = hoTen;
-    }
 
-    public String getCCCD() {
-        return CCCD;
-    }
+	public String getHoTen() {
+		return hoTen;
+	}
 
-    public void setCCCD(String CCCD) {
-        this.CCCD = CCCD;
-    }
 
-    public String getGioiTinh() {
-        return GioiTinh;
-    }
+	public void setHoTen(String hoTen) {
+		this.hoTen = hoTen;
+	}
 
-    public void setGioiTinh(String gioiTinh) {
-        this.GioiTinh = gioiTinh;
-    }
 
-    public String getSDT() {
-        return SDT;
-    }
+	public String getCCCD() {
+		return CCCD;
+	}
 
-    public void setSDT(String SDT) {
-        this.SDT = SDT;
-    }
 
-    public String getEmail() {
-        return Email;
-    }
+	public void setCCCD(String cCCD) {
+		CCCD = cCCD;
+	}
 
-    public void setEmail(String email) {
-        this.Email = email;
-    }
 
-    public Date getNgaySinh() {
-        return NgaySinh;
-    }
+	public String getGioiTinh() {
+		return GioiTinh;
+	}
 
-    public void setNgaySinh(Date ngaySinh) {
-        this.NgaySinh = ngaySinh;
-    }
 
-    public String getTrinhDo() {
-        return TrinhDo;
-    }
+	public void setGioiTinh(String gioiTinh) {
+		GioiTinh = gioiTinh;
+	}
 
-    public void setTrinhDo(String trinhDo) {
-        this.TrinhDo = trinhDo;
-    }
 
-    public String getMaNhaGa() {
-        return MaNhaGa;
-    }
+	public String getSDT() {
+		return SDT;
+	}
 
-    public void setMaNhaGa(String maNhaGa) {
-        this.MaNhaGa = maNhaGa;
-    }
 
-    @Override
+	public void setSDT(String sDT) {
+		SDT = sDT;
+	}
+
+
+	public String getEmail() {
+		return email;
+	}
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+	public Date getNgaySinh() {
+		return ngaySinh;
+	}
+
+
+	public void setNgaySinh(Date ngaySinh) {
+		this.ngaySinh = ngaySinh;
+	}
+
+
+	public String getTrinhDo() {
+		return trinhDo;
+	}
+
+
+	public void setTrinhDo(String trinhDo) {
+		this.trinhDo = trinhDo;
+	}
+
+
+	public NhaGa getNhaGa() {
+		return nhaGa;
+	}
+
+
+	public void setNhaGa(NhaGa nhaGa) {
+		this.nhaGa = nhaGa;
+	}
+
+
+	@Override
     public int hashCode() {
-        return Objects.hash(MaNV);
+        return Objects.hash(maNV);
     }
 
     @Override
@@ -105,11 +133,17 @@ public class NhanVien {
         if (getClass() != obj.getClass())
             return false;
         NhanVien other = (NhanVien) obj;
-        return Objects.equals(MaNV, other.MaNV);
+        return Objects.equals(maNV, other.maNV);
     }
 
-    @Override
-    public String toString() {
-        return "NhanVien [MaNV=" + MaNV + ", HoTen=" + HoTen + ", CCCD=" + CCCD + ", GioiTinh=" + GioiTinh + ", SDT=" + SDT + ", Email=" + Email + ", NgaySinh=" + NgaySinh + ", TrinhDo=" + TrinhDo + ", MaNhaGa=" + MaNhaGa + "]";
-    }
+
+	@Override
+	public String toString() {
+		return "NhanVien [maNV=" + maNV + ", hoTen=" + hoTen + ", CCCD=" + CCCD + ", GioiTinh=" + GioiTinh + ", SDT="
+				+ SDT + ", email=" + email + ", ngaySinh=" + ngaySinh + ", trinhDo=" + trinhDo + ", nhaGa=" + nhaGa
+				+ "]";
+	}
+
+
+
 }

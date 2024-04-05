@@ -3,39 +3,46 @@ package entity;
 import java.util.Objects;
 
 public class Tau {
-    private String MaTau, LoaiTau, MaNhaGa;
+    private String maTau;
+    private NhaGa nhaGa;
+    private String loaiTau;
 
-    public Tau(String MaTau, String LoaiTau, String MaNhaGa) {
-        this.MaTau = MaTau;
-        this.LoaiTau = LoaiTau;
-        this.MaNhaGa = MaNhaGa;
-    }
+    public Tau(String maTau, NhaGa nhaGa, String loaiTau) {
+		super();
+		this.maTau = maTau;
+		this.nhaGa = nhaGa;
+		this.loaiTau = loaiTau;
+	}
 
-    public String getMaTau() {
-        return MaTau;
-    }
+	public Tau(String maTau) {
+		this.maTau = maTau;
+	}
+    
+	public String getMaTau() {
+		return maTau;
+	}
 
-    public void setMaTau(String maTau) {
-        this.MaTau = maTau;
-    }
+	public void setMaTau(String maTau) {
+		this.maTau = maTau;
+	}
 
-    public String getLoaiTau() {
-        return LoaiTau;
-    }
+	public NhaGa getNhaGa() {
+		return nhaGa;
+	}
 
-    public void setLoaiTau(String loaiTau) {
-        this.LoaiTau = loaiTau;
-    }
+	public void setNhaGa(NhaGa nhaGa) {
+		this.nhaGa = nhaGa;
+	}
 
-    public String getMaNhaGa() {
-        return MaNhaGa;
-    }
+	public String getLoaiTau() {
+		return loaiTau;
+	}
 
-    public void setMaNhaGa(String maNhaGa) {
-        this.MaNhaGa = maNhaGa;
-    }
-
-    @Override
+	public void setLoaiTau(String loaiTau) {
+		this.loaiTau = loaiTau;
+	}
+	
+	@Override
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
@@ -44,11 +51,13 @@ public class Tau {
         if (getClass() != obj.getClass())
             return false;
         Tau other = (Tau) obj;
-        return Objects.equals(MaTau, other.MaTau);
+        return Objects.equals(maTau, other.maTau);
     }
 
-    @Override
-    public String toString() {
-        return "Tau [MaTau=" + MaTau + ", LoaiTau=" + LoaiTau + ", MaNhaGa=" + MaNhaGa + "]";
-    }
+	@Override
+	public String toString() {
+		return "Tau [maTau=" + maTau + ", nhaGa=" + nhaGa + ", loaiTau=" + loaiTau + "]";
+	}
+
+	
 }

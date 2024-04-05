@@ -13,7 +13,10 @@ public class KhachHang {
         this.SDT = SDT;
         this.Email = Email;
     }
-
+    public KhachHang(String maKH) {
+    	this.MaKH=maKH;
+    }
+    
     public String getMaKH() {
         return MaKH;
     }
