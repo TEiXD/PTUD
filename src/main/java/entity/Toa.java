@@ -2,12 +2,13 @@ package entity;
 
 public class Toa {
 	private Tau tau;
-    private String loaiTau, maGhe;
-    private int soToaTau, soPhong, soGhe;
+    private String soToaTau, loaiTau, maGhe;
+	private int soPhong, soGhe;
 	
-    public Toa(Tau tau, String loaiTau, String maGhe, int soToaTau, int soPhong, int soGhe) {
+    public Toa(Tau tau, String soToaTau , String loaiTau, String maGhe, int soPhong, int soGhe) {
 		super();
 		this.tau = tau;
+		this.soToaTau = soToaTau;
 		this.loaiTau = loaiTau;
 		this.maGhe = maGhe;
 		this.soToaTau = soToaTau;
@@ -32,10 +33,10 @@ public class Toa {
 	public void setMaGhe(String maGhe) {
 		this.maGhe = maGhe;
 	}
-	public int getSoToaTau() {
+	public String getSoToaTau() {
 		return soToaTau;
 	}
-	public void setSoToaTau(int soToaTau) {
+	public void setSoToaTau(String soToaTau) {
 		this.soToaTau = soToaTau;
 	}
 	public int getSoPhong() {

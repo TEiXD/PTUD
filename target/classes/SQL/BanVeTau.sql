@@ -24,7 +24,7 @@ CREATE TABLE NhanVien (
     GioiTinh NVARCHAR(3) NOT NULL,
     SDT NVARCHAR(10) NOT NULL,
     Email NVARCHAR(50) NOT NULL,
-    NamSinh DATE NOT NULL,
+    NgaySinh DATE NOT NULL,
     TrinhDo NVARCHAR(100) NOT NULL,
     MaNhaGa NVARCHAR(3),
     FOREIGN KEY (MaNhaGa) REFERENCES NhaGa(MaNhaGa)
@@ -110,7 +110,7 @@ INSERT INTO KhachHang (MaKH, HoTen, CCCD, GioiTinh, SDT, Email) VALUES
 SELECT * FROM [dbo].[KhachHang];
 
 --Dữ liệu mẫu cho bảng NhanVien
-INSERT INTO NhanVien (MaNV, HoTen, CCCD, GioiTinh, SDT, Email, NamSinh, TrinhDo, MaNhaGa) VALUES 
+INSERT INTO NhanVien (MaNV, HoTen, CCCD, GioiTinh, SDT, Email, NgaySinh, TrinhDo, MaNhaGa) VALUES 
     ('NV001', N'Nguyễn Văn A', '012345678901', N'Nam', '0123456789', 'nva@gmail.com', '1990-01-01', N'Cử nhân', N'NGA'),
     ('NV002', N'Lê Thị B', '012345678902', N'Nữ', '0123456790', 'ltb@gmail.com', '1995-02-02', N'Cao đẳng', N'NGA'),
     ('NV003', N'Trần Văn C', '012345678903', N'Nam', '0123456798', 'tvc@gmail.com', '1992-03-03', N'Đại học', N'NGA'),
@@ -170,16 +170,16 @@ INSERT INTO Ve (MaVe, TenVe, LoaiVe, NgayDi, NgayVe, MaKH, MaNV, MaChuyenTau) VA
 SELECT * FROM [dbo].[Ve];
 
 --Dữ liệu mẫu cho bảng Toa
-INSERT INTO Toa (MaTau, SoToaTau, LoaiTau, SoPhong, MaGhe) VALUES 
-    (N'TT001', N'Toa001', N'Tàu hỏa', 10, N'G001'),
-    (N'TT001', N'Toa002', N'Tàu hỏa', 12, N'G002'),
-    (N'TT002', N'Toa003', N'Tàu hỏa', 8, N'G003'),
-    (N'TT002', N'Toa004', N'Tàu hỏa', 10, N'G004'),
-    (N'TT003', N'Toa005', N'Tàu cao tốc', 6, N'G005'),
-    (N'TT003', N'Toa006', N'Tàu cao tốc', 8, N'G006'),
-    (N'TT004', N'Toa007', N'Tàu cao tốc', 10, N'G007'),
-    (N'TT004', N'Toa008', N'Tàu cao tốc', 12, N'G008'),
-    (N'TT005', N'Toa009', N'Tàu hỏa', 8, N'G009'),
-    (N'TT005', N'Toa010', N'Tàu hỏa', 10, N'G010');
+INSERT INTO Toa (MaTau, SoToaTau, LoaiTau, SoPhong, MaGhe, SoGhe) VALUES 
+    (N'TT001', N'Toa001', N'Tàu hỏa', 10, N'G001',64),
+    (N'TT001', N'Toa002', N'Tàu hỏa', 12, N'G002',64),
+    (N'TT002', N'Toa003', N'Tàu hỏa', 8, N'G003',64),
+    (N'TT002', N'Toa004', N'Tàu hỏa', 10, N'G004',64),
+    (N'TT003', N'Toa005', N'Tàu cao tốc', 6, N'G005',64),
+    (N'TT003', N'Toa006', N'Tàu cao tốc', 8, N'G006',64),
+    (N'TT004', N'Toa007', N'Tàu cao tốc', 10, N'G007',64),
+    (N'TT004', N'Toa008', N'Tàu cao tốc', 12, N'G008',64),
+    (N'TT005', N'Toa009', N'Tàu hỏa', 8, N'G009',64),
+    (N'TT005', N'Toa010', N'Tàu hỏa', 10, N'G010',64);
 
 SELECT * FROM [dbo].[Toa];
