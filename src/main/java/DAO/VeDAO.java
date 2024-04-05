@@ -22,10 +22,10 @@ public class VeDAO {
 	    try {
 	        ConnectDB.getInstance().connect();
 	        Connection conn = ConnectDB.getConnection();
-	        String SQL = "SELECT v.maVe, v.tenVe, v.loaiVe, v.ngayDi, v.ngayVe, kh.maKH, nv.maNV, ct.maChuyenTau FROM Ve v " +
-	                     "INNER JOIN KhachHang kh ON v.maKH = kh.maKH " +
-	                     "INNER JOIN NhanVien nv ON v.maNV = nv.maNV " +
-	                     "INNER JOIN ChuyenTau ct ON v.maChuyenTau = ct.maChuyenTau";
+	        String SQL = "SELECT v.MaVe, v.TenVe, v.LoaiVe, v.NgayDi, v.NgayVe, kh.MaKH, nv.MaNV, ct.MaChuyenTau FROM Ve v " +
+	                     "INNER JOIN KhachHang kh ON v.MaKH = kh.MaKH " +
+	                     "INNER JOIN NhanVien nv ON v.MaNV = nv.MaNV " +
+	                     "INNER JOIN ChuyenTau ct ON v.MaChuyenTau = ct.MaChuyenTau";
 	        Statement st = conn.createStatement();
 	        ResultSet rs = st.executeQuery(SQL);
 	        while (rs.next()) {
@@ -57,7 +57,7 @@ public class VeDAO {
 	    try {
 	        ConnectDB.getInstance();
 			conn = ConnectDB.getConnection();
-	        String SQL = "INSERT INTO dbo.Ve (maVe, tenVe, loaiVe, ngayDi, ngayVe, maKH, maNV, maChuyenTau) VALUES (?,?,?,?,?,?,?,?)";
+	        String SQL = "INSERT INTO dbo.Ve (MaVe, TenVe, LoaiVe, NgayDi, NgayVe, MaKH, MaNV, MaChuyenTau) VALUES (?,?,?,?,?,?,?,?)";
 	        st = conn.prepareStatement(SQL);
 	        st.setString(1, v.getMaVe().trim());
 	        st.setString(2, v.getTenVe().trim());
@@ -95,7 +95,7 @@ public class VeDAO {
 	    try {
 	        ConnectDB.getInstance();
 			conn = ConnectDB.getConnection();
-	        String SQL = "DELETE FROM Ve WHERE maVe=?";
+	        String SQL = "DELETE FROM Ve WHERE MaVe=?";
 	        st = conn.prepareStatement(SQL);
 	        st.setString(1, maV);
 
@@ -127,7 +127,7 @@ public class VeDAO {
 	    try {
 	        ConnectDB.getInstance();
 			conn = ConnectDB.getConnection();
-	        String SQL = "UPDATE Ve SET maVe=?, tenVe=?, loaiVe=?, ngayDi=?, ngayVe=?, maKH=?, maNV=?, maChuyenTau=? WHERE maVe=?";
+	        String SQL = "UPDATE Ve SET MaVe=?, TenVe=?, LoaiVe=?, NgayDi=?, NgayVe=?, MaKH=?, MaNV=?, MaChuyenTau=? WHERE MaVe=?";
 	        st = conn.prepareStatement(SQL);
 	        st.setString(1, v.getMaVe());
 	        st.setString(2, v.getTenVe());
