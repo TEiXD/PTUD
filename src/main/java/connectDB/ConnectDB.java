@@ -3,6 +3,14 @@ package connectDB;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import connectDB.ConnectDB;
+import entity.KhachHang;
 
 public class ConnectDB {
 	public static Connection conn = null;
@@ -12,11 +20,11 @@ public class ConnectDB {
 		return instance;
 	}
 
-	public void connect() throws SQLException {
+	public Connection connect() throws SQLException {
 		String url = "jdbc:sqlserver://localhost\\\\Tei-Laptop:1433;databaseName=BanVeTau;integratedSecurity=false;encrypt=false;trustServerCertificate=true;";
 		String user = "tei";
 		String password = "29032004";
-		conn = DriverManager.getConnection(url, user, password);
+		return conn = DriverManager.getConnection(url, user, password);
 	}
 
 	public void disconnect() {
