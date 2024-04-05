@@ -3,14 +3,6 @@ package connectDB;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import connectDB.ConnectDB;
-import entity.KhachHang;
 
 public class ConnectDB {
 	public static Connection conn = null;
