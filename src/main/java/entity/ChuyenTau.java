@@ -2,11 +2,10 @@ package entity;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 public class ChuyenTau {
     private String MaChuyenTau;
-    private Tau LTau;
+    private Tau MaTau;
     private String GaDi, GaDen;
     private String GioDi, GioDen;
     
@@ -15,11 +14,11 @@ public class ChuyenTau {
     	this.MaChuyenTau=maCT;
 	}
 
-	public ChuyenTau(String maChuyenTau, Tau lTau, String gaDi, String gaDen, String gioDi,
+	public ChuyenTau(String maChuyenTau, Tau MaTau, String gaDi, String gaDen, String gioDi,
 			String gioDen) {
 		super();
 		MaChuyenTau = maChuyenTau;
-		LTau = lTau;
+		this.MaTau = MaTau;
 		GaDi = gaDi;
 		GaDen = gaDen;
 		GioDi = gioDi;
@@ -34,12 +33,12 @@ public class ChuyenTau {
 		MaChuyenTau = maChuyenTau;
 	}
 
-	public Tau getLTau() {
-		return LTau;
+	public Tau getMaTau() {
+		return MaTau;
 	}
 
-	public void setLTau(Tau lTau) {
-		LTau = lTau;
+	public void setMaTau(Tau MaTau) {
+		this.MaTau = MaTau;
 	}
 
 	public String getGaDi() {
@@ -76,7 +75,7 @@ public class ChuyenTau {
 
 	@Override
 	public String toString() {
-		return "ChuyenTau [MaChuyenTau=" + MaChuyenTau + ", LTau=" + LTau + ", GaDi=" + GaDi + ", GaDen=" + GaDen
+		return "ChuyenTau [MaChuyenTau=" + MaChuyenTau + ", MaTau=" + MaTau + ", GaDi=" + GaDi + ", GaDen=" + GaDen
 				+ ", GioDi=" + GioDi + ", GioDen=" + GioDen + "]";
 	}
     

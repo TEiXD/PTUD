@@ -9,12 +9,37 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import javax.swing.JComboBox;
+
 import connectDB.ConnectDB;
 import entity.ChuyenTau;
 import entity.NhaGa;
 import entity.Tau;
 
+
+
 public class ChuyenTauDAO {
+	
+	public void layComboBox(JComboBox<String> cboMaTau) {
+        try {
+        	Connection conn = ConnectDB.getConnection();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT MaTau FROM ChuyenTau");
+
+            // Remove all existing items
+            cboMaTau.removeAllItems();
+
+            // Add new items
+            while (rs.next()) {
+                cboMaTau.addItem(rs.getString("MaTau"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+	
+	
 	public ArrayList<ChuyenTau> layThongTin(){
 		ArrayList<ChuyenTau> dsCT = new ArrayList<ChuyenTau>();
 		try {
@@ -22,7 +47,7 @@ public class ChuyenTauDAO {
 			Connection conn = ConnectDB.getConnection();
 			String SQL = "SELECT ct.MaChuyenTau, t.MaTau, ct.GaDi, ct.GaDen, ct.GioDi, ct.GioDen " +
 		             "FROM ChuyenTau ct " +
-		             "INNER JOIN Tau t ON ct.MaTau = t.MaTau ";
+		             "INNER JOIN Tau t ON ct.MaTau = t.MaTau";
 
 			Statement st = conn.createStatement();
 			ResultSet rs = st.executeQuery(SQL);
@@ -55,7 +80,7 @@ public class ChuyenTauDAO {
 		try {
 			st = conn.prepareStatement(SQL);
 			st.setString(1, chuyenTau.getMaChuyenTau().trim());
-			st.setString(2, chuyenTau.getLTau().getLoaiTau().trim());
+			st.setString(2, chuyenTau.getMaTau().getMaTau().trim());
 			st.setString(3, chuyenTau.getGaDi().trim());
 			st.setString(4, chuyenTau.getGaDen().trim());
 			st.setString(5, chuyenTau.getGioDi().trim());
@@ -107,7 +132,7 @@ public class ChuyenTauDAO {
 			String SQL = "UPDATE ChuyenTau SET MaChuyenTau=?, MaTau=?, MaNhaGa=?, GaDi=?, GaDen=?, GioDi=?, GioDen=? WHERE MaChuyenTau=?";
 			st = conn.prepareStatement(SQL);
 			st.setString(1, chuyenTau.getMaChuyenTau());
-			st.setString(2, chuyenTau.getLTau().getLoaiTau().trim());
+			st.setString(2, chuyenTau.getMaTau().getMaTau().trim());
 			st.setString(3, chuyenTau.getGaDi().trim());
 			st.setString(4, chuyenTau.getGaDen().trim());
 			st.setString(5, chuyenTau.getGioDi().trim());
