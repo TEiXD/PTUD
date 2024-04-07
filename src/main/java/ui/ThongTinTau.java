@@ -14,7 +14,7 @@ import java.sql.ResultSetMetaData;
 import javax.swing.JOptionPane;
 import java.sql.SQLException;
 import java.util.Vector;
-import com.microsoft.sqlserver.jdbc.SQLServerDriver;
+import connectDB.*;
 import java.sql.Statement;
 import java.text.MessageFormat;
 import javax.swing.JPanel;

@@ -13,10 +13,10 @@ import java.sql.SQLException;
 import java.util.Vector;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import com.microsoft.sqlserver.jdbc.SQLServerDriver;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import connectDB.*;
 /**
  *
  * @author Tei

@@ -39,11 +39,7 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
 
     public ThongTinChuyenTau() {
 
-        try {
-            ConnectDB.getInstance().connect();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        ConnectDB.getInstance().connect();
         ctDAO = new ChuyenTauDAO();
 
         setLayout(new BorderLayout());
