@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 import connectDB.ConnectDB;
 import entity.ChuyenTau;
@@ -16,86 +15,109 @@ import entity.NhaGa;
 import entity.Tau;
 
 public class ChuyenTauDAO {
-	public List<ChuyenTau> layThongTin() {
-	    List<ChuyenTau> dsCT = new ArrayList<>();
-	    try (Connection conn = ConnectDB.getConnection();
-	         Statement st = conn.createStatement();
-	         ResultSet rs = st.executeQuery("SELECT ct.MaChuyenTau, t.Tau, ng.NhaGa, ct.GaDi, ct.GaDen, ct.GioDi, ct.GioDen " +
-	         "FROM ChuyenTau ct INNER JOIN Tau t ON ct.MaTau = t.MaTau INNER JOIN NhaGa ng ON ct.MaNhaGa = ng.MaNhaGa")) {
-	        while (rs.next()) {
-	            String maChuyenTau = rs.getString(1);
-	            String maTau = rs.getString(2);
-	            String maNhaGa = rs.getString(3);
-	            String gaDi = rs.getString(4);
-	            String gaDen = rs.getString(5);
-	            LocalDateTime gioDi = rs.getTimestamp(6).toLocalDateTime();
-	            LocalDateTime gioDen = rs.getTimestamp(7).toLocalDateTime();
-	            Tau t = new Tau(maTau);
-	            NhaGa ng = new NhaGa(maNhaGa);
-	            ChuyenTau ct = new ChuyenTau(maChuyenTau, t, ng, gaDi, gaDen, gioDi, gioDen);
-	            dsCT.add(ct);
-	        }
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-	    return dsCT;
-	}
+	public ArrayList<ChuyenTau> layThongTin(){
+		ArrayList<ChuyenTau> dsCT = new ArrayList<ChuyenTau>();
+		try {
+			ConnectDB.getInstance().connect();
+			Connection conn = ConnectDB.getConnection();
+			String SQL = "SELECT ct.MaChuyenTau, t.LoaiTau, ct.GaDi, ct.GaDen, ct.GioDi, ct.GioDen " +
+		             "FROM ChuyenTau ct " +
+		             "INNER JOIN Tau t ON ct.MaTau = t.MaTau";
 
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery(SQL);
+			while (rs.next()) {
+				String maChuyenTau = rs.getString(1);
+				String loaiTau = rs.getString(2);
+				String gaDi = rs.getString(3);
+				String gaDen = rs.getString(4);
+				String gioDi = rs.getString(5);
+				String gioDen = rs.getString(6);
+				Tau t = new Tau(loaiTau);
+				
+				ChuyenTau ct = new ChuyenTau(maChuyenTau, t, gaDi, gaDen, gioDi, gioDen);
+				dsCT.add(ct);
+			}
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return dsCT;
+	}
+	
 	//thêm chuyến tàu
 	public boolean addCT(ChuyenTau chuyenTau) {
-	    try (Connection conn = ConnectDB.getConnection();
-	         PreparedStatement st = conn.prepareStatement(
-	                 "INSERT INTO dbo.ChuyenTau (MaChuyenTau, MaTau, MaNhaGa, GaDi, GaDen, GioDi, GioDen) " +
-	                 "VALUES (?, ?, ?, ?, ?, ?, ?)")) {
-	    	
-	        st.setString(1, chuyenTau.getMaChuyenTau().trim());
-	        st.setString(2, chuyenTau.getmTau().getMaTau().trim());
-	        st.setString(3, chuyenTau.getNhaGa().getMaNhaGa().trim());
-	        st.setString(4, chuyenTau.getGaDi().trim());
-	        st.setString(5, chuyenTau.getGaDen().trim());
-	        st.setTimestamp(6, Timestamp.valueOf(chuyenTau.getGioDi()));
-	        st.setTimestamp(7, Timestamp.valueOf(chuyenTau.getGioDen()));
-	        int rowsAff = st.executeUpdate();
-	        return rowsAff > 0;
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        return false;
-	    }
+		ConnectDB.getInstance();
+		Connection conn = ConnectDB.getConnection();
+		PreparedStatement st = null;
+		String SQL = "INSERT  INTO dbo.ChuyenTau (MaChuyenTau, LoaiTau, GaDi, GaDen, GioDi, GioDen) VALUES (?,?,?,?,?,?)";
+		int n = 0;
+		try {
+			st = conn.prepareStatement(SQL);
+			st.setString(1, chuyenTau.getMaChuyenTau().trim());
+			st.setString(2, chuyenTau.getLTau().getLoaiTau().trim());
+			st.setString(3, chuyenTau.getGaDi().trim());
+			st.setString(4, chuyenTau.getGaDen().trim());
+			st.setString(5, chuyenTau.getGioDi().trim());
+			st.setString(6, chuyenTau.getGioDen().trim());
+			
+	        n = st.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				if(st != null) {
+					st.close();
+				}conn.close();
+			}catch (SQLException e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+		}
+		return false;
 	}
-
+	
 	//xóa chuyến tàu
 	public boolean removeCT(String maCT) {
-	    try (Connection conn = ConnectDB.getConnection();
-	         PreparedStatement st = conn.prepareStatement("DELETE FROM ChuyenTau WHERE MaChuyenTau = ?")) {
-	        st.setString(1, maCT.trim());
-	        int rowsAff = st.executeUpdate();
-	        return rowsAff > 0;
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        return false;
-	    }
+		ConnectDB.getInstance();
+		Connection conn = ConnectDB.getConnection();
+		PreparedStatement st = null;
+		int n=0;
+		try {
+			String SQL = "DELETE FROM ChuyenTau WHERE maChuyenTau=?";
+			st = conn.prepareStatement(SQL);
+			st.setString(1, maCT);
+			n = st.executeUpdate();
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return n > 0;
 	}
 	
 	//sửa phiếu
 	public boolean updateCT(ChuyenTau chuyenTau) {
-	    try (Connection conn = ConnectDB.getConnection();
-	         PreparedStatement st = conn.prepareStatement(
-	         "UPDATE ChuyenTau SET MaChuyenTau=?, MaTau=?, MaNhaGa=?, GaDi=?, GaDen=?, GioDi=?, GioDen=? WHERE MaChuyenTau=?")) {
-
-	        st.setString(1, chuyenTau.getMaChuyenTau().trim());
-	        st.setString(2, chuyenTau.getmTau().getMaTau().trim());
-	        st.setString(3, chuyenTau.getNhaGa().getMaNhaGa().trim());
-	        st.setString(4, chuyenTau.getGaDi().trim());
-	        st.setString(5, chuyenTau.getGaDen().trim());
-	        st.setTimestamp(6, Timestamp.valueOf(chuyenTau.getGioDi()));
-	        st.setTimestamp(7, Timestamp.valueOf(chuyenTau.getGioDen()));
-	        st.setString(8, chuyenTau.getMaChuyenTau().trim());
-	        int rowsAff = st.executeUpdate();
-	        return rowsAff > 0;
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        return false;
-	    }
+		ConnectDB.getInstance();
+		Connection conn = ConnectDB.getConnection();
+		PreparedStatement st = null;
+		int n=0;
+		try {
+			String SQL = "UPDATE ChuyenTau SET maChuyenTau=?, maTau=?, maNhaGa=?, gaDi=?, gaDen=?, gioDi=?, gioDen=? WHERE maChuyenTau=?";
+			st = conn.prepareStatement(SQL);
+			st.setString(1, chuyenTau.getMaChuyenTau());
+			st.setString(2, chuyenTau.getLTau().getLoaiTau().trim());
+			st.setString(3, chuyenTau.getGaDi().trim());
+			st.setString(4, chuyenTau.getGaDen().trim());
+			st.setString(5, chuyenTau.getGioDi().trim());
+			st.setString(6, chuyenTau.getGioDen().trim());
+			
+	        n = st.executeUpdate();
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return n>0;
 	}
-
 }

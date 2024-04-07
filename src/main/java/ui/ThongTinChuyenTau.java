@@ -1,269 +1,263 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package ui;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.util.Vector;
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
-import com.microsoft.sqlserver.jdbc.SQLServerDriver;
-/**
- *
- * @author Tei
- */
-public class ThongTinChuyenTau extends javax.swing.JPanel {
-        Connection conn = null;
-        private static final String url = "jdbc:sqlserver://localhost\\Tei-Laptop:1433;databaseName=BanVeTau;integratedSecurity=false;encrypt=false;trustServerCertificate=true;";
-        private static final String username = "tei";
-        private static final String password = "29032004";
-        PreparedStatement pst = null;
-        ResultSet rs = null;
-        int i,q, id, deleteItem;
+import javax.swing.*;
+import javax.swing.border.*;
+import javax.swing.table.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.*;
+import java.text.*;
+import java.util.*;
+import DAO.*;
+import connectDB.*;
+import entity.*;
+import java.util.List;
+
+
+public class ThongTinChuyenTau extends JPanel implements ActionListener {
+
+    private static final long serialVersionUID = 1L;
+    private final JPanel contentPanel = new JPanel();
+    private JTable table;
+    private JTextField txtMaChuyenTau;
+    private DefaultTableModel modelCT;
+    private JButton btnThem;
+    private JButton btnSua;
+    private JButton btnXoa;
+    private JButton btnXoaTrang;
+    private ChuyenTauDAO ctDAO;
+    private JPanel pNorth;
+    private JLabel lblTieuDe;
+    private JComboBox<String> cboGaDi;
+    private JComboBox<String> cboLoaiTau;
+    private JComboBox<String> cboGaDen;
+    private SpinnerDateModel dateModelGioDi;
+    private SpinnerDateModel dateModelGioDen;
+    private JSpinner spinGioDi;
+    private JSpinner spinGioDen;
+    private TitledBorder inputPanelBorder;
+
     public ThongTinChuyenTau() {
-        initComponents();
-    }
-    public void SuaDB() throws ClassNotFoundException, SQLException{
+
         try {
-        Class.forName("com.mssql.jdbc.Driver");
-        conn = DriverManager.getConnection(url,username,password);  
-        pst = conn.prepareStatement("Select * from dbo.ChuyenTau");
-        rs = pst.executeQuery();
-        ResultSetMetaData stData = rs.getMetaData();
-        q = stData.getColumnCount();
-        DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
-            model.setRowCount(0);
-            while (rs.next()) {
-                Vector columnData = new Vector();
-                for(i = 1;i <= q;i++){
-                columnData.add(rs.getString("MaChuyenTau"));
-                columnData.add(rs.getString("GaDi"));
-                columnData.add(rs.getString("GaDen"));
-                columnData.add(rs.getString("GioDi"));
-                columnData.add(rs.getString("GioDen"));
-                columnData.add(rs.getString("MaTau"));
-                columnData.add(rs.getString("MaNhaGa"));
+            ConnectDB.getInstance().connect();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        ctDAO = new ChuyenTauDAO();
+
+        setLayout(new BorderLayout());
+
+        contentPanel.setBorder(new EmptyBorder(30, 20, 0, 20));
+        add(contentPanel, BorderLayout.CENTER);
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+
+        add(pNorth = new JPanel(), BorderLayout.NORTH);
+        pNorth.add(lblTieuDe = new JLabel("THÔNG TIN CHUYẾN TÀU"));
+        lblTieuDe.setFont(new Font("Times New Roman", Font.BOLD, 40));
+        lblTieuDe.setForeground(Color.blue);
+
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new GridLayout(2, 6, 2, 15));
+        inputPanel.setBorder(new EmptyBorder(10, 20, 30, 20));
+        contentPanel.add(inputPanel);
+
+        // Add input fields to the panel
+        JLabel lblMaChuyenTau = new JLabel("Mã chuyến tàu");
+        lblMaChuyenTau.setFont(lblMaChuyenTau.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
+        inputPanel.add(lblMaChuyenTau);
+
+        txtMaChuyenTau = new JTextField();
+        inputPanel.add(txtMaChuyenTau);
+        txtMaChuyenTau.setColumns(10);
+
+        JLabel lblGaDi = new JLabel("Ga đi");
+        lblGaDi.setFont(lblGaDi.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
+        inputPanel.add(lblGaDi);
+        cboGaDi = new JComboBox<>(new String[]{"Ga A", "Ga B", "Ga C", "Ga D", "Ga E", "Ga F", "Ga G", "Ga I", "Ga K"});
+        inputPanel.add(cboGaDi);
+
+        dateModelGioDi = new SpinnerDateModel();
+        dateModelGioDi.setCalendarField(Calendar.MINUTE);
+
+        JLabel lblGioDi = new JLabel("Giờ đi");
+        lblGioDi.setFont(lblGioDi.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
+        inputPanel.add(lblGioDi);
+        spinGioDi = new JSpinner(dateModelGioDi);
+        spinGioDi.setEditor(new JSpinner.DateEditor(spinGioDi, "yyyy-MM-dd HH:mm:ss"));
+        inputPanel.add(spinGioDi);
+
+        JLabel lblLoaiTau = new JLabel("Loại tàu");
+        lblLoaiTau.setFont(lblLoaiTau.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
+        inputPanel.add(lblLoaiTau);
+        cboLoaiTau = new JComboBox<>(new String[]{"Tàu hỏa", "Tàu cao tốc"});
+        inputPanel.add(cboLoaiTau);
+
+        JLabel lblGaDen = new JLabel("Ga đến");
+        lblGaDen.setFont(lblGaDen.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
+        inputPanel.add(lblGaDen);
+        cboGaDen = new JComboBox<>(new String[]{"Ga A", "Ga B", "Ga C", "Ga D", "Ga E", "Ga F", "Ga G", "Ga I", "Ga K"});
+        inputPanel.add(cboGaDen);
+
+        JLabel lblGioDen = new JLabel("Giờ đến");
+        lblGioDen.setFont(lblGioDen.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
+        inputPanel.add(lblGioDen);
+        dateModelGioDen = new SpinnerDateModel();
+        dateModelGioDen.setCalendarField(Calendar.MINUTE);
+        spinGioDen = new JSpinner(dateModelGioDen);
+        spinGioDen.setEditor(new JSpinner.DateEditor(spinGioDen, "yyyy-MM-dd HH:mm:ss"));
+        inputPanel.add(spinGioDen);
+
+        inputPanelBorder = BorderFactory.createTitledBorder("Thông Tin Chuyến Tàu");
+        inputPanelBorder.setTitleFont(new Font("Times New Roman", Font.ITALIC, 18));
+        inputPanelBorder.setTitleJustification(TitledBorder.LEFT);
+        inputPanelBorder.setBorder(BorderFactory.createLineBorder(Color.BLACK)); // Thay đổi màu của LineBorder thành đen
+        inputPanel.setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(10, 10, 10, 10), inputPanelBorder));
+
+        // Table
+        String[] columns = {
+                "Mã chuyến tàu", "Loại tàu", "Ga đi", "Ga đến", "Giờ đi", "Giờ đến"
+        };
+        modelCT = new DefaultTableModel(columns, 0);
+        table = new JTable(modelCT);
+        table.setBorder(new EmptyBorder(100, 10, 100, 10));
+        table.setPreferredSize(new Dimension(50, 550));
+        table.setFont(new Font("Times New Roman", Font.BOLD, 18));
+        table.setRowHeight(25);
+
+        // Table header
+        JTableHeader header = table.getTableHeader();
+        header.setPreferredSize(new Dimension(header.getPreferredSize().width, 30));
+        header.setBackground(Color.lightGray);
+        header.setFont(new Font("Times New Roman", Font.BOLD, 20));
+
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        contentPanel.add(scrollPane);
+
+        JPanel panelButton = new JPanel();
+        panelButton.setBackground(new Color(173, 216, 230));
+        panelButton.setLayout(new BoxLayout(panelButton, BoxLayout.X_AXIS));
+
+        // Thêm các nút vào panelButton
+        panelButton.add(Box.createHorizontalGlue());
+        btnThem = new JButton("Thêm");
+        panelButton.add(btnThem);
+        panelButton.add(Box.createHorizontalStrut(10));
+        btnSua = new JButton("Sửa");
+        panelButton.add(btnSua);
+        panelButton.add(Box.createHorizontalStrut(10));
+        btnXoa = new JButton("Xóa");
+        panelButton.add(btnXoa);
+        panelButton.add(Box.createHorizontalStrut(10));
+        btnXoaTrang = new JButton("Xóa trắng");
+        panelButton.add(btnXoaTrang);
+        panelButton.add(Box.createHorizontalGlue());
+
+        // Đặt font cho các nút
+        Font textFieldFont = new Font("Times New Roman", Font.PLAIN, 18);
+        btnThem.setFont(textFieldFont);
+        btnSua.setFont(textFieldFont);
+        btnXoa.setFont(textFieldFont);
+        btnXoaTrang.setFont(textFieldFont);
+
+        // Thêm panelButton vào phần SOUTH của JPanel
+        add(panelButton, BorderLayout.SOUTH);
+
+        // Đăng ký ActionListener cho các nút
+        btnThem.addActionListener(this);
+        btnSua.addActionListener(this);
+        btnXoa.addActionListener(this);
+        btnXoaTrang.addActionListener(this);
+
+        // Load data from database into the table
+        docDuLieuDBVaoTable();
+    }
+
+    // Action handling for buttons
+    public void actionPerformed(ActionEvent e) {
+        Object o = e.getSource();
+        if (o.equals(btnThem)) {
+            // Lấy thông tin từ các trường nhập liệu
+            String maCT = txtMaChuyenTau.getText().trim();
+            String loaiTau = String.valueOf(cboLoaiTau.getSelectedItem());
+            String gaDi = String.valueOf(cboGaDi.getSelectedItem());
+            String gaDen = String.valueOf(cboGaDen.getSelectedItem());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String gioDiStr = sdf.format((java.util.Date) spinGioDi.getValue());
+            String gioDenStr = sdf.format((java.util.Date) spinGioDen.getValue());
+
+            Tau tau = new Tau(loaiTau);
+
+            // Tạo một đối tượng ChuyenTau mới
+            ChuyenTau chuyenTau = new ChuyenTau(maCT, tau, gaDi, gaDen, gioDiStr, gioDenStr);
+
+            // Thêm đối tượng ChuyenTau vào bảng để hiển thị trên giao diện
+            modelCT.addRow(new Object[]{maCT, loaiTau, gaDi, gaDen, gioDiStr, gioDenStr});
+
+            // Clear input fields
+            txtMaChuyenTau.setText("");
+            cboLoaiTau.setSelectedIndex(0);
+            cboGaDi.setSelectedIndex(0);
+            cboGaDen.setSelectedIndex(0);
+            spinGioDi.setValue(new java.util.Date());
+            spinGioDen.setValue(new java.util.Date());
+            try {
+                // Thêm đối tượng ChuyenTau vào cơ sở dữ liệu
+                ctDAO.addCT(chuyenTau);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                // Xử lý nếu có lỗi khi thêm vào cơ sở dữ liệu
+                JOptionPane.showMessageDialog(this, "Lỗi khi thêm vào cơ sở dữ liệu!");
+            }
+        } else if (o.equals(btnSua)) {
+            int r = modelCT.getRowCount();
+            for (int i = 0; i < r; i++) {
+                String maCT = (String) modelCT.getValueAt(i, 0);
+                String loaiTau = (String) modelCT.getValueAt(i, 1);
+                String gaDi = (String) modelCT.getValueAt(i, 2);
+                String gaDen = (String) modelCT.getValueAt(i, 3);
+                String gioDi = (String) modelCT.getValueAt(i, 4);
+                String gioDen = (String) modelCT.getValueAt(i, 5);
+
+                Tau tau = new Tau(loaiTau);
+
+                ChuyenTau chuyenTau = new ChuyenTau(maCT, tau, gaDi, gaDen, gioDi, gioDen);
+
+                try {
+                    ctDAO.updateCT(chuyenTau);
+                } catch (Exception e2) {
+                    // TODO: handle exception
+                    e2.printStackTrace();
+                    JOptionPane.showMessageDialog(this, "Lỗi khi sửa dữ liệu!");
                 }
-            model.addRow(columnData);
-        }
-        } catch (ClassNotFoundException | SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex);
+            }
+            JOptionPane.showMessageDialog(this, "Dữ liệu đã được sửa thành công");
+
+        } else if (o.equals(btnXoa)) {
+            int r = table.getSelectedRow();
+            if (r != -1) {
+                String maCT = (String) modelCT.getValueAt(r, 0);
+                modelCT.removeRow(r);
+                ctDAO.removeCT(maCT);
+            }
+        } else if (o.equals(btnXoaTrang)) {
+            // Xóa trắng các trường
+            txtMaChuyenTau.setText("");
+            cboGaDi.setSelectedIndex(0);
+            cboLoaiTau.setSelectedIndex(0);
+            cboGaDen.setSelectedIndex(0);
+            spinGioDi.setValue(new java.util.Date());
+            spinGioDen.setValue(new java.util.Date());
         }
     }
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
 
-        lbl_Header = new javax.swing.JLabel();
-        lbl_MaTau = new javax.swing.JLabel();
-        txt_MaTau = new javax.swing.JTextField();
-        lbl_MaChuyenTau = new javax.swing.JLabel();
-        txt_MaChuyenTau = new javax.swing.JTextField();
-        lbl_MaNhaGa = new javax.swing.JLabel();
-        txt_MaNhaGa = new javax.swing.JTextField();
-        lbl_GaDI = new javax.swing.JLabel();
-        txt_GaDi = new javax.swing.JTextField();
-        lbl_GaDen = new javax.swing.JLabel();
-        txt_GaDen = new javax.swing.JTextField();
-        lbl_ThoiGianDi = new javax.swing.JLabel();
-        txt_ThoiGianDi = new javax.swing.JTextField();
-        lbl_GioDen = new javax.swing.JLabel();
-        txt_GioDen = new javax.swing.JTextField();
-        layout_table = new javax.swing.JPanel();
-        tbl_DSNV = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        btn_Xoa = new javax.swing.JButton();
-        btn_Them = new javax.swing.JButton();
-        btn_Sua = new javax.swing.JButton();
-
-        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        lbl_Header.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        lbl_Header.setText("THÔNG TIN CHUYẾN TÀU");
-        add(lbl_Header, new org.netbeans.lib.awtextra.AbsoluteConstraints(297, 6, -1, 61));
-
-        lbl_MaTau.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        lbl_MaTau.setText("Mã tàu:");
-        add(lbl_MaTau, new org.netbeans.lib.awtextra.AbsoluteConstraints(67, 67, -1, -1));
-
-        txt_MaTau.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        add(txt_MaTau, new org.netbeans.lib.awtextra.AbsoluteConstraints(132, 68, 161, -1));
-
-        lbl_MaChuyenTau.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        lbl_MaChuyenTau.setText("Mã chuyến tàu:");
-        add(lbl_MaChuyenTau, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 112, -1, -1));
-
-        txt_MaChuyenTau.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        add(txt_MaChuyenTau, new org.netbeans.lib.awtextra.AbsoluteConstraints(132, 113, 159, -1));
-
-        lbl_MaNhaGa.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        lbl_MaNhaGa.setText("Mã nhà ga:");
-        add(lbl_MaNhaGa, new org.netbeans.lib.awtextra.AbsoluteConstraints(311, 67, -1, -1));
-
-        txt_MaNhaGa.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        add(txt_MaNhaGa, new org.netbeans.lib.awtextra.AbsoluteConstraints(405, 68, 161, -1));
-
-        lbl_GaDI.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        lbl_GaDI.setText("Ga đi:");
-        add(lbl_GaDI, new org.netbeans.lib.awtextra.AbsoluteConstraints(584, 67, -1, -1));
-
-        txt_GaDi.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        add(txt_GaDi, new org.netbeans.lib.awtextra.AbsoluteConstraints(636, 68, 160, -1));
-
-        lbl_GaDen.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        lbl_GaDen.setText("Ga đến:");
-        add(lbl_GaDen, new org.netbeans.lib.awtextra.AbsoluteConstraints(339, 112, -1, -1));
-
-        txt_GaDen.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        add(txt_GaDen, new org.netbeans.lib.awtextra.AbsoluteConstraints(406, 113, 160, -1));
-
-        lbl_ThoiGianDi.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        lbl_ThoiGianDi.setText("Giờ đi:");
-        add(lbl_ThoiGianDi, new org.netbeans.lib.awtextra.AbsoluteConstraints(578, 112, -1, -1));
-
-        txt_ThoiGianDi.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        add(txt_ThoiGianDi, new org.netbeans.lib.awtextra.AbsoluteConstraints(636, 113, 160, -1));
-
-        lbl_GioDen.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        lbl_GioDen.setText("Giờ đến:");
-        add(lbl_GioDen, new org.netbeans.lib.awtextra.AbsoluteConstraints(333, 157, -1, -1));
-
-        txt_GioDen.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txt_GioDen.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_GioDenActionPerformed(evt);
-            }
-        });
-        add(txt_GioDen, new org.netbeans.lib.awtextra.AbsoluteConstraints(406, 158, 160, -1));
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Mã chuyến tàu", "Mã tàu", "Mã nhà ga", "Ga đi", "Ga đến", "Giờ đi", "Giờ đến"
-            }
-        ));
-        tbl_DSNV.setViewportView(jTable1);
-
-        javax.swing.GroupLayout layout_tableLayout = new javax.swing.GroupLayout(layout_table);
-        layout_table.setLayout(layout_tableLayout);
-        layout_tableLayout.setHorizontalGroup(
-            layout_tableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tbl_DSNV, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 818, Short.MAX_VALUE)
-        );
-        layout_tableLayout.setVerticalGroup(
-            layout_tableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout_tableLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(tbl_DSNV, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-
-        add(layout_table, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 240, 818, -1));
-
-        btn_Xoa.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btn_Xoa.setText("Xóa");
-        btn_Xoa.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_XoaActionPerformed(evt);
-            }
-        });
-        add(btn_Xoa, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 202, 120, -1));
-
-        btn_Them.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btn_Them.setText("Thêm");
-        btn_Them.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_ThemActionPerformed(evt);
-            }
-        });
-        add(btn_Them, new org.netbeans.lib.awtextra.AbsoluteConstraints(194, 202, 120, -1));
-
-        btn_Sua.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btn_Sua.setText("Sửa");
-        btn_Sua.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_SuaActionPerformed(evt);
-            }
-        });
-        add(btn_Sua, new org.netbeans.lib.awtextra.AbsoluteConstraints(332, 202, 120, -1));
-    }// </editor-fold>//GEN-END:initComponents
-
-    private void btn_ThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ThemActionPerformed
-    try {
-    Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-    conn = DriverManager.getConnection(url,username,password);  
-    pst = conn.prepareStatement("INSERT INTO dbo.ChuyenTau (MaChuyenTau, GaDi, GaDen, GioDi, GioDen, MaTau, MaNhaGa) VALUES(?,?,?,?,?,?,?)");
-    pst.setString(1, txt_MaChuyenTau.getText());
-    pst.setString(2, txt_GaDi.getText());
-    pst.setString(3, txt_GaDen.getText());
-    pst.setString(4, txt_ThoiGianDi.getText());
-    pst.setString(5, txt_GioDen.getText());
-    pst.setString(6, txt_MaTau.getText());
-    pst.setString(7, txt_MaNhaGa.getText());
-    
-    pst.executeUpdate();
-    JOptionPane.showMessageDialog(this, "Thêm thành công");
-    SuaDB();
-} catch (SQLException ex) {
-    if (ex.getSQLState().equals("23000")) {
-        JOptionPane.showMessageDialog(this, "Data already exists");
-    } else {
-        java.util.logging.Logger.getLogger(ThongTinTau.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    // Method to fetch data from the database and populate the table
+    public void docDuLieuDBVaoTable() {
+        List<ChuyenTau> listCT = ctDAO.layThongTin();
+        for (ChuyenTau ct : listCT) {
+            modelCT.addRow(new Object[]{ct.getMaChuyenTau(), ct.getLTau().getLoaiTau(), ct.getGaDi(), ct.getGaDen(), ct.getGioDi(), ct.getGioDen()});
+        }
     }
-} catch (ClassNotFoundException ex) {
-    java.util.logging.Logger.getLogger(ThongTinTau.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-}
 
-    }//GEN-LAST:event_btn_ThemActionPerformed
-
-    private void btn_SuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SuaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_SuaActionPerformed
-
-    private void btn_XoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_XoaActionPerformed
-        
-    }//GEN-LAST:event_btn_XoaActionPerformed
-
-    private void txt_GioDenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_GioDenActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txt_GioDenActionPerformed
-
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn_Sua;
-    private javax.swing.JButton btn_Them;
-    private javax.swing.JButton btn_Xoa;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JPanel layout_table;
-    private javax.swing.JLabel lbl_GaDI;
-    private javax.swing.JLabel lbl_GaDen;
-    private javax.swing.JLabel lbl_GioDen;
-    private javax.swing.JLabel lbl_Header;
-    private javax.swing.JLabel lbl_MaChuyenTau;
-    private javax.swing.JLabel lbl_MaNhaGa;
-    private javax.swing.JLabel lbl_MaTau;
-    private javax.swing.JLabel lbl_ThoiGianDi;
-    private javax.swing.JScrollPane tbl_DSNV;
-    private javax.swing.JTextField txt_GaDen;
-    private javax.swing.JTextField txt_GaDi;
-    private javax.swing.JTextField txt_GioDen;
-    private javax.swing.JTextField txt_MaChuyenTau;
-    private javax.swing.JTextField txt_MaNhaGa;
-    private javax.swing.JTextField txt_MaTau;
-    private javax.swing.JTextField txt_ThoiGianDi;
-    // End of variables declaration//GEN-END:variables
-
-  
 }

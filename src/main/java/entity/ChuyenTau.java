@@ -5,110 +5,81 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class ChuyenTau {
-    private String maChuyenTau;
-    private Tau mTau;
-    private NhaGa nhaGa;
-    private String gaDi, gaDen;
-    private LocalDateTime GioDi, GioDen;
+    private String MaChuyenTau;
+    private Tau LTau;
+    private String GaDi, GaDen;
+    private String GioDi, GioDen;
     
-    
-    public ChuyenTau(String maChuyenTau, Tau mTau, NhaGa nhaGa, String gaDi, String gaDen, LocalDateTime gioDi,
-			LocalDateTime gioDen) {
-		this.maChuyenTau = maChuyenTau;
-		this.mTau = mTau;
-		this.nhaGa = nhaGa;
-		this.gaDi = gaDi;
-		this.gaDen = gaDen;
+    public ChuyenTau(String maCT) {
+		// TODO Auto-generated constructor stub
+    	this.MaChuyenTau=maCT;
+	}
+
+	public ChuyenTau(String maChuyenTau, Tau lTau, String gaDi, String gaDen, String gioDi,
+			String gioDen) {
+		super();
+		MaChuyenTau = maChuyenTau;
+		LTau = lTau;
+		GaDi = gaDi;
+		GaDen = gaDen;
 		GioDi = gioDi;
 		GioDen = gioDen;
 	}
 
-
-
-	public ChuyenTau(String maChuyenTau) {
-		this.maChuyenTau = maChuyenTau;
-	}
-
-
-
 	public String getMaChuyenTau() {
-		return maChuyenTau;
+		return MaChuyenTau;
 	}
 
 	public void setMaChuyenTau(String maChuyenTau) {
-		maChuyenTau = maChuyenTau;
+		MaChuyenTau = maChuyenTau;
 	}
 
-	public Tau getmTau() {
-		return mTau;
+	public Tau getLTau() {
+		return LTau;
 	}
 
-	public void setmTau(Tau mTau) {
-		this.mTau = mTau;
-	}
-
-	public NhaGa getNhaGa() {
-		return nhaGa;
-	}
-
-	public void setNhaGa(NhaGa nhaGa) {
-		this.nhaGa = nhaGa;
+	public void setLTau(Tau lTau) {
+		LTau = lTau;
 	}
 
 	public String getGaDi() {
-		return gaDi;
+		return GaDi;
 	}
 
 	public void setGaDi(String gaDi) {
-		this.gaDi = gaDi;
+		GaDi = gaDi;
 	}
 
 	public String getGaDen() {
-		return gaDen;
+		return GaDen;
 	}
 
 	public void setGaDen(String gaDen) {
-		this.gaDen = gaDen;
+		GaDen = gaDen;
 	}
 
-	public LocalDateTime getGioDi() {
+	public String getGioDi() {
 		return GioDi;
 	}
 
-	public void setGioDi(LocalDateTime gioDi) {
+	public void setGioDi(String gioDi) {
 		GioDi = gioDi;
 	}
 
-	public LocalDateTime getGioDen() {
+	public String getGioDen() {
 		return GioDen;
 	}
 
-	public void setGioDen(LocalDateTime gioDen) {
+	public void setGioDen(String gioDen) {
 		GioDen = gioDen;
 	}
 
 	@Override
-    public int hashCode() {
-        return Objects.hash(maChuyenTau);
-    }
-
-	@Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        ChuyenTau other = (ChuyenTau) obj;
-        return Objects.equals(maChuyenTau, other.maChuyenTau);
-    }
-
-	@Override
 	public String toString() {
-		return "ChuyenTau [maChuyenTau=" + maChuyenTau + ", mTau=" + mTau + ", nhaGa=" + nhaGa + ", gaDi=" + gaDi
-				+ ", gaDen=" + gaDen + ", GioDi=" + GioDi + ", GioDen=" + GioDen + "]";
+		return "ChuyenTau [MaChuyenTau=" + MaChuyenTau + ", LTau=" + LTau + ", GaDi=" + GaDi + ", GaDen=" + GaDen
+				+ ", GioDi=" + GioDi + ", GioDen=" + GioDen + "]";
 	}
+    
 	
     
 }
