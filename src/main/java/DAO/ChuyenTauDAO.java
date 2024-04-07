@@ -20,20 +20,20 @@ public class ChuyenTauDAO {
 		try {
 			ConnectDB.getInstance().connect();
 			Connection conn = ConnectDB.getConnection();
-			String SQL = "SELECT ct.MaChuyenTau, t.LoaiTau, ct.GaDi, ct.GaDen, ct.GioDi, ct.GioDen " +
+			String SQL = "SELECT ct.MaChuyenTau, t.MaTau, ct.GaDi, ct.GaDen, ct.GioDi, ct.GioDen " +
 		             "FROM ChuyenTau ct " +
-		             "INNER JOIN Tau t ON ct.MaTau = t.MaTau";
+		             "INNER JOIN Tau t ON ct.MaTau = t.MaTau ";
 
 			Statement st = conn.createStatement();
 			ResultSet rs = st.executeQuery(SQL);
 			while (rs.next()) {
 				String maChuyenTau = rs.getString(1);
-				String loaiTau = rs.getString(2);
+				String MaTau = rs.getString(2);
 				String gaDi = rs.getString(3);
 				String gaDen = rs.getString(4);
 				String gioDi = rs.getString(5);
 				String gioDen = rs.getString(6);
-				Tau t = new Tau(loaiTau);
+				Tau t = new Tau(MaTau);
 				
 				ChuyenTau ct = new ChuyenTau(maChuyenTau, t, gaDi, gaDen, gioDi, gioDen);
 				dsCT.add(ct);
@@ -50,7 +50,7 @@ public class ChuyenTauDAO {
 		ConnectDB.getInstance();
 		Connection conn = ConnectDB.getConnection();
 		PreparedStatement st = null;
-		String SQL = "INSERT  INTO dbo.ChuyenTau (MaChuyenTau, LoaiTau, GaDi, GaDen, GioDi, GioDen) VALUES (?,?,?,?,?,?)";
+		String SQL = "INSERT  INTO dbo.ChuyenTau (MaChuyenTau, MaTau, GaDi, GaDen, GioDi, GioDen) VALUES (?,?,?,?,?,?)";
 		int n = 0;
 		try {
 			st = conn.prepareStatement(SQL);
@@ -86,7 +86,7 @@ public class ChuyenTauDAO {
 		PreparedStatement st = null;
 		int n=0;
 		try {
-			String SQL = "DELETE FROM ChuyenTau WHERE maChuyenTau=?";
+			String SQL = "DELETE FROM ChuyenTau WHERE MaChuyenTau=?";
 			st = conn.prepareStatement(SQL);
 			st.setString(1, maCT);
 			n = st.executeUpdate();
@@ -104,7 +104,7 @@ public class ChuyenTauDAO {
 		PreparedStatement st = null;
 		int n=0;
 		try {
-			String SQL = "UPDATE ChuyenTau SET maChuyenTau=?, maTau=?, maNhaGa=?, gaDi=?, gaDen=?, gioDi=?, gioDen=? WHERE maChuyenTau=?";
+			String SQL = "UPDATE ChuyenTau SET MaChuyenTau=?, MaTau=?, MaNhaGa=?, GaDi=?, GaDen=?, GioDi=?, GioDen=? WHERE MaChuyenTau=?";
 			st = conn.prepareStatement(SQL);
 			st.setString(1, chuyenTau.getMaChuyenTau());
 			st.setString(2, chuyenTau.getLTau().getLoaiTau().trim());

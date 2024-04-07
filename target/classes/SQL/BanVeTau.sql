@@ -2,82 +2,84 @@
 use BanVeTau
 
 CREATE TABLE NhaGa (
-    maNhaGa NVARCHAR(3) PRIMARY KEY,
-    tenNhaGa NVARCHAR(100) NOT NULL
+    MaNhaGa NVARCHAR(3) PRIMARY KEY,
+    TenNhaGa NVARCHAR(100) NOT NULL
 );
 GO
 
 CREATE TABLE KhachHang (
-    maKH NVARCHAR(8) PRIMARY KEY,
-    hoTen NVARCHAR(100) NOT NULL,
+    MaKH NVARCHAR(8) PRIMARY KEY,
+    HoTen NVARCHAR(100) NOT NULL,
     CCCD NVARCHAR(12) NOT NULL,
-    gioiTinh NVARCHAR(3) NOT NULL,
+    GioiTinh NVARCHAR(3) NOT NULL,
     SDT NVARCHAR(10) NOT NULL,
-    email NVARCHAR(50) NOT NULL
+    Email NVARCHAR(50) NOT NULL
 );
 GO
 
 CREATE TABLE NhanVien (
-    maNV NVARCHAR(8) PRIMARY KEY,
-    hoTen NVARCHAR(100) NOT NULL,
+    MaNV NVARCHAR(8) PRIMARY KEY,
+    HoTen NVARCHAR(100) NOT NULL,
     CCCD NVARCHAR(12) NOT NULL,
-    gioiTinh NVARCHAR(3) NOT NULL,
+    GioiTinh NVARCHAR(3) NOT NULL,
     SDT NVARCHAR(10) NOT NULL,
-    email NVARCHAR(50) NOT NULL,
-    ngaySinh DATE NOT NULL,
-    trinhDo NVARCHAR(100) NOT NULL,
-    maNhaGa NVARCHAR(3),
-    FOREIGN KEY (maNhaGa) REFERENCES NhaGa(maNhaGa)
+    Email NVARCHAR(50) NOT NULL,
+    NgaySinh DATE NOT NULL,
+    TrinhDo NVARCHAR(100) NOT NULL,
+    MaNhaGa NVARCHAR(3),
+    FOREIGN KEY (MaNhaGa) REFERENCES NhaGa(MaNhaGa)
 );
 GO
 
 CREATE TABLE Tau (
-    maTau NVARCHAR(10) PRIMARY KEY,
-    loaiTau NVARCHAR(50) NOT NULL,
-    maNhaGa NVARCHAR(3),
-    FOREIGN KEY (maNhaGa) REFERENCES NhaGa(maNhaGa)
+    MaTau NVARCHAR(10) PRIMARY KEY,
+    LoaiTau NVARCHAR(50) NOT NULL,
+    MaNhaGa NVARCHAR(3),
+    FOREIGN KEY (MaNhaGa) REFERENCES NhaGa(MaNhaGa)
 );
 GO
 
 CREATE TABLE ChuyenTau (
-    maChuyenTau NVARCHAR(10) PRIMARY KEY,
-    gaDi NVARCHAR(100) NOT NULL,
-    gaDen NVARCHAR(100) NOT NULL,
-    gioDi DATETIME NOT NULL,
-    gioDen DATETIME NOT NULL,
-    loaiTau NVARCHAR(10),
-    FOREIGN KEY (loaiTau) REFERENCES Tau(maTau)
+    MaChuyenTau NVARCHAR(10) PRIMARY KEY,
+    MaTau NVARCHAR(10),
+    GaDi NVARCHAR(100) NOT NULL,
+    GaDen NVARCHAR(100) NOT NULL,
+    GioDi DATETIME NOT NULL,
+    GioDen DATETIME NOT NULL,
+    FOREIGN KEY (MaTau) REFERENCES Tau(MaTau)
 );
+
 GO
 
 CREATE TABLE Ve (
-    maVe NVARCHAR(10) PRIMARY KEY,
-    tenVe NVARCHAR(100) NOT NULL,
-    loaiVe NVARCHAR(10) NOT NULL,
-    ngayDi DATETIME NOT NULL,
-    ngayVe DATETIME NOT NULL,
-    maKH NVARCHAR(8),
-    maNV NVARCHAR(8),
-    maChuyenTau NVARCHAR(10),
-    FOREIGN KEY (maKH) REFERENCES KhachHang(maKH),
-    FOREIGN KEY (maNV) REFERENCES NhanVien(maNV),
-    FOREIGN KEY (maChuyenTau) REFERENCES ChuyenTau(maChuyenTau)
+    MaVe NVARCHAR(10) PRIMARY KEY,
+    TenVe NVARCHAR(100) NOT NULL,
+    LoaiVe NVARCHAR(10) NOT NULL,
+    NgayDi DATETIME NOT NULL,
+    NgayVe DATETIME NOT NULL,
+    MaKH NVARCHAR(8),
+    MaNV NVARCHAR(8),
+    MaChuyenTau NVARCHAR(10),
+    FOREIGN KEY (MaKH) REFERENCES KhachHang(MaKH),
+    FOREIGN KEY (MaNV) REFERENCES NhanVien(MaNV),
+    FOREIGN KEY (MaChuyenTau) REFERENCES ChuyenTau(MaChuyenTau)
 );
 GO
 
 CREATE TABLE Toa (
-    maTau NVARCHAR(10),
-    soToaTau NVARCHAR(10) PRIMARY KEY,
-    loaiTau NVARCHAR(100),
-    soPhong INT,
-    maGhe NVARCHAR(10),
+    MaTau NVARCHAR(10),
+    SoToaTau NVARCHAR(10) PRIMARY KEY,
+    LoaiTau NVARCHAR(100),
+    SoPhong INT,
+    MaGhe NVARCHAR(10),
 	SoGhe int,
-    FOREIGN KEY (maTau) REFERENCES Tau(maTau)
+    FOREIGN KEY (MaTau) REFERENCES Tau(MaTau)
 );
 GO
 
+
 --Dữ liệu mẫu cho bảng NhaGa
-INSERT INTO NhaGa (maNhaGa, tenNhaGa) VALUES 
+INSERT INTO NhaGa (MaNhaGa, TenNhaGa) VALUES
     (N'NGA', N'Nhà ga A'),
     (N'NGB', N'Nhà ga B'),
     (N'NGC', N'Nhà ga C'),
@@ -92,7 +94,7 @@ INSERT INTO NhaGa (maNhaGa, tenNhaGa) VALUES
 SELECT * FROM [dbo].[NhaGa];
 
 --Dữ liệu mẫu cho bảng KhachHang
-INSERT INTO KhachHang (maKH, hoTen, CCCD, gioiTinh, SDT, email) VALUES 
+INSERT INTO KhachHang (MaKH, HoTen, CCCD, GioiTinh, SDT, Email) VALUES 
 	('KH001', N'Nguyễn Văn A', '012345678901', N'Nam', '0123456789', N'nva@gmail.com'),
 	('KH002', N'Lê Thị B', '012345678902', N'Nữ', '0123456790', N'ltb@gmail.com'),
 	('KH003', N'Trần Văn C', '012345678903', N'Nam', '0123456798', N'tvc@gmail.com'),
@@ -108,8 +110,8 @@ INSERT INTO KhachHang (maKH, hoTen, CCCD, gioiTinh, SDT, email) VALUES
 SELECT * FROM [dbo].[KhachHang];
 
 --Dữ liệu mẫu cho bảng NhanVien
-INSERT INTO NhanVien (maNV, hoTen, CCCD, gioiTinh, SDT, email, namSinh, trinhDo, maNhaGa) VALUES 
-    ('NV001', N'Nguyễn Văn A', '012345678901', N'Nam', '0123456789', 'nva@gmail.com', '1990-01-01', N'Cử nhân', N'NGA'),
+INSERT INTO NhanVien (MaNV, HoTen, CCCD, GioiTinh, SDT, Email, NgaySinh, TrinhDo, MaNhaGa) VALUES 
+	('NV001', N'Nguyễn Văn A', '012345678901', N'Nam', '0123456789', 'nva@gmail.com', '1990-01-01', N'Cử nhân', N'NGA'),
     ('NV002', N'Lê Thị B', '012345678902', N'Nữ', '0123456790', 'ltb@gmail.com', '1995-02-02', N'Cao đẳng', N'NGA'),
     ('NV003', N'Trần Văn C', '012345678903', N'Nam', '0123456798', 'tvc@gmail.com', '1992-03-03', N'Đại học', N'NGA'),
     ('NV004', N'Phạm Thị D', '012345678904', N'Nữ', '0123456791', 'ptd@gmail.com', '1997-04-04', N'Trung cấp', N'NGA'),
@@ -123,7 +125,7 @@ INSERT INTO NhanVien (maNV, hoTen, CCCD, gioiTinh, SDT, email, namSinh, trinhDo,
 SELECT * FROM [dbo].[NhanVien];
 
 --Dữ liệu mẫu cho bảng Tau
-INSERT INTO Tau (maTau, loaiTau, maNhaGa) VALUES 
+INSERT INTO Tau (MaTau, LoaiTau, MaNhaGa) VALUES 
 	(N'TT001', N'Tàu hỏa', N'NGA'),
     (N'TT002', N'Tàu hỏa', N'NGB'),
     (N'TT003', N'Tàu cao tốc', N'NGC'),
@@ -137,23 +139,24 @@ INSERT INTO Tau (maTau, loaiTau, maNhaGa) VALUES
 SELECT * FROM Tau;
 
 ----Dữ liệu mẫu cho bảng ChuyenTau
-INSERT INTO ChuyenTau (maChuyenTau, gaDi, gaDen, gioDi, gioDen, loaiTau) VALUES 
-    (N'CT001', N'Ga A', N'Ga B', '2024-04-01 08:00:00', '2024-04-01 10:00:00', N'Tàu hỏa'),
-    (N'CT002', N'Ga B', N'Ga C', '2024-04-01 10:30:00', '2024-04-01 12:30:00', N'Tàu hỏa'),
-    (N'CT003', N'Ga C', N'Ga D', '2024-04-01 13:00:00', '2024-04-01 15:00:00', N'Tàu hỏa'),
-    (N'CT004', N'Ga D', N'Ga E', '2024-04-01 15:30:00', '2024-04-01 17:30:00', N'Tàu hỏa'),
-    (N'CT005', N'Ga E', N'Ga F', '2024-04-01 18:00:00', '2024-04-01 20:00:00', N'Tàu hỏa'),
-    (N'CT006', N'Ga F', N'Ga G', '2024-04-01 20:30:00', '2024-04-01 22:30:00', N'Tàu cao tốc'),
-    (N'CT007', N'Ga G', N'Ga H', '2024-04-01 23:00:00', '2024-04-02 01:00:00', N'Tàu cao tốc'),
-    (N'CT008', N'Ga H', N'Ga I', '2024-04-02 01:30:00', '2024-04-02 03:30:00', N'Tàu cao tốc'),
-    (N'CT009', N'Ga I', N'Ga K', '2024-04-02 04:00:00', '2024-04-02 06:00:00', N'Tàu cao tốc'),
-    (N'CT010', N'Ga K', N'Ga A', '2024-04-02 06:30:00', '2024-04-02 08:30:00', N'Tàu cao tốc');
+INSERT INTO ChuyenTau (MaChuyenTau, GaDi, GaDen, GioDi, GioDen, MaTau) VALUES
+    (N'CT001', N'Ga A', N'Ga B', '2024-04-01 08:00:00', '2024-04-01 10:00:00', N'TT001'),
+    (N'CT002', N'Ga B', N'Ga C', '2024-04-01 10:30:00', '2024-04-01 12:30:00', N'TT002'),
+    (N'CT003', N'Ga C', N'Ga D', '2024-04-01 13:00:00', '2024-04-01 15:00:00', N'TT003'),
+    (N'CT004', N'Ga D', N'Ga E', '2024-04-01 15:30:00', '2024-04-01 17:30:00', N'TT004'),
+    (N'CT005', N'Ga E', N'Ga F', '2024-04-01 18:00:00', '2024-04-01 20:00:00', N'TT005'),
+    (N'CT006', N'Ga F', N'Ga G', '2024-04-01 20:30:00', '2024-04-01 22:30:00', N'TT006'),
+    (N'CT007', N'Ga G', N'Ga H', '2024-04-01 23:00:00', '2024-04-02 01:00:00', N'TT007'),
+    (N'CT008', N'Ga H', N'Ga I', '2024-04-02 01:30:00', '2024-04-02 03:30:00', N'TT008'),
+    (N'CT009', N'Ga I', N'Ga K', '2024-04-02 04:00:00', '2024-04-02 06:00:00', N'TT009'),
+    (N'CT010', N'Ga K', N'Ga A', '2024-04-02 06:30:00', '2024-04-02 08:30:00', N'TT010');
+
 
 
 SELECT * FROM [dbo].[ChuyenTau];
 
 --Dữ liệu mẫu cho bảng Ve
-INSERT INTO Ve (maVe, tenVe, loaiVe, ngayDi, ngayVe, maKH, maNV, maChuyenTau) VALUES 
+INSERT INTO Ve (MaVe, TenVe, LoaiVe, NgayDi, NgayVe, MaKH, MaNV, MaChuyenTau) VALUES 
     (N'V001', N'Vé 1', N'Loại 1', '2024-04-01 08:00:00', '2024-04-01 10:00:00', N'KH001', N'NV001', N'CT001'),
     (N'V002', N'Vé 2', N'Loại 2', '2024-04-01 10:30:00', '2024-04-01 12:30:00', N'KH002', N'NV002', N'CT002'),
     (N'V003', N'Vé 3', N'Loại 1', '2024-04-01 13:00:00', '2024-04-01 15:00:00', N'KH003', N'NV003', N'CT003'),
@@ -168,7 +171,7 @@ INSERT INTO Ve (maVe, tenVe, loaiVe, ngayDi, ngayVe, maKH, maNV, maChuyenTau) VA
 SELECT * FROM [dbo].[Ve];
 
 --Dữ liệu mẫu cho bảng Toa
-INSERT INTO Toa (maTau, soToaTau, loaiTau, soPhong, maGhe) VALUES 
+INSERT INTO Toa (MaTau, SoToaTau, LoaiTau, SoPhong, MaGhe) VALUES 
     (N'TT001', N'Toa001', N'Tàu hỏa', 10, N'G001'),
     (N'TT001', N'Toa002', N'Tàu hỏa', 12, N'G002'),
     (N'TT002', N'Toa003', N'Tàu hỏa', 8, N'G003'),
