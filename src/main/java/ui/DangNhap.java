@@ -86,12 +86,21 @@ public class DangNhap extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnLogin) {
             // Xử lý đăng nhập
-            String username = txtUser.getText();
-            String password = new String(txtPwd.getPassword());
+            String usern = txtUser.getText();
+            String pass = new String(txtPwd.getPassword());
+            if (usern.equals("")) {
+            	JOptionPane.showMessageDialog(null, "Vui lòng nhập username");	
+            }else if (pass.equals("")) {
+            	JOptionPane.showMessageDialog(null, "Vui lòng nhập password");
+            }else if (usern.contains("test") && pass.contains("1234")) {
+            	ui.Menu menu = new Menu();
+                menu.setVisible(true);
+                dispose(); 
+            }else {
+            	JOptionPane.showMessageDialog(null, "Username hoặc password sai");
+            }
             
-            Menu menu = new Menu();
-            menu.setVisible(true);
-            dispose(); 
+            
             // Thêm code xử lý đăng nhập ở đây
         } else if (e.getSource() == btnExit) {
             int option = JOptionPane.showConfirmDialog(null, "Bạn có thực sự muốn thoát?", "Thoát", JOptionPane.YES_NO_OPTION);

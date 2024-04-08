@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
 
 import javax.swing.*;
 
@@ -110,7 +111,12 @@ public class Menu extends JFrame {
         ThongTinNV.setText("Thông tin nhân viên");
         ThongTinNV.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                ThongTinNVActionPerformed(evt);
+                try {
+					ThongTinNVActionPerformed(evt);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
         });
         NV.add(ThongTinNV);
@@ -207,7 +213,7 @@ public class Menu extends JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_NVMouseEntered
 
-    private void ThongTinNVActionPerformed(ActionEvent evt) {//GEN-FIRST:event_ThongTinNVActionPerformed
+    private void ThongTinNVActionPerformed(ActionEvent evt) throws SQLException {//GEN-FIRST:event_ThongTinNVActionPerformed
         panelChucNang.removeAll();
         panelChucNang.repaint();
         panelChucNang.revalidate();

@@ -5,7 +5,6 @@ import javax.swing.border.*;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.sql.*;
 import java.text.*;
 import java.util.*;
 import DAO.*;
@@ -24,7 +23,6 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
     private JButton btnThem;
     private JButton btnSua;
     private JButton btnXoa;
-    private JButton btnXoaTrang;
     private ChuyenTauDAO ctDAO;
     private JPanel pNorth;
     private JLabel lblTieuDe;
@@ -40,7 +38,6 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
     public ThongTinChuyenTau() {
 
         ConnectDB.getInstance().connect();
-        Connection conn = ConnectDB.getConnection();
         ctDAO = new ChuyenTauDAO();
 
         setLayout(new BorderLayout());
@@ -114,7 +111,7 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
 
         // Table
         String[] columns = {
-                "Mã chuyến tàu", "Loại tàu", "Ga đi", "Ga đến", "Giờ đi", "Giờ đến"
+                "Mã chuyến tàu", "Mã tàu", "Ga đi", "Ga đến", "Giờ đi", "Giờ đến"
         };
         modelCT = new DefaultTableModel(columns, 0);
         table = new JTable(modelCT);
@@ -127,8 +124,7 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
         	        cboMaTau.setSelectedItem(modelCT.getValueAt(SelectedRows, 1).toString());
         	        cboGaDi.setSelectedItem(modelCT.getValueAt(SelectedRows, 2).toString());
         	        cboGaDen.setSelectedItem(modelCT.getValueAt(SelectedRows, 3).toString());
-        	        spinGioDi.setValue(modelCT.getValueAt(SelectedRows, 4));
-        	        spinGioDen.setValue(modelCT.getValueAt(SelectedRows, 5));
+        	        
         	    }
         	}
 
@@ -163,8 +159,6 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
         btnXoa = new JButton("Xóa");
         panelButton.add(btnXoa);
         panelButton.add(Box.createHorizontalStrut(10));
-        btnXoaTrang = new JButton("Xóa trắng");
-        panelButton.add(btnXoaTrang);
         panelButton.add(Box.createHorizontalGlue());
 
         // Đặt font cho các nút
@@ -172,7 +166,6 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
         btnThem.setFont(textFieldFont);
         btnSua.setFont(textFieldFont);
         btnXoa.setFont(textFieldFont);
-        btnXoaTrang.setFont(textFieldFont);
 
         // Thêm panelButton vào phần SOUTH của JPanel
         add(panelButton, BorderLayout.SOUTH);
@@ -181,7 +174,6 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
         btnThem.addActionListener(this);
         btnSua.addActionListener(this);
         btnXoa.addActionListener(this);
-        btnXoaTrang.addActionListener(this);
 
         // Load data from database into the table
         docDuLieuDBVaoTable();
@@ -230,18 +222,19 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
                 cboMaTau.setSelectedItem(modelCT.getValueAt(i, 1).toString());
                 cboGaDi.setSelectedItem(modelCT.getValueAt(i, 2).toString());
                 cboGaDen.setSelectedItem(modelCT.getValueAt(i, 3).toString());
-                spinGioDi.setValue(modelCT.getValueAt(i, 4));
-                spinGioDen.setValue(modelCT.getValueAt(i, 5));
 
+//============================================================
+                
                 String maCT = txtMaChuyenTau.getText();
                 String loaiTau = cboMaTau.getSelectedItem().toString();
                 String gaDi = cboGaDi.getSelectedItem().toString();
                 String gaDen = cboGaDen.getSelectedItem().toString();
-                String gioDi = spinGioDi.getValue().toString();
-                String gioDen = spinGioDen.getValue().toString();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String gioDiStr = sdf.format((java.util.Date) spinGioDi.getValue());
+                String gioDenStr = sdf.format((java.util.Date) spinGioDen.getValue());
 
                 Tau tau = new Tau(loaiTau);
-                ChuyenTau chuyenTau = new ChuyenTau(maCT, tau, gaDi, gaDen, gioDi, gioDen);
+                ChuyenTau chuyenTau = new ChuyenTau(maCT, tau, gaDi, gaDen, gioDiStr, gioDenStr);
 
                 try {
                     ctDAO.updateCT(chuyenTau);

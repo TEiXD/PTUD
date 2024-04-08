@@ -19,7 +19,7 @@ public class NhanVienDAO {
 	    try {
 	        Connection conn = ConnectDB.getConnection();
 	        String SQL = "SELECT nv.MaNV, nv.HoTen, nv.CCCD, nv.GioiTinh, nv.SDT, nv.Email, nv.NgaySinh, nv.TrinhDo, ng.MaNhaGa " +
-	                     "FROM NhanVien nv INNER JOIN NhaGa ng ON nv.maNhaGa = ng.maNhaGa";
+	                     "FROM NhanVien nv INNER JOIN NhaGa ng ON nv.MaNhaGa = ng.MaNhaGa";
 	        try (PreparedStatement ps = conn.prepareStatement(SQL);
 	             ResultSet rs = ps.executeQuery()) {
 	            while (rs.next()) {

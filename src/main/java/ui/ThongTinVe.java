@@ -13,53 +13,27 @@ import java.sql.SQLException;
 import java.util.Vector;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import connectDB.*;
+
+import DAO.VeDAO;
+import connectDB.ConnectDB;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.GroupLayout;
+import java.awt.Font;
+
 /**
  *
  * @author Tei
  */
 public class ThongTinVe extends javax.swing.JPanel {
-    Connection conn = null;
-        private static final String url = "jdbc:sqlserver://localhost\\Tei-Laptop:1433;databaseName=BanVeTau;integratedSecurity=false;encrypt=false;trustServerCertificate=true;";
-        private static final String username = "tei";
-        private static final String password = "29032004";
-        PreparedStatement pst = null;
-        ResultSet rs = null;
-        int i,q, id, deleteItem;
     /**
      * Creates new form NewJPanel
      */
     public ThongTinVe() {
         initComponents();
+        ConnectDB.getInstance().connect();
+        VeDAO veDAO = new VeDAO();
     }
-    public void SuaDB() throws ClassNotFoundException, SQLException{
-        try {
-        Class.forName("com.mssql.jdbc.Driver");
-        conn = DriverManager.getConnection(url,username,password);  
-        pst = conn.prepareStatement("Select * from dbo.Ve");
-        rs = pst.executeQuery();
-        ResultSetMetaData stData = rs.getMetaData();
-        q = stData.getColumnCount();
-        DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
-            model.setRowCount(0);
-            while (rs.next()) {
-                Vector columnData = new Vector();
-                for(i = 1;i<=q;i++){
-                columnData.add(rs.getString("MaVe"));
-                columnData.add(rs.getString("TenVe"));
-                columnData.add(rs.getString("LoaiVe"));
-                columnData.add(rs.getString("NgayDi"));
-                columnData.add(rs.getString("NgayVe"));
-                columnData.add(rs.getString("MaKH"));
-                columnData.add(rs.getString("MaNV"));
-                columnData.add(rs.getString("MaChuyenTau"));
-                }
-            model.addRow(columnData);
-        }
-        } catch (ClassNotFoundException | SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex);
-        }
-    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -95,7 +69,7 @@ public class ThongTinVe extends javax.swing.JPanel {
         tbl_DSNV = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
 
-        lbl_Header.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lbl_Header.setFont(new Font("Times New Roman", Font.BOLD, 24)); // NOI18N
         lbl_Header.setText("THÔNG TIN VÉ");
 
         lbl_MaVe.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -275,17 +249,20 @@ public class ThongTinVe extends javax.swing.JPanel {
         tbl_DSNV.setViewportView(jTable1);
 
         javax.swing.GroupLayout layout_tableLayout = new javax.swing.GroupLayout(layout_table);
-        layout_table.setLayout(layout_tableLayout);
         layout_tableLayout.setHorizontalGroup(
-            layout_tableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tbl_DSNV, javax.swing.GroupLayout.Alignment.TRAILING)
+        	layout_tableLayout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(layout_tableLayout.createSequentialGroup()
+        			.addContainerGap()
+        			.addComponent(tbl_DSNV, GroupLayout.PREFERRED_SIZE, 910, GroupLayout.PREFERRED_SIZE)
+        			.addContainerGap())
         );
         layout_tableLayout.setVerticalGroup(
-            layout_tableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout_tableLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(tbl_DSNV, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE))
+        	layout_tableLayout.createParallelGroup(Alignment.TRAILING)
+        		.addGroup(layout_tableLayout.createSequentialGroup()
+        			.addComponent(tbl_DSNV, GroupLayout.PREFERRED_SIZE, 325, GroupLayout.PREFERRED_SIZE)
+        			.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+        layout_table.setLayout(layout_tableLayout);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -313,32 +290,7 @@ public class ThongTinVe extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_ThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ThemActionPerformed
-         try {
-    Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-    conn = DriverManager.getConnection(url,username,password);  
-    pst = conn.prepareStatement("INSERT INTO dbo.Ve (MaVe, TenVe, LoaiVe, NgayDi, NgayVe, MaKH, MaNV, MaChuyenTau) VALUES(?,?,?,?,?,?,?,?)");
-    txt_MaNV.setText(""); 
-    pst.setString(1, txt_MaVe.getText());
-    pst.setString(2, txt_TenVe.getText());
-    pst.setString(3, (String) cbb_LoaiVe.getSelectedItem());
-    pst.setString(4, txt_NgayDi.getText());
-    pst.setString(5, txt_NgayVe.getText());
-    pst.setString(6, txt_MaKH.getText());
-    pst.setString(7, txt_MaNV.getText());
-    pst.setString(8, txt_MaChuyenTau.getText());
-    
-    pst.executeUpdate();
-    JOptionPane.showMessageDialog(this, "Thêm thành công");
-    SuaDB();
-} catch (SQLException ex) {
-    if (ex.getSQLState().equals("23000")) {
-        JOptionPane.showMessageDialog(this, "Data already exists");
-    } else {
-        java.util.logging.Logger.getLogger(ThongTinTau.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    }
-} catch (ClassNotFoundException ex) {
-    java.util.logging.Logger.getLogger(ThongTinTau.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-}
+         
 
     }//GEN-LAST:event_btn_ThemActionPerformed
 
@@ -378,7 +330,4 @@ public class ThongTinVe extends javax.swing.JPanel {
     private javax.swing.JTextField txt_NgayDi;
     private javax.swing.JTextField txt_NgayVe;
     private javax.swing.JTextField txt_TenVe;
-    // End of variables declaration//GEN-END:variables
-
-
 }
