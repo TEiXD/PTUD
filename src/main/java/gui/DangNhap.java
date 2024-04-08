@@ -1,4 +1,4 @@
-package ui;
+package gui;
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -93,7 +93,7 @@ public class DangNhap extends JFrame implements ActionListener {
             }else if (pass.equals("")) {
             	JOptionPane.showMessageDialog(null, "Vui lòng nhập password");
             }else if (usern.contains("test") && pass.contains("1234")) {
-            	ui.Menu menu = new Menu();
+            	gui.Menu menu = new Menu();
                 menu.setVisible(true);
                 dispose(); 
             }else {

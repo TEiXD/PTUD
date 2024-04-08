@@ -20,5 +20,6 @@
 			<attribute name="javadoc_location" value="jar:file:/D:/Mii/TEmp/PTUD/src/main/java/lib/mssql-jdbc-12.6.1.jre8-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="miglayout15-swing.jar" sourcepath="miglayout-src.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
