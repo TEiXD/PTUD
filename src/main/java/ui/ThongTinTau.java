@@ -1,339 +1,212 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package ui;
-import java.awt.HeadlessException;
-import javax.swing.JFrame;
-import javax.swing.table.DefaultTableModel;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSetMetaData;
-import javax.swing.JOptionPane;
-import java.sql.SQLException;
-import java.util.Vector;
+
+import javax.swing.*;
+import javax.swing.border.*;
+import javax.swing.table.*;
+import java.awt.*;
+import java.awt.event.*;
+import DAO.*;
 import connectDB.*;
-import java.sql.Statement;
-import java.text.MessageFormat;
-import javax.swing.JPanel;
-import javax.swing.JTable;
-/**
- *
- * @author Tei
- */
-public class ThongTinTau extends javax.swing.JPanel {
-        Connection conn = null;
-        private static final String url = "jdbc:sqlserver://localhost\\Tei-Laptop:1433;databaseName=BanVeTau;"
-                                           + "integratedSecurity=false;encrypt=false;trustServerCertificate=true;";
-        private static final String username = "tei";
-        private static final String password = "29032004";
-        PreparedStatement pst = null;
-        ResultSet rs = null;
-        int i,q, id, deleteItem;
-        
-        
-        
-    /**
-     * Creates new form NewJPanel
-     */
+import entity.*;
+import java.util.List;
+
+public class ThongTinTau extends JPanel implements ActionListener {
+
+    private static final long serialVersionUID = 1L;
+    private final JPanel contentPanel = new JPanel();
+    private JTable table;
+    private JTextField txtMaTau;
+    private DefaultTableModel modelTau;
+    private JButton btnThem;
+    private JButton btnSua;
+    private JButton btnXoa;
+    private TauDAO tauDAO;
+    private JPanel pNorth;
+    private JLabel lblTieuDe;
+    private JComboBox<String> cboLoaiTau;
+    private JTextField txtMaNhaGa;
+    private TitledBorder inputPanelBorder;
+
     public ThongTinTau() {
-        initComponents();
-        tbl_DSTau = new JTable(); 
-        try {
-            SuaDB();
-        } catch (ClassNotFoundException | SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex);
+
+        ConnectDB.getInstance().connect();
+        tauDAO = new TauDAO();
+
+        setLayout(new BorderLayout());
+
+        contentPanel.setBorder(new EmptyBorder(30, 20, 0, 20));
+        add(contentPanel, BorderLayout.CENTER);
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+
+        add(pNorth = new JPanel(), BorderLayout.NORTH);
+        pNorth.add(lblTieuDe = new JLabel("THÔNG TIN TÀU"));
+        lblTieuDe.setFont(new Font("Times New Roman", Font.BOLD, 40));
+        lblTieuDe.setForeground(Color.blue);
+
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new GridLayout(6, 1, 2, 15));
+        inputPanel.setBorder(new EmptyBorder(10, 20, 30, 20));
+        contentPanel.add(inputPanel);
+
+        // Add input fields to the panel
+        JLabel lblMaTau = new JLabel("Mã tàu:");
+        lblMaTau.setFont(lblMaTau.getFont().deriveFont(Font.BOLD, 14));
+        inputPanel.add(lblMaTau);
+
+        txtMaTau = new JTextField();
+        inputPanel.add(txtMaTau);
+        txtMaTau.setColumns(10);
+
+        JLabel lblLoaiTau = new JLabel("Loại tàu:");
+        lblLoaiTau.setFont(lblLoaiTau.getFont().deriveFont(Font.BOLD, 14));
+        inputPanel.add(lblLoaiTau);
+        cboLoaiTau = new JComboBox<>(new String[]{"Tàu cao tốc", "Tàu hỏa"});
+        inputPanel.add(cboLoaiTau);
+
+        JLabel lblMaNhaGa = new JLabel("Mã nhà ga:");
+        lblMaNhaGa.setFont(lblMaNhaGa.getFont().deriveFont(Font.BOLD, 14));
+        inputPanel.add(lblMaNhaGa);
+        txtMaNhaGa = new JTextField(); // Change from JComboBox to JTextField
+        inputPanel.add(txtMaNhaGa);
+
+        inputPanelBorder = BorderFactory.createTitledBorder("Thông Tin Tàu");
+        inputPanelBorder.setTitleFont(new Font("Times New Roman", Font.ITALIC, 18));
+        inputPanelBorder.setTitleJustification(TitledBorder.LEFT);
+        inputPanelBorder.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        inputPanel.setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(10, 10, 10, 10), inputPanelBorder));
+        inputPanel.setPreferredSize(new Dimension(300, 250));
+
+        // Table
+        String[] columns = {"Mã tàu", "Mã nhà ga", "Loại tàu"};
+        modelTau = new DefaultTableModel(columns, 0);
+        table = new JTable(modelTau);
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int selectedRow = table.getSelectedRow();
+                if (selectedRow != -1) {
+                    txtMaTau.setText(modelTau.getValueAt(selectedRow, 0).toString());
+                    txtMaNhaGa.setText(modelTau.getValueAt(selectedRow, 1).toString());
+                    cboLoaiTau.setSelectedItem(modelTau.getValueAt(selectedRow, 2).toString());
+                }
+            }
+        });
+        table.setBorder(new EmptyBorder(100, 10, 100, 10));
+        table.setPreferredSize(new Dimension(50, 550));
+        table.setFont(new Font("Times New Roman", Font.BOLD, 18));
+        table.setRowHeight(25);
+
+        // Table header
+        JTableHeader header = table.getTableHeader();
+        header.setPreferredSize(new Dimension(header.getPreferredSize().width, 30));
+        header.setBackground(Color.lightGray);
+        header.setFont(new Font("Times New Roman", Font.BOLD, 20));
+
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        contentPanel.add(scrollPane);
+
+        JPanel panelButton = new JPanel();
+        panelButton.setBackground(new Color(173, 216, 230));
+        panelButton.setLayout(new BoxLayout(panelButton, BoxLayout.X_AXIS));
+
+        panelButton.add(Box.createHorizontalGlue());
+        btnThem = new JButton("Thêm");
+        panelButton.add(btnThem);
+        panelButton.add(Box.createHorizontalStrut(10));
+        btnSua = new JButton("Sửa");
+        panelButton.add(btnSua);
+        panelButton.add(Box.createHorizontalStrut(10));
+        btnXoa = new JButton("Xóa");
+        panelButton.add(btnXoa);
+        panelButton.add(Box.createHorizontalStrut(10));
+        panelButton.add(Box.createHorizontalGlue());
+
+        Font textFieldFont = new Font("Times New Roman", Font.PLAIN, 18);
+        btnThem.setFont(textFieldFont);
+        btnSua.setFont(textFieldFont);
+        btnXoa.setFont(textFieldFont);
+
+        add(panelButton, BorderLayout.SOUTH);
+
+        btnThem.addActionListener(this);
+        btnSua.addActionListener(this);
+        btnXoa.addActionListener(this);
+
+        docDuLieuDBVaoTable();
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        Object o = e.getSource();
+        if (o.equals(btnThem)) {
+            String maTau = txtMaTau.getText().trim();
+            String maNhaGa = txtMaNhaGa.getText().trim();
+            String loaiTau = cboLoaiTau.getSelectedItem().toString().trim();
+
+            NhaGa ng = new NhaGa(maNhaGa);
+
+            if (maTau.isEmpty() || loaiTau.isEmpty() || maNhaGa.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            Tau tau = new Tau(maTau, ng, loaiTau);
+
+            modelTau.addRow(new Object[]{maTau, maNhaGa, loaiTau});
+
+            txtMaTau.setText("");
+            txtMaNhaGa.setText("");
+            cboLoaiTau.setSelectedIndex(0);
+
+            try {
+                tauDAO.addTau(tau);
+            } catch (Exception e2) {
+                // TODO: handle exception
+                e2.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Lỗi khi thêm vào cơ sở dữ liệu!");
+            }
+
+        } else if (o.equals(btnSua)) {
+            int selectedRow = table.getSelectedRow();
+            for(int i = 0; i < selectedRow; i++) {
+                txtMaTau.setText(modelTau.getValueAt(i, 0).toString());
+                txtMaNhaGa.setText(modelTau.getValueAt(i, 1).toString());
+                cboLoaiTau.setSelectedItem(modelTau.getValueAt(i, 2).toString());
+
+                String maTau = txtMaTau.getText().trim();
+                String maNhaGa = txtMaNhaGa.getText().trim();
+                String loaiTau = cboLoaiTau.getSelectedItem().toString().trim();
+
+                NhaGa ng = new NhaGa(maNhaGa);
+
+                Tau tau = new Tau(maTau, ng, loaiTau);
+
+                try {
+                    tauDAO.suaTau(tau);
+                } catch (Exception e2) {
+                    // TODO: handle exception
+                    e2.printStackTrace();
+                    JOptionPane.showMessageDialog(this, "Lỗi khi sửa dữ liệu!");
+                }
+            }
+
+
+        } else if (o.equals(btnXoa)) {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn tàu muốn xóa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            String maTau = modelTau.getValueAt(selectedRow, 0).toString();
+            tauDAO.xoaTau(maTau);
+            modelTau.removeRow(selectedRow);
         }
     }
-    public final void SuaDB() throws ClassNotFoundException, SQLException{
-         try {
-        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        conn = DriverManager.getConnection(url,username,password);  
-        pst = conn.prepareStatement("Select * from dbo.Tau");
-        rs = pst.executeQuery();
-        ResultSetMetaData stData = rs.getMetaData();
-        q = stData.getColumnCount();
-        DefaultTableModel model = (DefaultTableModel)tbl_DSTau.getModel();
-        model.setRowCount(0);
-        while (rs.next()) {
-            Vector columnData = new Vector();
-            columnData.add(rs.getString("MaTau"));
-            columnData.add(rs.getString("LoaiTau"));
-            columnData.add(rs.getString("MaNhaGa"));
-            System.out.println(columnData);
-            model.addRow(columnData);
+
+    private void docDuLieuDBVaoTable() {
+        List<Tau> listTau = tauDAO.layThongTin();
+        for(Tau tau : listTau) {
+            modelTau.addRow(new Object[] {tau.getMaTau(), tau.getNhaGa().getMaNhaGa(), tau.getLoaiTau()});
         }
-        model.fireTableDataChanged();
-        tbl_DSTau.revalidate();
-        tbl_DSTau.repaint();
-    } catch (ClassNotFoundException | SQLException ex) {
-        JOptionPane.showMessageDialog(null, ex);
     }
-    }
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
-
-        lbl_Header = new javax.swing.JLabel();
-        panel_thongtin = new javax.swing.JPanel();
-        lbl_MaTau = new javax.swing.JLabel();
-        txt_MaTau = new javax.swing.JTextField();
-        lbl_MaNhaGa = new javax.swing.JLabel();
-        txt_MaNhaGa = new javax.swing.JTextField();
-        lbl_LoaiTau = new javax.swing.JLabel();
-        cbb_loaitau = new javax.swing.JComboBox<>();
-        btn_Xoa = new javax.swing.JButton();
-        btn_Sua = new javax.swing.JButton();
-        btn_Them = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        layout_table = new javax.swing.JPanel();
-        tbl_DS = new javax.swing.JScrollPane();
-        tbl_DSTau = new javax.swing.JTable();
-
-        lbl_Header.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        lbl_Header.setText("THÔNG TIN TÀU");
-
-        lbl_MaTau.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        lbl_MaTau.setText("Mã tàu:");
-
-        txt_MaTau.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-
-        lbl_MaNhaGa.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        lbl_MaNhaGa.setText("Mã nhà ga:");
-
-        txt_MaNhaGa.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txt_MaNhaGa.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_MaNhaGaActionPerformed(evt);
-            }
-        });
-
-        lbl_LoaiTau.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        lbl_LoaiTau.setText("Loại tàu:");
-
-        cbb_loaitau.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cbb_loaitau.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tàu cao tốc", "tàu hỏa" }));
-
-        btn_Xoa.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btn_Xoa.setText("Xóa");
-
-        btn_Sua.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btn_Sua.setText("Sửa");
-        btn_Sua.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_SuaActionPerformed(evt);
-            }
-        });
-
-        btn_Them.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btn_Them.setText("Thêm");
-        btn_Them.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_ThemActionPerformed(evt);
-            }
-        });
-
-        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jButton1.setText("Làm mới");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout panel_thongtinLayout = new javax.swing.GroupLayout(panel_thongtin);
-        panel_thongtin.setLayout(panel_thongtinLayout);
-        panel_thongtinLayout.setHorizontalGroup(
-            panel_thongtinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_thongtinLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panel_thongtinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_thongtinLayout.createSequentialGroup()
-                        .addGroup(panel_thongtinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(panel_thongtinLayout.createSequentialGroup()
-                                .addComponent(lbl_LoaiTau)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbb_loaitau, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panel_thongtinLayout.createSequentialGroup()
-                                .addComponent(lbl_MaTau)
-                                .addGap(7, 7, 7)
-                                .addComponent(txt_MaTau, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18)
-                        .addComponent(lbl_MaNhaGa)
-                        .addGap(6, 6, 6)
-                        .addComponent(txt_MaNhaGa, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(21, 21, 21))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_thongtinLayout.createSequentialGroup()
-                        .addComponent(btn_Them, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btn_Sua, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btn_Xoa, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton1)
-                        .addGap(100, 100, 100))))
-        );
-        panel_thongtinLayout.setVerticalGroup(
-            panel_thongtinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_thongtinLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panel_thongtinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_MaTau)
-                    .addComponent(lbl_MaNhaGa)
-                    .addGroup(panel_thongtinLayout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addGroup(panel_thongtinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txt_MaTau, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txt_MaNhaGa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGroup(panel_thongtinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_thongtinLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(lbl_LoaiTau))
-                    .addGroup(panel_thongtinLayout.createSequentialGroup()
-                        .addGap(17, 17, 17)
-                        .addComponent(cbb_loaitau, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(20, 20, 20)
-                .addGroup(panel_thongtinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btn_Them)
-                    .addComponent(btn_Sua)
-                    .addGroup(panel_thongtinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btn_Xoa)
-                        .addComponent(jButton1)))
-                .addContainerGap())
-        );
-
-        tbl_DSTau.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Mã tàu", "Mã nhà ga", "Loại tàu"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
-        tbl_DS.setViewportView(tbl_DSTau);
-
-        javax.swing.GroupLayout layout_tableLayout = new javax.swing.GroupLayout(layout_table);
-        layout_table.setLayout(layout_tableLayout);
-        layout_tableLayout.setHorizontalGroup(
-            layout_tableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tbl_DS)
-        );
-        layout_tableLayout.setVerticalGroup(
-            layout_tableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout_tableLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(tbl_DS, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(layout_table, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(panel_thongtin, javax.swing.GroupLayout.PREFERRED_SIZE, 723, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(275, Short.MAX_VALUE)
-                .addComponent(lbl_Header)
-                .addGap(272, 272, 272))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addComponent(lbl_Header)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panel_thongtin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(layout_table, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-    }// </editor-fold>//GEN-END:initComponents
-private JPanel panel;
-    private void btn_ThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ThemActionPerformed
-        try {
-        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        conn = DriverManager.getConnection(url,username,password);  
-        pst = conn.prepareStatement("INSERT INTO dbo.Tau (MaTau, LoaiTau, MaNhaGa) VALUES(?,?,?)");
-        pst.setString(1, txt_MaTau.getText());
-        pst.setString(2, (String) cbb_loaitau.getSelectedItem());
-        pst.setString(3, txt_MaNhaGa.getText());
-        pst.executeUpdate();
-        JOptionPane.showMessageDialog(this, "Thêm thành công");
-        SuaDB();
-    } catch (SQLException ex) {
-    if (ex.getSQLState().equals("23000")) {
-        JOptionPane.showMessageDialog(this, "Dữ liệu đã tồn tại");
-    } else {
-        java.util.logging.Logger.getLogger(ThongTinTau.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    }
-} catch (ClassNotFoundException ex) {
-    java.util.logging.Logger.getLogger(ThongTinTau.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-}
-    }//GEN-LAST:event_btn_ThemActionPerformed
-
-    private void btn_SuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SuaActionPerformed
-        try {
-        conn = DriverManager.getConnection(url ,username, password);
-        pst = conn.prepareStatement("UPDATE dbo.Tau SET MaTau = ?, LoaiTau = ?, MaNhaGa = ? WHERE MaTau = ?");
-        pst.setString(1, txt_MaTau.getText().toString());
-        pst.setString(2, cbb_loaitau.getSelectedItem().toString());
-        pst.setString(3, txt_MaNhaGa.getText().toString());
-        
-        pst.executeUpdate();
-        JOptionPane.showMessageDialog(this, "Sửa thành công");
-        SuaDB();
-    } catch (SQLException ex) {
-    if (ex.getSQLState().equals("23000")) {
-        JOptionPane.showMessageDialog(this, "Data already exists");
-    } else {
-        java.util.logging.Logger.getLogger(ThongTinTau.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-    }
-} catch (ClassNotFoundException ex) {
-    java.util.logging.Logger.getLogger(ThongTinTau.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-}
-    }//GEN-LAST:event_btn_SuaActionPerformed
-
-    private void txt_MaNhaGaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_MaNhaGaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txt_MaNhaGaActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn_Sua;
-    private javax.swing.JButton btn_Them;
-    private javax.swing.JButton btn_Xoa;
-    private javax.swing.JComboBox<String> cbb_loaitau;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JPanel layout_table;
-    private javax.swing.JLabel lbl_Header;
-    private javax.swing.JLabel lbl_LoaiTau;
-    private javax.swing.JLabel lbl_MaNhaGa;
-    private javax.swing.JLabel lbl_MaTau;
-    private javax.swing.JPanel panel_thongtin;
-    private javax.swing.JScrollPane tbl_DS;
-    private javax.swing.JTable tbl_DSTau;
-    private javax.swing.JTextField txt_MaNhaGa;
-    private javax.swing.JTextField txt_MaTau;
-    // End of variables declaration//GEN-END:variables
 }
