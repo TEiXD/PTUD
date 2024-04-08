@@ -58,7 +58,7 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
 
         // Add input fields to the panel
         JLabel lblMaChuyenTau = new JLabel("Mã chuyến tàu");
-        lblMaChuyenTau.setFont(lblMaChuyenTau.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
+        lblMaChuyenTau.setFont(lblMaChuyenTau.getFont().deriveFont(Font.BOLD, 14));
         inputPanel.add(lblMaChuyenTau);
 
         txtMaChuyenTau = new JTextField();
@@ -66,7 +66,7 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
         txtMaChuyenTau.setColumns(10);
 
         JLabel lblGaDi = new JLabel("Ga đi");
-        lblGaDi.setFont(lblGaDi.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
+        lblGaDi.setFont(lblGaDi.getFont().deriveFont(Font.BOLD, 14));
         inputPanel.add(lblGaDi);
         cboGaDi = new JComboBox<>(new String[]{"Ga A", "Ga B", "Ga C", "Ga D", "Ga E", "Ga F", "Ga G", "Ga I", "Ga K"});
         inputPanel.add(cboGaDi);
@@ -75,27 +75,27 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
         dateModelGioDi.setCalendarField(Calendar.MINUTE);
 
         JLabel lblGioDi = new JLabel("Giờ đi");
-        lblGioDi.setFont(lblGioDi.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
+        lblGioDi.setFont(lblGioDi.getFont().deriveFont(Font.BOLD, 14));
         inputPanel.add(lblGioDi);
         spinGioDi = new JSpinner(dateModelGioDi);
         spinGioDi.setEditor(new JSpinner.DateEditor(spinGioDi, "yyyy-MM-dd HH:mm:ss"));
         inputPanel.add(spinGioDi);
 
         JLabel lblMaTau = new JLabel("Mã tàu");
-        lblMaTau.setFont(lblMaTau.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
+        lblMaTau.setFont(lblMaTau.getFont().deriveFont(Font.BOLD, 14)); 
         inputPanel.add(lblMaTau);
         cboMaTau = new JComboBox<>(new String[]{});
         ctDAO.layComboBox(cboMaTau);
         inputPanel.add(cboMaTau);
 
         JLabel lblGaDen = new JLabel("Ga đến");
-        lblGaDen.setFont(lblGaDen.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
+        lblGaDen.setFont(lblGaDen.getFont().deriveFont(Font.BOLD, 14));
         inputPanel.add(lblGaDen);
         cboGaDen = new JComboBox<>(new String[]{"Ga A", "Ga B", "Ga C", "Ga D", "Ga E", "Ga F", "Ga G", "Ga I", "Ga K"});
         inputPanel.add(cboGaDen);
 
         JLabel lblGioDen = new JLabel("Giờ đến");
-        lblGioDen.setFont(lblGioDen.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
+        lblGioDen.setFont(lblGioDen.getFont().deriveFont(Font.BOLD, 14));
         inputPanel.add(lblGioDen);
         dateModelGioDen = new SpinnerDateModel();
         dateModelGioDen.setCalendarField(Calendar.MINUTE);
