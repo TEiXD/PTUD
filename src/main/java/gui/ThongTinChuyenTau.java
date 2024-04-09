@@ -122,8 +122,8 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
         	    if (SelectedRows != -1) { // Check if a row is selected
         	        txtMaChuyenTau.setText(modelCT.getValueAt(SelectedRows, 0).toString());
         	        cboMaTau.setSelectedItem(modelCT.getValueAt(SelectedRows, 1).toString());
-        	        cboGaDi.setSelectedItem(modelCT.getValueAt(SelectedRows, 2).toString());
-        	        cboGaDen.setSelectedItem(modelCT.getValueAt(SelectedRows, 3).toString());
+        	        cboGaDi.setSelectedItem(modelCT.getValueAt(SelectedRows, 2));
+        	        cboGaDen.setSelectedItem(modelCT.getValueAt(SelectedRows, 3));
         	        
         	    }
         	}
@@ -215,6 +215,7 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
                 // Xử lý nếu có lỗi khi thêm vào cơ sở dữ liệu
                 JOptionPane.showMessageDialog(this, "Lỗi khi thêm vào cơ sở dữ liệu!");
             }
+          //============================================================
         } else if (o.equals(btnSua)) {
             int SelectedRows = modelCT.getRowCount();
             for (int i = 0; i < SelectedRows; i++) {
@@ -223,7 +224,7 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
                 cboGaDi.setSelectedItem(modelCT.getValueAt(i, 2).toString());
                 cboGaDen.setSelectedItem(modelCT.getValueAt(i, 3).toString());
 
-//============================================================
+
                 
                 String maCT = txtMaChuyenTau.getText();
                 String loaiTau = cboMaTau.getSelectedItem().toString();

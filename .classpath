@@ -43,5 +43,6 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/src/miglayout15-swing.jar" sourcepath="/src/miglayout-src.zip"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

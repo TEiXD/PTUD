@@ -1,22 +1,21 @@
 package entity;
 
-import java.time.LocalDateTime;
 
 public class Ve {
     private String maVe, tenVe, loaiVe;
-    private LocalDateTime ngayDi, ngayVe;
+    private String ngayDi, ngayVe;
     private KhachHang maKH;
     private NhanVien maNV;
     private ChuyenTau maCT;
 
-    public Ve(String maVe, String tenVe, String loaiVe, LocalDateTime ngayDi, LocalDateTime ngayVe, KhachHang maKH,
+    public Ve(String maVe, String tenVe, String loaiVe, String ngayDistr, String ngayVestr, KhachHang maKH,
 			NhanVien maNV, ChuyenTau maCT) {
 		super();
 		this.maVe = maVe;
 		this.tenVe = tenVe;
 		this.loaiVe = loaiVe;
-		this.ngayDi = ngayDi;
-		this.ngayVe = ngayVe;
+		this.ngayDi = ngayDistr;
+		this.ngayVe = ngayVestr;
 		this.maKH = maKH;
 		this.maNV = maNV;
 		this.maCT = maCT;
@@ -46,19 +45,19 @@ public class Ve {
 		this.loaiVe = loaiVe;
 	}
 
-	public LocalDateTime getNgayDi() {
+	public String getNgayDi() {
 		return ngayDi;
 	}
 
-	public void setNgayDi(LocalDateTime ngayDi) {
+	public void setNgayDi(String ngayDi) {
 		this.ngayDi = ngayDi;
 	}
 
-	public LocalDateTime getNgayVe() {
+	public String getNgayVe() {
 		return ngayVe;
 	}
 
-	public void setNgayVe(LocalDateTime ngayVe) {
+	public void setNgayVe(String ngayVe) {
 		this.ngayVe = ngayVe;
 	}
 

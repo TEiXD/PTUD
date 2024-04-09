@@ -6,10 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
-
+import java.util.List; 
 import connectDB.ConnectDB;
 import entity.ChuyenTau;
 import entity.KhachHang;
@@ -29,14 +27,14 @@ public class VeDAO {
 	        Statement st = conn.createStatement();
 	        ResultSet rs = st.executeQuery(SQL);
 	        while (rs.next()) {
-	            String maV = rs.getString("maVe");
-	            String tenV = rs.getString("tenVe");
-	            String loaiV = rs.getString("loaiVe");
-	            LocalDateTime ngayDi = rs.getTimestamp("ngayDi").toLocalDateTime();
-	            LocalDateTime ngayVe = rs.getTimestamp("ngayVe").toLocalDateTime();
-	            String maKH = rs.getString("maKH");
-	            String maNV = rs.getString("maNV");
-	            String maCT = rs.getString("maChuyenTau");
+	            String maV = rs.getString(1);
+	            String tenV = rs.getString(2);
+	            String loaiV = rs.getString(3);
+	            String ngayDi = rs.getString(4);
+	            String ngayVe = rs.getString(5);
+	            String maKH = rs.getString(6);
+	            String maNV = rs.getString(7);
+	            String maCT = rs.getString(8);
 	            KhachHang kh = new KhachHang(maKH);
 	            NhanVien nv = new NhanVien(maNV);
 	            ChuyenTau ct = new ChuyenTau(maCT);

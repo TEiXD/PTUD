@@ -36,8 +36,8 @@ public class ThongTinNV extends JPanel implements ActionListener {
     private JTextField txtSDT;
     private JTextField txtEmail;
     private JTextField txtMaNhaGa;
-    private JTextField txtNgaySinh;
     private TitledBorder inputPanelBorder;
+    private JSpinner spinNgaySinh;
 
     public ThongTinNV() throws SQLException {
 
@@ -66,6 +66,7 @@ public class ThongTinNV extends JPanel implements ActionListener {
         inputPanel.add(lblMaNV);
 
         txtMaNV = new JTextField();
+        txtMaNV.setFont(new Font("Tahoma", Font.PLAIN, 14));
         inputPanel.add(txtMaNV);
         txtMaNV.setColumns(10);
 
@@ -73,48 +74,57 @@ public class ThongTinNV extends JPanel implements ActionListener {
         lblHoTen.setFont(lblHoTen.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
         inputPanel.add(lblHoTen);
         txtHoTen = new JTextField();
+        txtHoTen.setFont(new Font("Tahoma", Font.PLAIN, 14));
         inputPanel.add(txtHoTen);
 
         JLabel lblGioiTinh = new JLabel("Giới tính");
         lblGioiTinh.setFont(lblGioiTinh.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
         inputPanel.add(lblGioiTinh);
         cboGioiTinh = new JComboBox<>(new String[]{"Nam", "Nữ"});
+        cboGioiTinh.setFont(new Font("Tahoma", Font.PLAIN, 14));
         inputPanel.add(cboGioiTinh);
 
         JLabel lblCCCD = new JLabel("CCCD");
         lblCCCD.setFont(lblCCCD.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
         inputPanel.add(lblCCCD);
         txtCCCD = new JTextField();
+        txtCCCD.setFont(new Font("Tahoma", Font.PLAIN, 14));
         inputPanel.add(txtCCCD);
 
         JLabel lblSDT = new JLabel("Số điện thoại");
         lblSDT.setFont(lblSDT.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
         inputPanel.add(lblSDT);
         txtSDT = new JTextField();
+        txtSDT.setFont(new Font("Tahoma", Font.PLAIN, 14));
         inputPanel.add(txtSDT);
 
         JLabel lblEmail = new JLabel("Email");
         lblEmail.setFont(lblEmail.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
         inputPanel.add(lblEmail);
         txtEmail = new JTextField();
+        txtEmail.setFont(new Font("Tahoma", Font.PLAIN, 14));
         inputPanel.add(txtEmail);
 
         JLabel lblNgaySinh = new JLabel("Ngày sinh");
         lblNgaySinh.setFont(lblNgaySinh.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
         inputPanel.add(lblNgaySinh);
-        txtNgaySinh = new JTextField();
-        inputPanel.add(txtNgaySinh);
+        
+        spinNgaySinh = new JSpinner();
+        spinNgaySinh.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        inputPanel.add(spinNgaySinh);
 
         JLabel lblTrinhDo = new JLabel("Trình độ");
         lblTrinhDo.setFont(lblTrinhDo.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
         inputPanel.add(lblTrinhDo);
         cboTrinhDo = new JComboBox<>(new String[]{"Đại học", "Cử nhân", "Cao đẳng"});
+        cboTrinhDo.setFont(new Font("Tahoma", Font.PLAIN, 14));
         inputPanel.add(cboTrinhDo);
 
         JLabel lblMaNhaGa = new JLabel("Mã nhà ga");
         lblMaNhaGa.setFont(lblMaNhaGa.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
         inputPanel.add(lblMaNhaGa);
         txtMaNhaGa = new JTextField();
+        txtMaNhaGa.setFont(new Font("Tahoma", Font.PLAIN, 14));
         inputPanel.add(txtMaNhaGa);
 
         inputPanelBorder = BorderFactory.createTitledBorder("Thông Tin Nhân Viên");
@@ -150,18 +160,22 @@ public class ThongTinNV extends JPanel implements ActionListener {
         contentPanel.add(panelButton);
 
         btnThem = new JButton("Thêm");
+        btnThem.setFont(new Font("Tahoma", Font.PLAIN, 18));
         btnThem.addActionListener(this);
         panelButton.add(btnThem);
 
         btnSua = new JButton("Sửa");
+        btnSua.setFont(new Font("Tahoma", Font.PLAIN, 18));
         btnSua.addActionListener(this);
         panelButton.add(btnSua);
 
         btnXoa = new JButton("Xóa");
+        btnXoa.setFont(new Font("Tahoma", Font.PLAIN, 18));
         btnXoa.addActionListener(this);
         panelButton.add(btnXoa);
 
         btnXoaTrang = new JButton("Xóa trắng");
+        btnXoaTrang.setFont(new Font("Tahoma", Font.PLAIN, 18));
         btnXoaTrang.addActionListener(this);
         panelButton.add(btnXoaTrang);
 
@@ -190,14 +204,15 @@ public class ThongTinNV extends JPanel implements ActionListener {
             String cccd = txtCCCD.getText();
             String sdt = txtSDT.getText();
             String email = txtEmail.getText();
-            String ngaySinh = txtNgaySinh.getText();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String ngaySinhstr = sdf.format((java.util.Date) spinNgaySinh.getValue());
             String trinhDo = cboTrinhDo.getSelectedItem().toString();
             String maNhaGa = txtMaNhaGa.getText();
             
             NhaGa ng = new NhaGa(maNhaGa);
 
             // Tạo đối tượng NhanVien từ thông tin nhập liệu
-            NhanVien nv = new NhanVien(maNV, hoTen, cccd, gioiTinh, sdt, email, null, trinhDo, null);
+            NhanVien nv = new NhanVien(maNV, hoTen, cccd, gioiTinh, sdt, email, ngaySinhstr, trinhDo, ng);
 
             // Thêm nhân viên vào cơ sở dữ liệu
             nvDAO.addNV(nv);
@@ -212,16 +227,6 @@ public class ThongTinNV extends JPanel implements ActionListener {
         } else if (e.getSource() == btnXoa) {
             // Code xử lý sự kiện xóa nhân viên
             // Xóa nhân viên được chọn trong bảng và cơ sở dữ liệu
-        } else if (e.getSource() == btnXoaTrang) {
-        	txtMaNV.setText("");
-            txtHoTen.setText("");
-            cboGioiTinh.setSelectedIndex(0);
-            txtCCCD.setText("");
-            txtSDT.setText("");
-            txtEmail.setText("");
-            txtNgaySinh.setText("");
-            cboTrinhDo.setSelectedIndex(0);
-            txtMaNhaGa.setText("");
         }
     }
 

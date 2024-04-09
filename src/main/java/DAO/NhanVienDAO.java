@@ -29,7 +29,7 @@ public class NhanVienDAO {
 	                String gioiTinh = rs.getString(4);
 	                String SDT = rs.getString(5);
 	                String email = rs.getString(6);
-	                Date ngaySinh = rs.getDate(7);
+	                String ngaySinh = rs.getString(7);
 	                String trinhDo = rs.getString(8);
 	                String maNhaGa = rs.getString(9);
 	                NhaGa ng = new NhaGa(maNhaGa);
