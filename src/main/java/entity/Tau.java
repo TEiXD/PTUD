@@ -8,11 +8,11 @@ public class Tau {
     private String loaiTau;
 
     public Tau(String maTau, NhaGa nhaGa, String loaiTau) {
-		super();
-		this.maTau = maTau;
-		this.nhaGa = nhaGa;
-		this.loaiTau = loaiTau;
-	}
+        this.maTau = maTau;
+        this.nhaGa = nhaGa;
+        this.loaiTau = loaiTau;
+    }
+
 
 	public Tau(String maTau) {
 		this.maTau = maTau;

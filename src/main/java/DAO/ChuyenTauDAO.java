@@ -91,16 +91,7 @@ public class ChuyenTauDAO {
 		} catch (SQLException e) {
 			// TODO: handle exception
 			e.printStackTrace();
-		} finally {
-			try {
-				if(st != null) {
-					st.close();
-				}conn.close();
-			}catch (SQLException e) {
-				// TODO: handle exception
-				e.printStackTrace();
-			}
-		}
+		} 
 		return false;
 	}
 	

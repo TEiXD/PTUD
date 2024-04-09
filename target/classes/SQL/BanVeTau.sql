@@ -1,4 +1,4 @@
-﻿CREATE DATABASE BanVeTau;
+CREATE DATABASE BanVeTau;
 use BanVeTau
 
 CREATE TABLE NhaGa (
@@ -76,6 +76,13 @@ CREATE TABLE Toa (
     FOREIGN KEY (MaTau) REFERENCES Tau(MaTau)
 );
 GO
+
+ALTER TABLE ChuyenTau
+ADD CONSTRAINT FK_ChuyenTau_MaTau
+FOREIGN KEY (MaTau)
+REFERENCES Tau(MaTau)
+ON DELETE CASCADE;
+
 
 
 --Dữ liệu mẫu cho bảng NhaGa
