@@ -6,14 +6,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JOptionPane;
+
 import connectDB.ConnectDB;
 import entity.NhaGa;
 import entity.Tau;
 
 public class TauDAO {
     
-    public List<Tau> layThongTin() {
-        List<Tau> dsT = new ArrayList<>();
+    public ArrayList<Tau> layThongTin() {
+    	ArrayList<Tau> dsT = new ArrayList<>();
         try {
             Connection conn = ConnectDB.getInstance().connect();
             String SQL = "SELECT t.MaTau, ng.MaNhaGa, t.LoaiTau " +
@@ -36,14 +39,15 @@ public class TauDAO {
         return dsT;
     }
     
- // Thêm tàu
+    // Thêm tàu
     public boolean addTau(Tau tau) {
-        ConnectDB.getInstance();
-        Connection conn = ConnectDB.getConnection();
+        Connection conn = null;
         PreparedStatement st = null;
-        String SQL = "INSERT INTO Tau (MaTau, MaNhaGa, LoaiTau) VALUES (?, ?, ?)";
+        ResultSet rs = null;
         int n = 0;
         try {
+            conn = ConnectDB.getInstance().connect();
+            String SQL = "INSERT INTO Tau (MaTau, MaNhaGa, LoaiTau) VALUES (?, ?, ?)";
             // Kiểm tra xem MaNhaGa đã tồn tại trong bảng NhaGa hay không
             if (kiemTraMaNhaGaTonTai(conn, tau.getNhaGa().getMaNhaGa())) {
                 st = conn.prepareStatement(SQL);
@@ -56,7 +60,7 @@ public class TauDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        } 
         return n > 0;
     }
 
@@ -72,41 +76,76 @@ public class TauDAO {
     }
 
 
-    // Xóa tàu
     public boolean xoaTau(String maTau) {
-    	ConnectDB.getInstance();
-        Connection conn = ConnectDB.getConnection();
+        Connection conn = null;
         PreparedStatement st = null;
-        int n=0;
-		try {
-			String SQL =  "DELETE FROM Tau WHERE MaTau = ?";
-			st = conn.prepareStatement(SQL);
+        int n = 0;
+        try {
+            conn = ConnectDB.getInstance().connect();
+            
+            String checkVeSQL = "SELECT COUNT(*) FROM Ve WHERE MaChuyenTau IN (SELECT MaChuyenTau FROM ChuyenTau WHERE MaTau = ?)";
+            PreparedStatement checkVeStmt = conn.prepareStatement(checkVeSQL);
+            checkVeStmt.setString(1, maTau);
+            ResultSet rsVe = checkVeStmt.executeQuery();
+            rsVe.next();
+            int veCount = rsVe.getInt(1);
+            
+            if (veCount > 0) {
+                int option = JOptionPane.showConfirmDialog(null, "Bạn có thật sự muốn xóa?", "Xóa", JOptionPane.YES_NO_OPTION);
+                if (option == JOptionPane.YES_OPTION) {
+                    String deleteVeSQL = "DELETE FROM Ve WHERE MaChuyenTau IN (SELECT MaChuyenTau FROM ChuyenTau WHERE MaTau = ?)";
+                    PreparedStatement deleteVeStmt = conn.prepareStatement(deleteVeSQL);
+                    deleteVeStmt.setString(1, maTau);
+                    deleteVeStmt.executeUpdate();
+                } else {
+                    return false; 
+                }
+            }
+            
+            String deleteChuyenTauSQL = "DELETE FROM ChuyenTau WHERE MaTau = ?";
+            PreparedStatement deleteChuyenTauStmt = conn.prepareStatement(deleteChuyenTauSQL);
+            deleteChuyenTauStmt.setString(1, maTau);
+            deleteChuyenTauStmt.executeUpdate();
+            
+            String deleteTauSQL = "DELETE FROM Tau WHERE MaTau = ?";
+            st = conn.prepareStatement(deleteTauSQL);
             st.setString(1, maTau);
-           
             n = st.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (st != null) {
+                    st.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-		return n>0;
+        return n > 0;
     }
+
+
 
     // Sửa tàu
     public boolean suaTau(Tau tau) {
-    	ConnectDB.getInstance();
-		Connection conn = ConnectDB.getConnection();
-		PreparedStatement st = null;
-		int n=0;
-		try {
-			String SQL = "UPDATE Tau SET MaNhaGa = ?, LoaiTau = ? WHERE MaTau = ?";
-			st = conn.prepareStatement(SQL);
+        Connection conn = null;
+        PreparedStatement st = null;
+        int n = 0;
+        try {
+            conn = ConnectDB.getInstance().connect();
+            String SQL = "UPDATE Tau SET MaNhaGa = ?, LoaiTau = ? WHERE MaTau = ?";
+            st = conn.prepareStatement(SQL);
             st.setString(1, tau.getNhaGa().getMaNhaGa().trim());
             st.setString(2, tau.getLoaiTau().trim());
             st.setString(3, tau.getMaTau().trim());
-           
             n = st.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
-        }
-		return n>0;
+        } 
+        return n > 0;
     }
 }

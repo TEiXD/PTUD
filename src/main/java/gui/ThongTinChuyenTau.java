@@ -34,11 +34,13 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
     private JSpinner spinGioDi;
     private JSpinner spinGioDen;
     private TitledBorder inputPanelBorder;
+	private TauDAO tauDao;
 
     public ThongTinChuyenTau() {
 
         ConnectDB.getInstance().connect();
         ctDAO = new ChuyenTauDAO();
+        tauDao = new TauDAO();
 
         setLayout(new BorderLayout());
 
@@ -83,11 +85,15 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
 
         JLabel lblMaTau = new JLabel("Mã tàu");
         lblMaTau.setFont(lblMaTau.getFont().deriveFont(Font.BOLD, 14)); 
+        cboMaTau = new JComboBox<String>();
+        cboMaTau.setEditable(false);	
+		ArrayList<Tau> listTau = tauDao.layThongTin() ;
+		for (Tau tau : listTau) {
+			cboMaTau.addItem(tau.getMaTau());
+		}
         inputPanel.add(lblMaTau);
-        cboMaTau = new JComboBox<>(new String[]{});
-        ctDAO.layComboBox(cboMaTau);
         inputPanel.add(cboMaTau);
-
+        
         JLabel lblGaDen = new JLabel("Ga đến");
         lblGaDen.setFont(lblGaDen.getFont().deriveFont(Font.BOLD, 14));
         inputPanel.add(lblGaDen);
