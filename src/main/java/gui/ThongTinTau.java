@@ -226,24 +226,22 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
                 e2.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Lỗi khi xóa dữ liệu!");
             }
-        } else if (o.equals(btnTim)) {
-            String maTau = txtNhap.getText().trim();
-            List<Integer> timMT = new ArrayList<>();
+        }	else if (o.equals(btnTim)) {
+            String maTau = txtNhap.getText();
+            ListSelectionModel timTau = table.getSelectionModel();
+            timTau.clearSelection(); 
             for (int i = 0; i < modelTau.getRowCount(); i++) {
-                if (modelTau.getValueAt(i, 0).toString().equals(maTau)) {
-                    timMT.add(i);
+                if (modelTau.getValueAt(i, 0).toString().contains(maTau)) {
+                	timTau.addSelectionInterval(i, i); 
                 }
             }
-            if (!timMT.isEmpty()) {
-                int[] selectedRows = new int[timMT.size()];
-                for (int i = 0; i < timMT.size(); i++) {
-                    selectedRows[i] = timMT.get(i);
-                }
-                table.setRowSelectionInterval(selectedRows[0], selectedRows[selectedRows.length - 1]);
-            } else {
-                JOptionPane.showMessageDialog(this, "Không tìm thấy tàu!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            if (timTau.isSelectionEmpty()) {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy tàu");
             }
         }
+
+
+
     }
 
     private void docDuLieuDBVaoTable() {
