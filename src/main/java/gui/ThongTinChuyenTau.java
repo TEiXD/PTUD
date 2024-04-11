@@ -69,7 +69,11 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
         JLabel lblGaDi = new JLabel("Ga đi");
         lblGaDi.setFont(lblGaDi.getFont().deriveFont(Font.BOLD, 14));
         inputPanel.add(lblGaDi);
-        cboGaDi = new JComboBox<>(new String[]{"Ga A", "Ga B", "Ga C", "Ga D", "Ga E", "Ga F", "Ga G", "Ga I", "Ga K"});
+        cboGaDi = new JComboBox<String>();
+        ArrayList<ChuyenTau> listCT = ctDAO.layThongTin();
+        for(ChuyenTau ct : listCT) {
+        	cboGaDi.addItem(ct.getGaDi());
+        }
         inputPanel.add(cboGaDi);
 
         dateModelGioDi = new SpinnerDateModel();
@@ -96,7 +100,10 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
         JLabel lblGaDen = new JLabel("Ga đến");
         lblGaDen.setFont(lblGaDen.getFont().deriveFont(Font.BOLD, 14));
         inputPanel.add(lblGaDen);
-        cboGaDen = new JComboBox<>(new String[]{"Ga A", "Ga B", "Ga C", "Ga D", "Ga E", "Ga F", "Ga G", "Ga I", "Ga K"});
+        cboGaDen = new JComboBox<String>();
+        for(ChuyenTau ct : listCT) {
+        	cboGaDen.addItem(ct.getGaDen());
+        }
         inputPanel.add(cboGaDen);
 
         JLabel lblGioDen = new JLabel("Giờ đến");
@@ -111,7 +118,7 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
         inputPanelBorder = BorderFactory.createTitledBorder("Thông Tin Chuyến Tàu");
         inputPanelBorder.setTitleFont(new Font("Times New Roman", Font.ITALIC, 18));
         inputPanelBorder.setTitleJustification(TitledBorder.LEFT);
-        inputPanelBorder.setBorder(BorderFactory.createLineBorder(Color.BLACK)); // Thay đổi màu của LineBorder thành đen
+        inputPanelBorder.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         inputPanel.setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(10, 10, 10, 10), inputPanelBorder));
 
         // Table

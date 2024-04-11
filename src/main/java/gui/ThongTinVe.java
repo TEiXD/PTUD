@@ -181,6 +181,7 @@ public class ThongTinVe extends javax.swing.JPanel implements ActionListener {
         		}
         	}
         });
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         table.setBorder(new EmptyBorder(100, 10, 100, 10));
         table.setPreferredSize(new Dimension(50, 550));
         table.setFont(new Font("Times New Roman", Font.BOLD, 18));
@@ -192,7 +193,7 @@ public class ThongTinVe extends javax.swing.JPanel implements ActionListener {
         header.setBackground(Color.LIGHT_GRAY);
         header.setFont(new Font("Times New Roman", Font.BOLD, 21));
 
-        JScrollPane scrollPane = new JScrollPane(table);
+        JScrollPane scrollPane = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         contentPanel.add(scrollPane);
 

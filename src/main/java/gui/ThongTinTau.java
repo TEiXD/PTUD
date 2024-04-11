@@ -187,7 +187,7 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
             }
 
             String maTau = txtMaTau.getText().trim();
-            String maNhaGa = cboMaNhaGa.getSelectedItem().toString().trim(); // Get selected item from combobox
+            String maNhaGa = cboMaNhaGa.getSelectedItem().toString().trim();
             String loaiTau = cboLoaiTau.getSelectedItem().toString().trim();
 
             if (maTau.isEmpty() || loaiTau.isEmpty() || maNhaGa.isEmpty()) {
