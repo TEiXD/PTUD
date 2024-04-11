@@ -63,7 +63,7 @@ public class VeDAO {
 	        st.setTimestamp(4, Timestamp.valueOf(v.getNgayDi()));
 	        st.setTimestamp(5, Timestamp.valueOf(v.getNgayVe()));
 	        st.setString(6, v.getMaKH().getMaKH().trim());
-	        st.setString(7, v.getMaNV().getMaNV().trim());
+	        st.setString(7, v.getnhanVien().getMaNV().trim());
 	        st.setString(8, v.getMaCT().getMaChuyenTau().trim());
 	        int rowsAff = st.executeUpdate();
 	        return rowsAff > 0; 
@@ -125,17 +125,18 @@ public class VeDAO {
 	    try {
 	        ConnectDB.getInstance();
 			conn = ConnectDB.getConnection();
-	        String SQL = "UPDATE Ve SET MaVe=?, TenVe=?, LoaiVe=?, NgayDi=?, NgayVe=?, MaKH=?, MaNV=?, MaChuyenTau=? WHERE MaVe=?";
+	        String SQL = "UPDATE Ve SET TenVe=?, LoaiVe=?, NgayDi=?, NgayVe=?, MaKH=?, MaNV=?, MaChuyenTau=? WHERE MaVe=?";
 	        st = conn.prepareStatement(SQL);
-	        st.setString(1, v.getMaVe());
-	        st.setString(2, v.getTenVe());
-	        st.setString(3, v.getLoaiVe());
-	        st.setTimestamp(4, Timestamp.valueOf(v.getNgayDi()));
-	        st.setTimestamp(5, Timestamp.valueOf(v.getNgayVe()));
-	        st.setString(6, v.getMaKH().getMaKH());
-	        st.setString(7, v.getMaNV().getMaNV());
-	        st.setString(8, v.getMaCT().getMaChuyenTau());
-	        st.setString(9, v.getMaVe()); // Set maVe for WHERE clause
+
+	        st.setString(1, v.getTenVe());
+	        st.setString(2, v.getLoaiVe());
+	        st.setTimestamp(3, Timestamp.valueOf(v.getNgayDi()));
+	        st.setTimestamp(4, Timestamp.valueOf(v.getNgayVe()));
+	        st.setString(5, v.getMaKH().getMaKH());
+	        st.setString(6, v.getnhanVien().getMaNV());
+	        st.setString(7, v.getMaCT().getMaChuyenTau());
+	        st.setString(8, v.getMaVe()); 
+	        st.setString(9, v.getMaVe());
 
 	        rowsAff = st.executeUpdate();
 	        return rowsAff > 0; 

@@ -5,11 +5,11 @@ public class Ve {
     private String maVe, tenVe, loaiVe;
     private String ngayDi, ngayVe;
     private KhachHang maKH;
-    private NhanVien maNV;
+    private NhanVien nhanVien;
     private ChuyenTau maCT;
 
     public Ve(String maVe, String tenVe, String loaiVe, String ngayDistr, String ngayVestr, KhachHang maKH,
-			NhanVien maNV, ChuyenTau maCT) {
+			NhanVien nhanVien, ChuyenTau maCT) {
 		super();
 		this.maVe = maVe;
 		this.tenVe = tenVe;
@@ -17,7 +17,7 @@ public class Ve {
 		this.ngayDi = ngayDistr;
 		this.ngayVe = ngayVestr;
 		this.maKH = maKH;
-		this.maNV = maNV;
+		this.nhanVien = nhanVien;
 		this.maCT = maCT;
 	}
     
@@ -69,12 +69,12 @@ public class Ve {
 		this.maKH = maKH;
 	}
 
-	public NhanVien getMaNV() {
-		return maNV;
+	public NhanVien getnhanVien() {
+		return nhanVien;
 	}
 
-	public void setMaNV(NhanVien maNV) {
-		this.maNV = maNV;
+	public void setnhanVien(NhanVien nhanVien) {
+		this.nhanVien = nhanVien;
 	}
 
 	public ChuyenTau getMaCT() {
@@ -100,7 +100,7 @@ public class Ve {
 	@Override
 	public String toString() {
 		return "Ve [maVe=" + maVe + ", tenVe=" + tenVe + ", loaiVe=" + loaiVe + ", ngayDi=" + ngayDi + ", ngayVe="
-				+ ngayVe + ", maKH=" + maKH + ", maNV=" + maNV + ", maCT=" + maCT + "]";
+				+ ngayVe + ", maKH=" + maKH + ", nhanVien=" + nhanVien + ", maCT=" + maCT + "]";
 	}
 	
 }

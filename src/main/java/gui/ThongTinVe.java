@@ -41,6 +41,7 @@ import javax.swing.JSpinner;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+
 /**
  *
  * @author Tei
@@ -174,22 +175,22 @@ public class ThongTinVe extends javax.swing.JPanel implements ActionListener {
         			txtMaVe.setText(modelVe.getValueAt(SelectedRows, 0).toString());
         			txtTenVe.setText(modelVe.getValueAt(SelectedRows, 1).toString());
         			cboLoaiVe.setSelectedItem(modelVe.getValueAt(SelectedRows, 2));
-        			txtMaKH.setText(modelVe.getValueAt(SelectedRows, 3).toString());
-        			txtMaNV.setText(modelVe.getValueAt(SelectedRows, 4).toString());
-        			txtMaChuyenTau.setText(modelVe.getValueAt(SelectedRows, 5).toString());
+        			txtMaKH.setText(modelVe.getValueAt(SelectedRows, 5).toString());
+        			txtMaNV.setText(modelVe.getValueAt(SelectedRows, 6).toString());
+        			txtMaChuyenTau.setText(modelVe.getValueAt(SelectedRows, 7).toString());
         		}
         	}
         });
         table.setBorder(new EmptyBorder(100, 10, 100, 10));
         table.setPreferredSize(new Dimension(50, 550));
-        table.setFont(new Font("Times New Roman", Font.BOLD, 24));
+        table.setFont(new Font("Times New Roman", Font.BOLD, 18));
         table.setRowHeight(25);
 
         // Table header
         JTableHeader header = table.getTableHeader();
         header.setPreferredSize(new Dimension(header.getPreferredSize().width, 30));
         header.setBackground(Color.LIGHT_GRAY);
-        header.setFont(new Font("Times New Roman", Font.BOLD, 26));
+        header.setFont(new Font("Times New Roman", Font.BOLD, 21));
 
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
@@ -227,7 +228,7 @@ public class ThongTinVe extends javax.swing.JPanel implements ActionListener {
         List<Ve> listVe = veDAO.layThongTin();
         for (Ve v : listVe) {
             Object[] rowData = {
-                v.getMaVe(), v.getTenVe(), v.getLoaiVe(), v.getNgayDi(), v.getNgayVe(), v.getMaKH(), v.getMaNV(), v.getMaCT()
+                v.getMaVe(), v.getTenVe(), v.getLoaiVe(), v.getNgayDi(), v.getNgayVe(), v.getMaKH().getMaKH(), v.getnhanVien().getMaNV(), v.getMaCT().getMaChuyenTau()
             };
             modelVe.addRow(rowData);
             }
@@ -265,15 +266,8 @@ public class ThongTinVe extends javax.swing.JPanel implements ActionListener {
 				}
 		     // Load lại bảng sau khi thêm
 		        docDuLieuVaoTable();
-		        
-		        txtMaVe.setText("");
-		        txtTenVe.setText("");
-		        cboLoaiVe.setSelectedIndex(0);
-		        spinNgayDi.setValue(new java.util.Date());
-		        spinNgayVe.setValue(new java.util.Date());
-		        txtMaKH.setText("");
-		        txtMaNV.setText("");
-		        txtMaChuyenTau.setText("");
+		        xoaRong();
+
 			}else if(o.equals(btnSua)) {
 				int SelectedRows = modelVe.getRowCount();
 				for(int i = 0; i < SelectedRows; i++) {
@@ -285,8 +279,17 @@ public class ThongTinVe extends javax.swing.JPanel implements ActionListener {
 	    			txtMaChuyenTau.setText(modelVe.getValueAt(i, 5).toString());
 				}
 			}
-		
 
+	}
+	public void xoaRong() {
+        txtMaVe.setText("");
+        txtTenVe.setText("");
+        cboLoaiVe.setSelectedIndex(0);
+        spinNgayDi.setValue(new java.util.Date());
+        spinNgayVe.setValue(new java.util.Date());
+        txtMaKH.setText("");
+        txtMaNV.setText("");
+        txtMaChuyenTau.setText("");
 	}
 
 	}
