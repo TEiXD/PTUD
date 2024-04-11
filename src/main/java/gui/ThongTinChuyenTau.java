@@ -12,7 +12,6 @@ import connectDB.*;
 import entity.*;
 import java.util.List;
 
-
 public class ThongTinChuyenTau extends JPanel implements ActionListener {
 
     private static final long serialVersionUID = 1L;
@@ -34,7 +33,7 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
     private JSpinner spinGioDi;
     private JSpinner spinGioDen;
     private TitledBorder inputPanelBorder;
-	private TauDAO tauDao;
+    private TauDAO tauDao;
 
     public ThongTinChuyenTau() {
 
@@ -84,16 +83,16 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
         inputPanel.add(spinGioDi);
 
         JLabel lblMaTau = new JLabel("Mã tàu");
-        lblMaTau.setFont(lblMaTau.getFont().deriveFont(Font.BOLD, 14)); 
+        lblMaTau.setFont(lblMaTau.getFont().deriveFont(Font.BOLD, 14));
         cboMaTau = new JComboBox<String>();
-        cboMaTau.setEditable(false);	
-		ArrayList<Tau> listTau = tauDao.layThongTin() ;
-		for (Tau tau : listTau) {
-			cboMaTau.addItem(tau.getMaTau());
-		}
+        cboMaTau.setEditable(false);
+        ArrayList<Tau> listTau = tauDao.layThongTin();
+        for (Tau tau : listTau) {
+            cboMaTau.addItem(tau.getMaTau());
+        }
         inputPanel.add(lblMaTau);
         inputPanel.add(cboMaTau);
-        
+
         JLabel lblGaDen = new JLabel("Ga đến");
         lblGaDen.setFont(lblGaDen.getFont().deriveFont(Font.BOLD, 14));
         inputPanel.add(lblGaDen);
@@ -122,17 +121,17 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
         modelCT = new DefaultTableModel(columns, 0);
         table = new JTable(modelCT);
         table.addMouseListener(new MouseAdapter() {
-        	@Override
-        	public void mouseClicked(MouseEvent e) {
-        	    int SelectedRows = table.getSelectedRow(); // Get the selected row index
-        	    if (SelectedRows != -1) { // Check if a row is selected
-        	        txtMaChuyenTau.setText(modelCT.getValueAt(SelectedRows, 0).toString());
-        	        cboMaTau.setSelectedItem(modelCT.getValueAt(SelectedRows, 1).toString());
-        	        cboGaDi.setSelectedItem(modelCT.getValueAt(SelectedRows, 2));
-        	        cboGaDen.setSelectedItem(modelCT.getValueAt(SelectedRows, 3));
-        	        
-        	    }
-        	}
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int SelectedRows = table.getSelectedRow(); // Get the selected row index
+                if (SelectedRows != -1) { // Check if a row is selected
+                    txtMaChuyenTau.setText(modelCT.getValueAt(SelectedRows, 0).toString());
+                    cboMaTau.setSelectedItem(modelCT.getValueAt(SelectedRows, 1).toString());
+                    cboGaDi.setSelectedItem(modelCT.getValueAt(SelectedRows, 2));
+                    cboGaDen.setSelectedItem(modelCT.getValueAt(SelectedRows, 3));
+
+                }
+            }
 
         });
         table.setBorder(new EmptyBorder(100, 10, 100, 10));
@@ -203,64 +202,76 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
             // Tạo một đối tượng ChuyenTau mới
             ChuyenTau chuyenTau = new ChuyenTau(maCT, tau, gaDi, gaDen, gioDiStr, gioDenStr);
 
-            // Thêm đối tượng ChuyenTau vào bảng để hiển thị trên giao diện
-            modelCT.addRow(new Object[]{maCT, maTau, gaDi, gaDen, gioDiStr, gioDenStr});
-
-            // Clear input fields
-            txtMaChuyenTau.setText("");
-            cboMaTau.setSelectedIndex(0);
-            cboGaDi.setSelectedIndex(0);
-            cboGaDen.setSelectedIndex(0);
-            spinGioDi.setValue(new java.util.Date());
-            spinGioDen.setValue(new java.util.Date());
             try {
                 // Thêm đối tượng ChuyenTau vào cơ sở dữ liệu
                 ctDAO.addCT(chuyenTau);
+
+                // Thêm dữ liệu vào table
+                modelCT.addRow(new Object[]{maCT, maTau, gaDi, gaDen, gioDiStr, gioDenStr});
+
+                // Clear input fields
+                txtMaChuyenTau.setText("");
+                cboMaTau.setSelectedIndex(0);
+                cboGaDi.setSelectedIndex(0);
+                cboGaDen.setSelectedIndex(0);
+                spinGioDi.setValue(new java.util.Date());
+                spinGioDen.setValue(new java.util.Date());
             } catch (Exception ex) {
                 ex.printStackTrace();
                 // Xử lý nếu có lỗi khi thêm vào cơ sở dữ liệu
                 JOptionPane.showMessageDialog(this, "Lỗi khi thêm vào cơ sở dữ liệu!");
             }
-          //============================================================
         } else if (o.equals(btnSua)) {
-            int SelectedRows = modelCT.getRowCount();
-            for (int i = 0; i < SelectedRows; i++) {
-                txtMaChuyenTau.setText(modelCT.getValueAt(i, 0).toString());
-                cboMaTau.setSelectedItem(modelCT.getValueAt(i, 1).toString());
-                cboGaDi.setSelectedItem(modelCT.getValueAt(i, 2).toString());
-                cboGaDen.setSelectedItem(modelCT.getValueAt(i, 3).toString());
-
-
-                
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow != -1) {
                 String maCT = txtMaChuyenTau.getText();
-                String loaiTau = cboMaTau.getSelectedItem().toString();
-                String gaDi = cboGaDi.getSelectedItem().toString();
-                String gaDen = cboGaDen.getSelectedItem().toString();
+                String maTau = String.valueOf(cboMaTau.getSelectedItem());
+                String gaDi = String.valueOf(cboGaDi.getSelectedItem());
+                String gaDen = String.valueOf(cboGaDen.getSelectedItem());
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 String gioDiStr = sdf.format((java.util.Date) spinGioDi.getValue());
                 String gioDenStr = sdf.format((java.util.Date) spinGioDen.getValue());
 
-                Tau tau = new Tau(loaiTau);
+                Tau tau = new Tau(maTau);
                 ChuyenTau chuyenTau = new ChuyenTau(maCT, tau, gaDi, gaDen, gioDiStr, gioDenStr);
 
                 try {
+                    // Update data in the database
                     ctDAO.updateCT(chuyenTau);
+
+                    // Update data in the table
+                    modelCT.setValueAt(maTau, selectedRow, 1);
+                    modelCT.setValueAt(gaDi, selectedRow, 2);
+                    modelCT.setValueAt(gaDen, selectedRow, 3);
+                    modelCT.setValueAt(gioDiStr, selectedRow, 4);
+                    modelCT.setValueAt(gioDenStr, selectedRow, 5);
+
+                    JOptionPane.showMessageDialog(this, "Dữ liệu đã được cập nhật thành công");
                 } catch (Exception e2) {
                     e2.printStackTrace();
-                    JOptionPane.showMessageDialog(this, "Lỗi khi sửa dữ liệu!");
+                    JOptionPane.showMessageDialog(this, "Lỗi khi cập nhật dữ liệu!");
                 }
+            } else {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn một hàng để cập nhật!");
             }
-            JOptionPane.showMessageDialog(this, "Dữ liệu đã được sửa thành công");
         } else if (o.equals(btnXoa)) {
-            int SelectedRows = table.getSelectedRow();
-            if (SelectedRows != -1) {
-                txtMaChuyenTau.setText(modelCT.getValueAt(SelectedRows, 0).toString());
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow != -1) {
                 String maCT = txtMaChuyenTau.getText();
-                modelCT.removeRow(SelectedRows);
-                ctDAO.removeCT(maCT);
+                try {
+                    // Xóa đối tượng ChuyenTau khỏi cơ sở dữ liệu
+                    ctDAO.removeCT(maCT);
+
+                    // Xóa hàng khỏi table
+                    modelCT.removeRow(selectedRow);
+                } catch (Exception e2) {
+                    e2.printStackTrace();
+                    JOptionPane.showMessageDialog(this, "Lỗi khi xóa dữ liệu!");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn một hàng để xóa!");
             }
         }
-
     }
 
     // Method to fetch data from the database and populate the table
@@ -270,5 +281,4 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
             modelCT.addRow(new Object[]{ct.getMaChuyenTau(), ct.getMaTau().getMaTau(), ct.getGaDi(), ct.getGaDen(), ct.getGioDi(), ct.getGioDen()});
         }
     }
-
 }

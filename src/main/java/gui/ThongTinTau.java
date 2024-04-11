@@ -8,7 +8,6 @@ import java.awt.event.*;
 import DAO.*;
 import connectDB.*;
 import entity.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,11 +25,11 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
     private JPanel pNorth;
     private JLabel lblTieuDe;
     private JComboBox<String> cboLoaiTau;
-    private JTextField txtMaNhaGa;
+    private JComboBox<String> cboMaNhaGa; // Thêm combobox cho mã nhà ga
     private TitledBorder inputPanelBorder;
     private JButton btnTim;
-	private JLabel lblNhap;
-	private JTextField txtNhap;
+    private JLabel lblNhap;
+    private JTextField txtNhap;
 
     public ThongTinTau() {
         ConnectDB.getInstance().connect();
@@ -70,8 +69,8 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
         JLabel lblMaNhaGa = new JLabel("Mã nhà ga:");
         lblMaNhaGa.setFont(lblMaNhaGa.getFont().deriveFont(Font.BOLD, 14));
         inputPanel.add(lblMaNhaGa);
-        txtMaNhaGa = new JTextField(); // Change from JComboBox to JTextField
-        inputPanel.add(txtMaNhaGa);
+        cboMaNhaGa = new JComboBox<>(); // Change from JTextField to JComboBox
+        inputPanel.add(cboMaNhaGa);
 
         inputPanelBorder = BorderFactory.createTitledBorder("Thông Tin Tàu");
         inputPanelBorder.setTitleFont(new Font("Times New Roman", Font.ITALIC, 18));
@@ -90,7 +89,7 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
                 int selectedRow = table.getSelectedRow();
                 if (selectedRow != -1) {
                     txtMaTau.setText(modelTau.getValueAt(selectedRow, 0).toString());
-                    txtMaNhaGa.setText(modelTau.getValueAt(selectedRow, 1).toString());
+                    cboMaNhaGa.setSelectedItem(modelTau.getValueAt(selectedRow, 1).toString());
                     cboLoaiTau.setSelectedItem(modelTau.getValueAt(selectedRow, 2).toString());
                 }
             }
@@ -158,7 +157,7 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
 
         if (o.equals(btnThem)) {
             String maTau = txtMaTau.getText().trim();
-            String maNhaGa = txtMaNhaGa.getText().trim();
+            String maNhaGa = cboMaNhaGa.getSelectedItem().toString().trim(); // Get selected item from combobox
             String loaiTau = cboLoaiTau.getSelectedItem().toString().trim();
 
             if (maTau.isEmpty() || loaiTau.isEmpty() || maNhaGa.isEmpty()) {
@@ -173,7 +172,7 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
                 tauDAO.addTau(tau);
                 modelTau.addRow(new Object[]{tau.getMaTau(), tau.getNhaGa().getMaNhaGa(), tau.getLoaiTau()});
                 txtMaTau.setText("");
-                txtMaNhaGa.setText("");
+                cboMaNhaGa.setSelectedIndex(0); // Reset combobox selection
                 cboLoaiTau.setSelectedIndex(0);
             } catch (Exception e2) {
                 e2.printStackTrace();
@@ -188,7 +187,7 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
             }
 
             String maTau = txtMaTau.getText().trim();
-            String maNhaGa = txtMaNhaGa.getText().trim();
+            String maNhaGa = cboMaNhaGa.getSelectedItem().toString().trim(); // Get selected item from combobox
             String loaiTau = cboLoaiTau.getSelectedItem().toString().trim();
 
             if (maTau.isEmpty() || loaiTau.isEmpty() || maNhaGa.isEmpty()) {
@@ -228,7 +227,7 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
                 JOptionPane.showMessageDialog(this, "Lỗi khi xóa dữ liệu!");
             }
         } else if (o.equals(btnTim)) {
-        	String maTau = txtNhap.getText().trim();
+            String maTau = txtNhap.getText().trim();
             List<Integer> timMT = new ArrayList<>();
             for (int i = 0; i < modelTau.getRowCount(); i++) {
                 if (modelTau.getValueAt(i, 0).toString().equals(maTau)) {
@@ -250,6 +249,7 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
     private void docDuLieuDBVaoTable() {
         List<Tau> listTau = tauDAO.layThongTin();
         for (Tau tau : listTau) {
+            cboMaNhaGa.addItem(tau.getNhaGa().getMaNhaGa());
             modelTau.addRow(new Object[]{tau.getMaTau(), tau.getNhaGa().getMaNhaGa(), tau.getLoaiTau()});
         }
     }
@@ -259,7 +259,7 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) {
             txtMaTau.setText(modelTau.getValueAt(selectedRow, 0).toString());
-            txtMaNhaGa.setText(modelTau.getValueAt(selectedRow, 1).toString());
+            cboMaNhaGa.setSelectedItem(modelTau.getValueAt(selectedRow, 1).toString());
             cboLoaiTau.setSelectedItem(modelTau.getValueAt(selectedRow, 2).toString());
         }
     }

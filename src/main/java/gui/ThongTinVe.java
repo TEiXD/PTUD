@@ -4,12 +4,8 @@
  */
 package gui;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -21,33 +17,24 @@ import DAO.VeDAO;
 import connectDB.ConnectDB;
 import entity.ChuyenTau;
 import entity.KhachHang;
-import entity.NhaGa;
 import entity.NhanVien;
 import entity.Ve;
 
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.GroupLayout;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import java.awt.Panel;
 import javax.swing.JLabel;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.GridBagLayout;
-import net.miginfocom.swing.MigLayout;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
-import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JSpinner;
@@ -58,7 +45,7 @@ import java.awt.event.MouseEvent;
  *
  * @author Tei
  */
-public class ThongTinVe extends javax.swing.JPanel {
+public class ThongTinVe extends javax.swing.JPanel implements ActionListener {
 	private final JPanel contentPanel = new JPanel();
 	private JTable table;
 	private JTextField txtMaNV;
@@ -83,6 +70,9 @@ public class ThongTinVe extends javax.swing.JPanel {
      //Creates new form NewJPanel
     public ThongTinVe() {
     	
+        ConnectDB.getInstance().connect();
+        veDAO = new VeDAO();
+        
     	setLayout(new BorderLayout());
 
         contentPanel.setBorder(new EmptyBorder(30, 20, 0, 20));
@@ -233,7 +223,7 @@ public class ThongTinVe extends javax.swing.JPanel {
     }
     
     private void docDuLieuVaoTable() {
-        modelVe.setRowCount(0); // Clear table
+       // modelVe.setRowCount(0);
         List<Ve> listVe = veDAO.layThongTin();
         for (Ve v : listVe) {
             Object[] rowData = {
@@ -243,55 +233,60 @@ public class ThongTinVe extends javax.swing.JPanel {
             }
         }
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
-		Object o = e.getSource();
-		if(o.equals(btnThem)) {
-			String maVe = txtMaVe.getText();
-			String tenVe = txtTenVe.getText();
-			String loaiVe = cboLoaiVe.getSelectedItem().toString();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String ngayDistr = sdf.format((java.util.Date) spinNgayDi.getValue());
-            String ngayVestr = sdf.format((java.util.Date) spinNgayVe.getValue());
-			String maKH = txtMaKH.getText(); 
-			String maNV =  txtMaNV.getText();
-			String maCT = txtMaChuyenTau.getText();
-			
-			KhachHang kh = new KhachHang(maKH);
-			NhanVien nv = new NhanVien(maNV);
-			ChuyenTau ct = new ChuyenTau(maCT);
-			
-	        // Tạo đối tượng NhanVien từ thông tin nhập liệu
-	        Ve v = new Ve(maVe, tenVe, loaiVe, ngayDistr, ngayVestr, kh, nv, ct);
-	        modelVe.addRow(new Object[]{maVe,tenVe,loaiVe,ngayDistr,ngayVestr,maKH,maNV,maCT});
-	        // Thêm nhân viên vào cơ sở dữ liệu
-	        try {
-	        	veDAO.themVe(v);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-                // Xử lý nếu có lỗi khi thêm vào cơ sở dữ liệu
-				JOptionPane.showMessageDialog(this, "Lỗi khi thêm vào cơ sở dữ liệu!");
+		// TODO Auto-generated method stub
+			Object o = e.getSource();
+			if(o.equals(btnThem)) {
+				String maVe = txtMaVe.getText();
+				String tenVe = txtTenVe.getText();
+				String loaiVe = cboLoaiVe.getSelectedItem().toString();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	            String ngayDistr = sdf.format((java.util.Date) spinNgayDi.getValue());
+	            String ngayVestr = sdf.format((java.util.Date) spinNgayVe.getValue());
+				String maKH = txtMaKH.getText(); 
+				String maNV =  txtMaNV.getText();
+				String maCT = txtMaChuyenTau.getText();
+				
+				KhachHang kh = new KhachHang(maKH);
+				NhanVien nv = new NhanVien(maNV);
+				ChuyenTau ct = new ChuyenTau(maCT);
+				
+		        // Tạo đối tượng NhanVien từ thông tin nhập liệu
+		        Ve v = new Ve(maVe, tenVe, loaiVe, ngayDistr, ngayVestr, kh, nv, ct);
+		        modelVe.addRow(new Object[]{maVe,tenVe,loaiVe,ngayDistr,ngayVestr,maKH,maNV,maCT});
+		        // Thêm nhân viên vào cơ sở dữ liệu
+		        try {
+		        	veDAO.themVe(v);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+	                // Xử lý nếu có lỗi khi thêm vào cơ sở dữ liệu
+					JOptionPane.showMessageDialog(this, "Lỗi khi thêm vào cơ sở dữ liệu!");
+				}
+		     // Load lại bảng sau khi thêm
+		        docDuLieuVaoTable();
+		        
+		        txtMaVe.setText("");
+		        txtTenVe.setText("");
+		        cboLoaiVe.setSelectedIndex(0);
+		        spinNgayDi.setValue(new java.util.Date());
+		        spinNgayVe.setValue(new java.util.Date());
+		        txtMaKH.setText("");
+		        txtMaNV.setText("");
+		        txtMaChuyenTau.setText("");
+			}else if(o.equals(btnSua)) {
+				int SelectedRows = modelVe.getRowCount();
+				for(int i = 0; i < SelectedRows; i++) {
+					txtMaVe.setText(modelVe.getValueAt(i, 0).toString());
+	    			txtTenVe.setText(modelVe.getValueAt(i, 1).toString());
+	    			cboLoaiVe.setSelectedItem(modelVe.getValueAt(i, 2));
+	    			txtMaKH.setText(modelVe.getValueAt(i, 3).toString());
+	    			txtMaNV.setText(modelVe.getValueAt(i, 4).toString());
+	    			txtMaChuyenTau.setText(modelVe.getValueAt(i, 5).toString());
+				}
 			}
-	     // Load lại bảng sau khi thêm
-	        docDuLieuVaoTable();
-	        
-	        txtMaVe.setText("");
-	        txtTenVe.setText("");
-	        cboLoaiVe.setSelectedIndex(0);
-	        spinNgayDi.setValue(new java.util.Date());
-	        spinNgayVe.setValue(new java.util.Date());
-	        txtMaKH.setText("");
-	        txtMaNV.setText("");
-	        txtMaChuyenTau.setText("");
-		}else if(o.equals(btnSua)) {
-			int SelectedRows = modelVe.getRowCount();
-			for(int i = 0; i < SelectedRows; i++) {
-				txtMaVe.setText(modelVe.getValueAt(i, 0).toString());
-    			txtTenVe.setText(modelVe.getValueAt(i, 1).toString());
-    			cboLoaiVe.setSelectedItem(modelVe.getValueAt(i, 2));
-    			txtMaKH.setText(modelVe.getValueAt(i, 3).toString());
-    			txtMaNV.setText(modelVe.getValueAt(i, 4).toString());
-    			txtMaChuyenTau.setText(modelVe.getValueAt(i, 5).toString());
-			}
-		}
+		
+
 	}
-}
+
+	}
