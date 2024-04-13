@@ -224,7 +224,8 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
             if (trungMa) {
                 JOptionPane.showMessageDialog(this, "Mã chuyến tàu đã tồn tại. Vui lòng chọn mã tàu khác.", "Lỗi", JOptionPane.ERROR_MESSAGE);
             } else {
-                if(ctDAO.addCT(chuyenTau)) {
+                if(trungMa = true) {
+                	ctDAO.addCT(chuyenTau);
                     modelCT.addRow(new Object[]{chuyenTau.getMaChuyenTau(), chuyenTau.getMaTau().getMaTau(), chuyenTau.getGaDi(), chuyenTau.getGaDen(), chuyenTau.getGioDi(), chuyenTau.getGioDen()});
                     JOptionPane.showMessageDialog(this, "Thêm thành công");
                     xoaRong();
@@ -232,7 +233,6 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
                     JOptionPane.showMessageDialog(null, "Lỗi khi thêm vào cơ sở dữ liệu!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
             }    
-            xoaRong();
             
         } else if (o.equals(btnSua)) {
             int selectedRow = table.getSelectedRow();

@@ -16,27 +16,6 @@ import entity.ChuyenTau;
 import entity.Tau;
 
 public class ChuyenTauDAO {
-    
-    public void layComboBox(JComboBox<String> cboMaTau) {
-        try {
-            Connection conn = ConnectDB.getConnection();
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT MaTau FROM ChuyenTau");
-
-            // Remove all existing items
-            cboMaTau.removeAllItems();
-
-            // Add new items
-            while (rs.next()) {
-                cboMaTau.addItem(rs.getString("MaTau"));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    
-    
     public ArrayList<ChuyenTau> layThongTin(){
         ArrayList<ChuyenTau> dsCT = new ArrayList<ChuyenTau>();
         try {

@@ -3,43 +3,43 @@ package entity;
 import java.util.Objects;
 
 public class Tau {
-    private String maTau;
-    private NhaGa nhaGa;
-    private String loaiTau;
+    private String MaTau;
+    private NhaGa NhaGa;
+    private String LoaiTau;
 
-    public Tau(String maTau, NhaGa nhaGa, String loaiTau) {
-        this.maTau = maTau;
-        this.nhaGa = nhaGa;
-        this.loaiTau = loaiTau;
+    public Tau(String MaTau, NhaGa NhaGa, String LoaiTau) {
+        this.MaTau = MaTau;
+        this.NhaGa = NhaGa;
+        this.LoaiTau = LoaiTau;
     }
 
 
 	public Tau(String maTau) {
-		this.maTau = maTau;
+		this.MaTau = maTau;
 	}
     
 	public String getMaTau() {
-		return maTau;
+		return MaTau;
 	}
 
-	public void setMaTau(String maTau) {
-		this.maTau = maTau;
+	public void setMaTau(String MaTau) {
+		this.MaTau = MaTau;
 	}
 
 	public NhaGa getNhaGa() {
-		return nhaGa;
+		return NhaGa;
 	}
 
-	public void setNhaGa(NhaGa nhaGa) {
-		this.nhaGa = nhaGa;
+	public void setNhaGa(NhaGa NhaGa) {
+		this.NhaGa = NhaGa;
 	}
 
 	public String getLoaiTau() {
-		return loaiTau;
+		return LoaiTau;
 	}
 
-	public void setLoaiTau(String loaiTau) {
-		this.loaiTau = loaiTau;
+	public void setLoaiTau(String LoaiTau) {
+		this.LoaiTau = LoaiTau;
 	}
 	
 	@Override
@@ -51,12 +51,12 @@ public class Tau {
         if (getClass() != obj.getClass())
             return false;
         Tau other = (Tau) obj;
-        return Objects.equals(maTau, other.maTau);
+        return Objects.equals(MaTau, other.MaTau);
     }
 
 	@Override
 	public String toString() {
-		return "Tau [maTau=" + maTau + ", nhaGa=" + nhaGa + ", loaiTau=" + loaiTau + "]";
+		return "Tau [maTau=" + MaTau + ", nhaGa=" + NhaGa + ", loaiTau=" + LoaiTau + "]";
 	}
 
 	
