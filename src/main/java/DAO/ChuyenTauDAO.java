@@ -66,6 +66,7 @@ public class ChuyenTauDAO {
         return dsCT;
     }
     
+    //thêm chuyến tàu
     public boolean addCT(ChuyenTau chuyenTau) {
         ConnectDB.getInstance();
         Connection conn = ConnectDB.getConnection();

@@ -12,7 +12,7 @@ import connectDB.*;
 import entity.*;
 import java.util.List;
 
-public class ThongTinChuyenTau extends JPanel implements ActionListener {
+public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseListener {
 
     private static final long serialVersionUID = 1L;
     private final JPanel contentPanel = new JPanel();
@@ -204,30 +204,36 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
             String gioDiStr = sdf.format((java.util.Date) spinGioDi.getValue());
             String gioDenStr = sdf.format((java.util.Date) spinGioDen.getValue());
 
+            if(maCT.isEmpty() || maTau.isEmpty() || gaDi.isEmpty() || gaDen.isEmpty() || gioDiStr.isEmpty() || gioDenStr.isEmpty()) {
+            	JOptionPane.showInternalMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            	return;
+            }
             Tau tau = new Tau(maTau);
 
             // Tạo một đối tượng ChuyenTau mới
             ChuyenTau chuyenTau = new ChuyenTau(maCT, tau, gaDi, gaDen, gioDiStr, gioDenStr);
 
-            try {
-                // Thêm đối tượng ChuyenTau vào cơ sở dữ liệu
-                ctDAO.addCT(chuyenTau);
-
-                // Thêm dữ liệu vào table
-                modelCT.addRow(new Object[]{maCT, maTau, gaDi, gaDen, gioDiStr, gioDenStr});
-
-                // Clear input fields
-                txtMaChuyenTau.setText("");
-                cboMaTau.setSelectedIndex(0);
-                cboGaDi.setSelectedIndex(0);
-                cboGaDen.setSelectedIndex(0);
-                spinGioDi.setValue(new java.util.Date());
-                spinGioDen.setValue(new java.util.Date());
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                // Xử lý nếu có lỗi khi thêm vào cơ sở dữ liệu
-                JOptionPane.showMessageDialog(this, "Lỗi khi thêm vào cơ sở dữ liệu!");
+            boolean trungMa = false;
+            for (int i = 0; i < modelCT.getRowCount(); i++) {
+                if (maCT.equals(modelCT.getValueAt(i, 0))) {
+                    trungMa = true;
+                    break;
+                }
             }
+
+            if (trungMa) {
+                JOptionPane.showMessageDialog(this, "Mã chuyến tàu đã tồn tại. Vui lòng chọn mã tàu khác.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            } else {
+                if(ctDAO.addCT(chuyenTau)) {
+                    modelCT.addRow(new Object[]{chuyenTau.getMaChuyenTau(), chuyenTau.getMaTau().getMaTau(), chuyenTau.getGaDi(), chuyenTau.getGaDen(), chuyenTau.getGioDi(), chuyenTau.getGioDen()});
+                    JOptionPane.showMessageDialog(this, "Thêm thành công");
+                    xoaRong();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Lỗi khi thêm vào cơ sở dữ liệu!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
+            }    
+            xoaRong();
+            
         } else if (o.equals(btnSua)) {
             int selectedRow = table.getSelectedRow();
             if (selectedRow != -1) {
@@ -261,6 +267,8 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
             } else {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn một hàng để cập nhật!");
             }
+            xoaRong();
+            
         } else if (o.equals(btnXoa)) {
             int selectedRow = table.getSelectedRow();
             if (selectedRow != -1) {
@@ -288,4 +296,62 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener {
             modelCT.addRow(new Object[]{ct.getMaChuyenTau(), ct.getMaTau().getMaTau(), ct.getGaDi(), ct.getGaDen(), ct.getGioDi(), ct.getGioDen()});
         }
     }
+    
+    public void xoaRong() {
+    	txtMaChuyenTau.setText("");
+        cboMaTau.setSelectedIndex(0);
+        cboGaDi.setSelectedIndex(0);
+        cboGaDen.setSelectedIndex(0);
+        spinGioDi.setValue(new java.util.Date());
+        spinGioDen.setValue(new java.util.Date());
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		int selectedRow = table.getSelectedRow();
+		if(selectedRow != -1) {
+			txtMaChuyenTau.setText(modelCT.getValueAt(selectedRow, 0).toString());
+			cboMaTau.setSelectedItem(modelCT.getValueAt(selectedRow, 1).toString());
+			cboGaDi.setSelectedItem(modelCT.getValueAt(selectedRow, 2).toString());
+			cboGaDen.setSelectedItem(modelCT.getValueAt(selectedRow, 3).toString());
+			spinGioDi.setValue(parseDate(modelCT.getValueAt(selectedRow, 4).toString()));
+			spinGioDen.setValue(parseDate(modelCT.getValueAt(selectedRow, 5).toString()));
+		}
+		
+	}
+	
+	private Date parseDate(String dateStr) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            return sdf.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 }

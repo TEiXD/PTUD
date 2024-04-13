@@ -41,41 +41,25 @@ public class TauDAO {
     
     // Thêm tàu
     public boolean addTau(Tau tau) {
-        Connection conn = null;
+    	ConnectDB.getInstance();
+        Connection conn = ConnectDB.getConnection();
         PreparedStatement st = null;
-        ResultSet rs = null;
+        String SQL = "INSERT INTO Tau (MaTau, MaNhaGa, LoaiTau) VALUES (?, ?, ?)";
         int n = 0;
         try {
-            conn = ConnectDB.getInstance().connect();
-            String SQL = "INSERT INTO Tau (MaTau, MaNhaGa, LoaiTau) VALUES (?, ?, ?)";
-            // Kiểm tra xem MaNhaGa đã tồn tại trong bảng NhaGa hay không
-            if (kiemTraMaNhaGaTonTai(conn, tau.getNhaGa().getMaNhaGa())) {
-                st = conn.prepareStatement(SQL);
-                st.setString(1, tau.getMaTau().trim());
-                st.setString(2, tau.getNhaGa().getMaNhaGa().trim());
-                st.setString(3, tau.getLoaiTau().trim());
-                n = st.executeUpdate();
-            } else {
-                System.out.println("MaNhaGa không tồn tại trong bảng NhaGa.");
-            }
+        	st = conn.prepareStatement(SQL);
+        	st.setString(1, tau.getMaTau().trim());
+        	st.setString(2, tau.getNhaGa().getMaNhaGa().trim());
+        	st.setString(3, tau.getLoaiTau().trim());
+            
+        	n = st.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         } 
-        return n > 0;
+        return n>0;
     }
 
-    // Kiểm tra xem mã nhà ga đã tồn tại trong bảng NhaGa hay chưa
-    private boolean kiemTraMaNhaGaTonTai(Connection conn, String maNhaGa) throws SQLException {
-        String SQL = "SELECT COUNT(*) FROM NhaGa WHERE MaNhaGa = ?";
-        PreparedStatement stmt = conn.prepareStatement(SQL);
-        stmt.setString(1, maNhaGa);
-        ResultSet rs = stmt.executeQuery();
-        rs.next();
-        int count = rs.getInt(1);
-        return count > 0;
-    }
-
-
+    //Xóa tàu
     public boolean xoaTau(String maTau) {
         Connection conn = null;
         PreparedStatement st = null;
@@ -113,17 +97,6 @@ public class TauDAO {
             n = st.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (st != null) {
-                    st.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
         return n > 0;
     }
@@ -148,4 +121,6 @@ public class TauDAO {
         } 
         return n > 0;
     }
+    
+    
 }

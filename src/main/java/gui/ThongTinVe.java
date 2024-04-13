@@ -1,11 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package gui;
 
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -13,6 +10,7 @@ import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
+import DAO.ChuyenTauDAO;
 import DAO.VeDAO;
 import connectDB.ConnectDB;
 import entity.ChuyenTau;
@@ -40,13 +38,9 @@ import java.awt.event.ActionListener;
 import javax.swing.JSpinner;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-
-/**
- *
- * @author Tei
- */
-public class ThongTinVe extends javax.swing.JPanel implements ActionListener {
+public class ThongTinVe extends javax.swing.JPanel implements ActionListener, MouseListener {
 	private final JPanel contentPanel = new JPanel();
 	private JTable table;
 	private JTextField txtMaNV;
@@ -63,16 +57,18 @@ public class ThongTinVe extends javax.swing.JPanel implements ActionListener {
 	private JTextField txtTenVe;
 	private JComboBox<String> cboLoaiVe;
 	private JTextField txtMaKH; 
-	private JTextField txtMaChuyenTau; 
 	private JButton btnReset; 
 	private JSpinner spinNgayVe;
 	private JSpinner spinNgayDi;
+	private JComboBox<String> cboMaChuyenTau;
+	private ChuyenTauDAO ctDAO;
 	
      //Creates new form NewJPanel
     public ThongTinVe() {
     	
         ConnectDB.getInstance().connect();
         veDAO = new VeDAO();
+        ctDAO = new ChuyenTauDAO();
         
     	setLayout(new BorderLayout());
 
@@ -151,9 +147,13 @@ public class ThongTinVe extends javax.swing.JPanel implements ActionListener {
         lblMaChuyenTau.setFont(lblMaChuyenTau.getFont().deriveFont(Font.BOLD, 14));
         inputPanel.add(lblMaChuyenTau);
 
-        txtMaChuyenTau = new JTextField();
-        txtMaChuyenTau.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        inputPanel.add(txtMaChuyenTau);
+        cboMaChuyenTau = new JComboBox<String>();
+        cboMaChuyenTau.setEditable(false);
+        ArrayList<ChuyenTau> listCT = ctDAO.layThongTin();
+        for(ChuyenTau ct : listCT) {
+        	cboMaChuyenTau.addItem(ct.getMaChuyenTau());
+        }
+        inputPanel.add(cboMaChuyenTau);
 
         inputPanelBorder = BorderFactory.createTitledBorder("Thông Tin Vé");
         inputPanelBorder.setTitleFont(new Font("Times New Roman", Font.ITALIC, 18));
@@ -175,9 +175,9 @@ public class ThongTinVe extends javax.swing.JPanel implements ActionListener {
         			txtMaVe.setText(modelVe.getValueAt(SelectedRows, 0).toString());
         			txtTenVe.setText(modelVe.getValueAt(SelectedRows, 1).toString());
         			cboLoaiVe.setSelectedItem(modelVe.getValueAt(SelectedRows, 2));
-        			txtMaKH.setText(modelVe.getValueAt(SelectedRows, 5).toString());
-        			txtMaNV.setText(modelVe.getValueAt(SelectedRows, 6).toString());
-        			txtMaChuyenTau.setText(modelVe.getValueAt(SelectedRows, 7).toString());
+        			txtMaKH.setText(modelVe.getValueAt(SelectedRows, 3).toString());
+        			txtMaNV.setText(modelVe.getValueAt(SelectedRows, 4).toString());
+        			cboMaChuyenTau.setSelectedItem(modelVe.getValueAt(SelectedRows, 5));
         		}
         	}
         });
@@ -248,7 +248,7 @@ public class ThongTinVe extends javax.swing.JPanel implements ActionListener {
 	            String ngayVestr = sdf.format((java.util.Date) spinNgayVe.getValue());
 				String maKH = txtMaKH.getText(); 
 				String maNV =  txtMaNV.getText();
-				String maCT = txtMaChuyenTau.getText();
+				String maCT = String.valueOf(cboMaChuyenTau.getSelectedItem());
 				
 				KhachHang kh = new KhachHang(maKH);
 				NhanVien nv = new NhanVien(maNV);
@@ -277,7 +277,7 @@ public class ThongTinVe extends javax.swing.JPanel implements ActionListener {
 	    			cboLoaiVe.setSelectedItem(modelVe.getValueAt(i, 2));
 	    			txtMaKH.setText(modelVe.getValueAt(i, 3).toString());
 	    			txtMaNV.setText(modelVe.getValueAt(i, 4).toString());
-	    			txtMaChuyenTau.setText(modelVe.getValueAt(i, 5).toString());
+	    			cboMaChuyenTau.setSelectedItem(modelVe.getValueAt(i, 5));;
 				}
 			}
 
@@ -290,7 +290,37 @@ public class ThongTinVe extends javax.swing.JPanel implements ActionListener {
         spinNgayVe.setValue(new java.util.Date());
         txtMaKH.setText("");
         txtMaNV.setText("");
-        txtMaChuyenTau.setText("");
+        cboMaChuyenTau.setSelectedIndex(0);;
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	}
