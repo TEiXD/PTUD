@@ -58,7 +58,7 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
         contentPanel.add(inputPanel);
 
         // Add input fields to the panel
-        JLabel lblMaChuyenTau = new JLabel("Mã chuyến tàu");
+        JLabel lblMaChuyenTau = new JLabel("Mã chuyến tàu:");
         lblMaChuyenTau.setFont(lblMaChuyenTau.getFont().deriveFont(Font.BOLD, 14));
         inputPanel.add(lblMaChuyenTau);
 
@@ -66,7 +66,7 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
         inputPanel.add(txtMaChuyenTau);
         txtMaChuyenTau.setColumns(10);
 
-        JLabel lblGaDi = new JLabel("Ga đi");
+        JLabel lblGaDi = new JLabel("Ga đi:");
         lblGaDi.setFont(lblGaDi.getFont().deriveFont(Font.BOLD, 14));
         inputPanel.add(lblGaDi);
         cboGaDi = new JComboBox<String>();
@@ -79,14 +79,14 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
         dateModelGioDi = new SpinnerDateModel();
         dateModelGioDi.setCalendarField(Calendar.MINUTE);
 
-        JLabel lblGioDi = new JLabel("Giờ đi");
+        JLabel lblGioDi = new JLabel("Thời gian đi:");
         lblGioDi.setFont(lblGioDi.getFont().deriveFont(Font.BOLD, 14));
         inputPanel.add(lblGioDi);
         spinGioDi = new JSpinner(dateModelGioDi);
         spinGioDi.setEditor(new JSpinner.DateEditor(spinGioDi, "yyyy-MM-dd HH:mm:ss"));
         inputPanel.add(spinGioDi);
 
-        JLabel lblMaTau = new JLabel("Mã tàu");
+        JLabel lblMaTau = new JLabel("Mã tàu:");
         lblMaTau.setFont(lblMaTau.getFont().deriveFont(Font.BOLD, 14));
         cboMaTau = new JComboBox<String>();
         cboMaTau.setEditable(false);
@@ -97,7 +97,7 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
         inputPanel.add(lblMaTau);
         inputPanel.add(cboMaTau);
 
-        JLabel lblGaDen = new JLabel("Ga đến");
+        JLabel lblGaDen = new JLabel("Ga đến:");
         lblGaDen.setFont(lblGaDen.getFont().deriveFont(Font.BOLD, 14));
         inputPanel.add(lblGaDen);
         cboGaDen = new JComboBox<String>();
@@ -106,7 +106,7 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
         }
         inputPanel.add(cboGaDen);
 
-        JLabel lblGioDen = new JLabel("Giờ đến");
+        JLabel lblGioDen = new JLabel("Thời gian đến:");
         lblGioDen.setFont(lblGioDen.getFont().deriveFont(Font.BOLD, 14));
         inputPanel.add(lblGioDen);
         dateModelGioDen = new SpinnerDateModel();
@@ -123,7 +123,7 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
 
         // Table
         String[] columns = {
-                "Mã chuyến tàu", "Mã tàu", "Ga đi", "Ga đến", "Giờ đi", "Giờ đến"
+                "Mã chuyến tàu", "Mã tàu", "Ga đi", "Ga đến", "Thời gian đi", "Thời gian đến"
         };
         modelCT = new DefaultTableModel(columns, 0);
         table = new JTable(modelCT);
