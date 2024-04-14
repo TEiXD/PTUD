@@ -208,6 +208,13 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
             	JOptionPane.showInternalMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             	return;
             }
+            
+            // Kiểm tra ga đi và ga đến không được trùng nhau
+            if (gaDi.equals(gaDen)) {
+                JOptionPane.showMessageDialog(this, "Ga đi và ga đến không được trùng nhau! Vui lòng chọn lại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
             Tau tau = new Tau(maTau);
 
             // Tạo một đối tượng ChuyenTau mới
@@ -244,7 +251,13 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 String gioDiStr = sdf.format((java.util.Date) spinGioDi.getValue());
                 String gioDenStr = sdf.format((java.util.Date) spinGioDen.getValue());
-
+                
+                // Kiểm tra ga đi và ga đến không được trùng nhau
+                if (gaDi.equals(gaDen)) {
+                    JOptionPane.showMessageDialog(this, "Ga đi và ga đến không được trùng nhau! Vui lòng chọn lại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
                 Tau tau = new Tau(maTau);
                 ChuyenTau chuyenTau = new ChuyenTau(maCT, tau, gaDi, gaDen, gioDiStr, gioDenStr);
 
