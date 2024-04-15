@@ -25,6 +25,7 @@ public class Menu extends JFrame {
     private JMenuItem ThongTInVe;
     private JMenu Tau;
     private JMenuItem ThongTinTAu;
+    private JMenuItem TimKiemTau;
     private JMenu ChuyenTau;
     private JMenuItem ThongTInChuyenTau;
     private JMenu Tk;
@@ -50,6 +51,7 @@ public class Menu extends JFrame {
         ThongTInVe = new JMenuItem();
         Tau = new JMenu();
         ThongTinTAu = new JMenuItem();
+        TimKiemTau = new JMenuItem(); // Khởi tạo JMenuItem TimKiemTau
         ChuyenTau = new JMenu();
         ThongTInChuyenTau = new JMenuItem();
         Tk = new JMenu();
@@ -114,7 +116,6 @@ public class Menu extends JFrame {
                 try {
 					ThongTinNVActionPerformed(evt);
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
             }
@@ -155,6 +156,15 @@ public class Menu extends JFrame {
             }
         });
         Tau.add(ThongTinTAu);
+
+        TimKiemTau.setIcon(new ImageIcon(getClass().getResource("/images/magnifier.png")));
+        TimKiemTau.setText("Tìm kiếm tàu");
+        TimKiemTau.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                timKiemTauActionPerformed(evt);
+            }
+        });
+        Tau.add(TimKiemTau);
 
         jMenuBar1.add(Tau);
 
@@ -313,7 +323,18 @@ public class Menu extends JFrame {
 
     private void timNVMouseClicked(MouseEvent evt) {//GEN-FIRST:event_timNVMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_timNVMouseClicked
+    }
+
+    private void timKiemTauActionPerformed(ActionEvent evt) {
+        panelChucNang.removeAll();
+        panelChucNang.repaint();
+        panelChucNang.revalidate();
+        TimKiemTau timKiemTau = new TimKiemTau();
+        panelChucNang.add(timKiemTau);
+        timKiemTau.setVisible(true);
+        panelChucNang.repaint();
+        panelChucNang.revalidate();
+    }
 
     public static void main(String args[]) {
         SwingUtilities.invokeLater(new Runnable() {

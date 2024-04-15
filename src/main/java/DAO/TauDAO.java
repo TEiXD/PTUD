@@ -42,6 +42,25 @@ public class TauDAO {
         return dsT;
     }
     
+    // Lấy danh sách mã nhà ga
+    public List<String> layDanhSachMaNhaGa() {
+        List<String> danhSachMaNhaGa = new ArrayList<>();
+        String sql = "SELECT MaNhaGa FROM NhaGa";
+
+        try (Connection conn = ConnectDB.getInstance().getConnection();
+             PreparedStatement st = conn.prepareStatement(sql);
+             ResultSet rs = st.executeQuery()) {
+
+            while (rs.next()) {
+                danhSachMaNhaGa.add(rs.getString("MaNhaGa"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return danhSachMaNhaGa;
+    }
+    
     // Thêm tàu
     public boolean addTau(Tau tau) {
     	ConnectDB.getInstance();
@@ -129,5 +148,37 @@ public class TauDAO {
         return n > 0;
     }
     
+    // Tìm kiếm tàu
+    public List<Tau> timKiemTau(Tau tau) {
+        List<Tau> dsTau = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try {
+        	conn = ConnectDB.getInstance().connect();
+            String SQL = "SELECT t.MaTau, ng.MaNhaGa, t.LoaiTau, t.SoLuongToa, t.SoLuongGhe " +
+                         "FROM Tau t " +
+                         "INNER JOIN NhaGa ng ON t.MaNhaGa = ng.MaNhaGa " +
+                         "WHERE t.MaTau = ?";
+            st = conn.prepareStatement(SQL);
+            st.setString(1, tau.getMaTau());
+            rs = st.executeQuery();
+            while (rs.next()) {
+                String maTau = rs.getString(1);
+                String maNhaGa = rs.getString(2);
+                String loaiTau = rs.getString(3);
+                int soLuongToa = rs.getInt(4);
+                int soLuongGhe = rs.getInt(5);
+                        
+                NhaGa ng = new NhaGa(maNhaGa);
+                Tau foundTau = new Tau(maTau, ng, loaiTau, soLuongToa, soLuongGhe);
+                dsTau.add(foundTau);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return dsTau;
+    }
+
     
 }

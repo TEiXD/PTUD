@@ -135,17 +135,7 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
         panelButton.setBackground(new Color(173, 216, 230));
         panelButton.setLayout(new BoxLayout(panelButton, BoxLayout.X_AXIS));
 
-        lblNhap = new JLabel("Nhập mã tàu cần tìm: ");
-        lblNhap.setFont(new Font("Times New Roman", Font.BOLD, 18));
-        txtNhap = new JTextField(6);
-        txtNhap.setFont(new Font("Times New Roman", Font.PLAIN, 18));
-
-        panelButton.add(Box.createHorizontalStrut(80));
-        panelButton.add(lblNhap);
-        panelButton.add(txtNhap);
-        btnTim = new JButton("Tìm");
-        panelButton.add(btnTim);
-        panelButton.add(Box.createHorizontalStrut(80));
+        panelButton.add(Box.createHorizontalGlue());
         btnThem = new JButton("Thêm");
         panelButton.add(btnThem);
         panelButton.add(Box.createHorizontalStrut(10));
@@ -161,14 +151,12 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
         btnThem.setFont(textFieldFont);
         btnSua.setFont(textFieldFont);
         btnXoa.setFont(textFieldFont);
-        btnTim.setFont(textFieldFont);
 
         add(panelButton, BorderLayout.SOUTH);
 
         btnThem.addActionListener(this);
         btnSua.addActionListener(this);
         btnXoa.addActionListener(this);
-        btnTim.addActionListener(this);
         table.addMouseListener(this);
 
         docDuLieuDBVaoTable();
@@ -268,19 +256,7 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
                 JOptionPane.showMessageDialog(this, "Lỗi khi xóa dữ liệu!");
             }
             xoaRong();
-        } else if (o.equals(btnTim)) {
-            String maTau = txtNhap.getText();
-            ListSelectionModel timTau = table.getSelectionModel();
-            timTau.clearSelection();
-            for (int i = 0; i < modelTau.getRowCount(); i++) {
-                if (modelTau.getValueAt(i, 0).toString().contains(maTau)) {
-                    timTau.addSelectionInterval(i, i);
-                }
-            }
-            if (timTau.isSelectionEmpty()) {
-                JOptionPane.showMessageDialog(this, "Không tìm thấy tàu");
-            }
-        }
+        } 
     }
 
     private void docDuLieuDBVaoTable() {
