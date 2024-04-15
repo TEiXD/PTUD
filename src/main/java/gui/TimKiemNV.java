@@ -90,7 +90,7 @@ public class TimKiemNV extends JPanel implements ActionListener {
         gbc.gridx = 0;
         gbc.gridy = 1;
         inputPanel.add(lblGioiTinh, gbc);
-        cboGioiTinh = new JComboBox<>(new String[]{"Nam", "Nữ"});
+        cboGioiTinh = new JComboBox<>(new String[]{"None","Nam", "Nữ"});
         gbc.gridx = 1;
         gbc.gridy = 1;
         inputPanel.add(cboGioiTinh, gbc);
@@ -120,7 +120,7 @@ public class TimKiemNV extends JPanel implements ActionListener {
         gbc.gridx = 0;
         gbc.gridy = 3;
         inputPanel.add(lblTrinhDo, gbc);
-        cboTrinhDo = new JComboBox<>(new String[]{"Đại học", "Cử nhân", "Cao đẳng"});
+        cboTrinhDo = new JComboBox<>(new String[]{"None","Đại học", "Cử nhân", "Cao đẳng"});
         gbc.gridx = 1;
         gbc.gridy = 3;
         inputPanel.add(cboTrinhDo, gbc);
