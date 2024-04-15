@@ -19,7 +19,7 @@ public class TauDAO {
     	ArrayList<Tau> dsT = new ArrayList<>();
         try {
             Connection conn = ConnectDB.getInstance().connect();
-            String SQL = "SELECT t.MaTau, ng.MaNhaGa, t.LoaiTau " +
+            String SQL = "SELECT t.MaTau, ng.MaNhaGa, t.LoaiTau, t.SoLuongToa, t.SoLuongGhe " +
                          "FROM Tau t " +
                          "INNER JOIN NhaGa ng ON t.MaNhaGa = ng.MaNhaGa";
             PreparedStatement stmt = conn.prepareStatement(SQL);
@@ -28,8 +28,11 @@ public class TauDAO {
                 String maTau = rs.getString(1);
                 String maNhaGa = rs.getString(2);
                 String loaiTau = rs.getString(3);
+                int slToa = rs.getInt(4);
+                int slGhe = rs.getInt(5);
+                
                 NhaGa ng = new NhaGa(maNhaGa);
-                Tau t = new Tau(maTau, ng, loaiTau);
+                Tau t = new Tau(maTau, ng, loaiTau, slToa, slGhe);
                 dsT.add(t);
             }
 
@@ -44,13 +47,15 @@ public class TauDAO {
     	ConnectDB.getInstance();
         Connection conn = ConnectDB.getConnection();
         PreparedStatement st = null;
-        String SQL = "INSERT INTO Tau (MaTau, MaNhaGa, LoaiTau) VALUES (?, ?, ?)";
+        String SQL = "INSERT INTO Tau (MaTau, MaNhaGa, LoaiTau, SoLuongToa, SoLuongGhe) VALUES (?, ?, ?, ?, ?)";
         int n = 0;
         try {
         	st = conn.prepareStatement(SQL);
         	st.setString(1, tau.getMaTau().trim());
         	st.setString(2, tau.getNhaGa().getMaNhaGa().trim());
         	st.setString(3, tau.getLoaiTau().trim());
+        	st.setInt(4, tau.getSoLuongToa());
+        	st.setInt(5, tau.getSoLuongGhe());
             
         	n = st.executeUpdate();
         } catch (SQLException e) {
@@ -110,11 +115,13 @@ public class TauDAO {
         int n = 0;
         try {
             conn = ConnectDB.getInstance().connect();
-            String SQL = "UPDATE Tau SET MaNhaGa = ?, LoaiTau = ? WHERE MaTau = ?";
+            String SQL = "UPDATE Tau SET MaNhaGa = ?, LoaiTau = ?, SoLuongToa = ?, SoLuongGhe = ? WHERE MaTau = ?";
             st = conn.prepareStatement(SQL);
             st.setString(1, tau.getNhaGa().getMaNhaGa().trim());
             st.setString(2, tau.getLoaiTau().trim());
             st.setString(3, tau.getMaTau().trim());
+            st.setInt(4, tau.getSoLuongToa());
+        	st.setInt(5, tau.getSoLuongGhe());
             n = st.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();

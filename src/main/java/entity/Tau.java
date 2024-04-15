@@ -6,42 +6,62 @@ public class Tau {
     private String MaTau;
     private NhaGa NhaGa;
     private String LoaiTau;
+    private int SoLuongToa, SoLuongGhe;
 
-    public Tau(String MaTau, NhaGa NhaGa, String LoaiTau) {
-        this.MaTau = MaTau;
-        this.NhaGa = NhaGa;
-        this.LoaiTau = LoaiTau;
-    }
-
+	public Tau(String maTau, entity.NhaGa nhaGa, String loaiTau, int soLuongToa, int soLuongGhe) {
+		super();
+		MaTau = maTau;
+		NhaGa = nhaGa;
+		LoaiTau = loaiTau;
+		SoLuongToa = soLuongToa;
+		SoLuongGhe = soLuongGhe;
+	}
 
 	public Tau(String maTau) {
 		this.MaTau = maTau;
 	}
     
+	
 	public String getMaTau() {
 		return MaTau;
 	}
 
-	public void setMaTau(String MaTau) {
-		this.MaTau = MaTau;
+	public void setMaTau(String maTau) {
+		MaTau = maTau;
 	}
 
 	public NhaGa getNhaGa() {
 		return NhaGa;
 	}
 
-	public void setNhaGa(NhaGa NhaGa) {
-		this.NhaGa = NhaGa;
+	public void setNhaGa(NhaGa nhaGa) {
+		NhaGa = nhaGa;
 	}
 
 	public String getLoaiTau() {
 		return LoaiTau;
 	}
 
-	public void setLoaiTau(String LoaiTau) {
-		this.LoaiTau = LoaiTau;
+	public void setLoaiTau(String loaiTau) {
+		LoaiTau = loaiTau;
 	}
-	
+
+	public int getSoLuongToa() {
+		return SoLuongToa;
+	}
+
+	public void setSoLuongToa(int soLuongToa) {
+		SoLuongToa = soLuongToa;
+	}
+
+	public int getSoLuongGhe() {
+		return SoLuongGhe;
+	}
+
+	public void setSoLuongGhe(int soLuongGhe) {
+		SoLuongGhe = soLuongGhe;
+	}
+
 	@Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -56,8 +76,10 @@ public class Tau {
 
 	@Override
 	public String toString() {
-		return "Tau [maTau=" + MaTau + ", nhaGa=" + NhaGa + ", loaiTau=" + LoaiTau + "]";
+		return "Tau [MaTau=" + MaTau + ", NhaGa=" + NhaGa + ", LoaiTau=" + LoaiTau + ", SoLuongToa=" + SoLuongToa
+				+ ", SoLuongGhe=" + SoLuongGhe + "]";
 	}
 
+	
 	
 }

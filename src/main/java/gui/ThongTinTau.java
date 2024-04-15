@@ -16,6 +16,8 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
     private final JPanel contentPanel = new JPanel();
     private JTable table;
     private JTextField txtMaTau;
+    private JTextField txtSoLuongToa;
+    private JTextField txtSoLuongGhe;
     private DefaultTableModel modelTau;
     private JButton btnThem;
     private JButton btnSua;
@@ -24,7 +26,7 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
     private JPanel pNorth;
     private JLabel lblTieuDe;
     private JComboBox<String> cboLoaiTau;
-    private JComboBox<String> cboMaNhaGa; 
+    private JComboBox<String> cboMaNhaGa;
     private TitledBorder inputPanelBorder;
     private JButton btnTim;
     private JLabel lblNhap;
@@ -48,7 +50,7 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
         lblTieuDe.setForeground(Color.blue);
 
         JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new GridLayout(6, 1, 2, 15));
+        inputPanel.setLayout(new GridLayout(5, 2, 5, 15)); // Updated GridLayout
         inputPanel.setBorder(new EmptyBorder(10, 20, 30, 20));
         contentPanel.add(inputPanel);
 
@@ -69,13 +71,25 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
         JLabel lblMaNhaGa = new JLabel("Mã nhà ga:");
         lblMaNhaGa.setFont(lblMaNhaGa.getFont().deriveFont(Font.BOLD, 14));
         inputPanel.add(lblMaNhaGa);
-        cboMaNhaGa = new JComboBox<String>();
+        cboMaNhaGa = new JComboBox<>();
         cboMaNhaGa.setEditable(false);
         List<NhaGa> listNG = nhagaDAO.layThongTin();
-        for(NhaGa ng : listNG) {
+        for (NhaGa ng : listNG) {
             cboMaNhaGa.addItem(ng.getMaNhaGa());
         }
         inputPanel.add(cboMaNhaGa);
+
+        JLabel lblSoLuongToa = new JLabel("Số lượng toa:");
+        lblSoLuongToa.setFont(lblSoLuongToa.getFont().deriveFont(Font.BOLD, 14));
+        inputPanel.add(lblSoLuongToa);
+        txtSoLuongToa = new JTextField();
+        inputPanel.add(txtSoLuongToa);
+
+        JLabel lblSoLuongGhe = new JLabel("Số lượng ghế:");
+        lblSoLuongGhe.setFont(lblSoLuongGhe.getFont().deriveFont(Font.BOLD, 14));
+        inputPanel.add(lblSoLuongGhe);
+        txtSoLuongGhe = new JTextField();
+        inputPanel.add(txtSoLuongGhe);
 
         inputPanelBorder = BorderFactory.createTitledBorder("Thông Tin Tàu");
         inputPanelBorder.setTitleFont(new Font("Times New Roman", Font.ITALIC, 18));
@@ -84,7 +98,7 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
         inputPanel.setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(10, 10, 10, 10), inputPanelBorder));
         inputPanel.setPreferredSize(new Dimension(300, 250));
 
-        String[] columns = {"Mã tàu", "Mã nhà ga", "Loại tàu"};
+        String[] columns = {"Mã tàu", "Mã nhà ga", "Loại tàu", "Số lượng toa", "Số lượng ghế"};
         modelTau = new DefaultTableModel(columns, 0);
         table = new JTable(modelTau);
         table.addMouseListener(new MouseAdapter() {
@@ -93,8 +107,13 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
                 int selectedRow = table.getSelectedRow();
                 if (selectedRow != -1) {
                     txtMaTau.setText(modelTau.getValueAt(selectedRow, 0).toString());
-                    cboMaNhaGa.setSelectedItem(modelTau.getValueAt(selectedRow, 1).toString());
+                    Object maNhaGaValue = modelTau.getValueAt(selectedRow, 1);
+                    if (maNhaGaValue != null) {
+                        cboMaNhaGa.setSelectedItem(maNhaGaValue.toString());
+                    }
                     cboLoaiTau.setSelectedItem(modelTau.getValueAt(selectedRow, 2).toString());
+                    txtSoLuongToa.setText(modelTau.getValueAt(selectedRow, 3).toString());
+                    txtSoLuongGhe.setText(modelTau.getValueAt(selectedRow, 4).toString());
                 }
             }
         });
@@ -162,6 +181,8 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
             String maTau = txtMaTau.getText().trim();
             String maNhaGa = cboMaNhaGa.getSelectedItem().toString().trim();
             String loaiTau = cboLoaiTau.getSelectedItem().toString().trim();
+            int soLuongToa = Integer.parseInt(txtSoLuongToa.getText().trim());
+            int soLuongGhe = Integer.parseInt(txtSoLuongGhe.getText().trim());
 
             if (maTau.isEmpty() || loaiTau.isEmpty() || maNhaGa.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -169,9 +190,8 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
             }
 
             NhaGa ng = new NhaGa(maNhaGa);
-            
-            Tau tau = new Tau(maTau, ng, loaiTau);
-            
+            Tau tau = new Tau(maTau, ng, loaiTau, soLuongToa, soLuongGhe);
+
             boolean trungMa = false;
             for (int i = 0; i < modelTau.getRowCount(); i++) {
                 if (maTau.equals(modelTau.getValueAt(i, 0))) {
@@ -185,13 +205,14 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
             } else {
                 if(trungMa = true) {
                 	tauDAO.addTau(tau);
-                    modelTau.addRow(new Object[]{tau.getMaTau(), tau.getNhaGa().getMaNhaGa(), tau.getLoaiTau()});
+                    modelTau.addRow(new Object[]{tau.getMaTau(), tau.getNhaGa().getMaNhaGa(), tau.getLoaiTau(), tau.getSoLuongToa(), tau.getSoLuongGhe()});
                     JOptionPane.showMessageDialog(this, "Thêm thành công");
                     xoaRong();
                 } else {
                     JOptionPane.showMessageDialog(null, "Lỗi khi thêm vào cơ sở dữ liệu!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 }
             }    
+
 
         } else if (o.equals(btnSua)) {
             int selectedRow = table.getSelectedRow();
@@ -204,6 +225,8 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
             String maTau = txtMaTau.getText().trim();
             String maNhaGa = cboMaNhaGa.getSelectedItem().toString().trim();
             String loaiTau = cboLoaiTau.getSelectedItem().toString().trim();
+            int soLuongToa = Integer.parseInt(txtSoLuongToa.getText().trim());
+            int soLuongGhe = Integer.parseInt(txtSoLuongGhe.getText().trim());
 
             if (maTau.isEmpty() || loaiTau.isEmpty() || maNhaGa.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -211,13 +234,15 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
             }
 
             NhaGa ng = new NhaGa(maNhaGa);
-            Tau tau = new Tau(maTau, ng, loaiTau);
+            Tau tau = new Tau(maTau, ng, loaiTau, soLuongToa, soLuongGhe);
 
             try {
                 tauDAO.suaTau(tau);
                 modelTau.setValueAt(maTau, selectedRow, 0);
                 modelTau.setValueAt(maNhaGa, selectedRow, 1);
                 modelTau.setValueAt(loaiTau, selectedRow, 2);
+                modelTau.setValueAt(soLuongToa, selectedRow, 3);
+                modelTau.setValueAt(soLuongGhe, selectedRow, 4);
                 JOptionPane.showMessageDialog(this, "Sửa thành công");
             } catch (Exception e2) {
                 e2.printStackTrace();
@@ -246,10 +271,10 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
         } else if (o.equals(btnTim)) {
             String maTau = txtNhap.getText();
             ListSelectionModel timTau = table.getSelectionModel();
-            timTau.clearSelection(); 
+            timTau.clearSelection();
             for (int i = 0; i < modelTau.getRowCount(); i++) {
-                if (modelTau.getValueAt(i, 1).toString().contains(maTau)) {
-                    timTau.addSelectionInterval(i, i); 
+                if (modelTau.getValueAt(i, 0).toString().contains(maTau)) {
+                    timTau.addSelectionInterval(i, i);
                 }
             }
             if (timTau.isSelectionEmpty()) {
@@ -259,17 +284,20 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
     }
 
     private void docDuLieuDBVaoTable() {
-        List<Tau> listTau = tauDAO.layThongTin();
-        for (Tau tau : listTau) {
-            cboMaNhaGa.addItem(tau.getNhaGa().getMaNhaGa());
-            modelTau.addRow(new Object[]{tau.getMaTau(), tau.getNhaGa().getMaNhaGa(), tau.getLoaiTau()});
+    	List<Tau> listTau = tauDAO.layThongTin();
+    	for (Tau tau : listTau) {
+    	    cboMaNhaGa.addItem(tau.getNhaGa().getMaNhaGa());
+    	    modelTau.addRow(new Object[]{tau.getMaTau(), tau.getNhaGa().getMaNhaGa(), tau.getLoaiTau(), tau.getSoLuongToa(), tau.getSoLuongGhe()});
+    
         }
     }
-    
+
     public void xoaRong() {
         txtMaTau.setText("");
         cboLoaiTau.setSelectedIndex(0);
         cboMaNhaGa.setSelectedIndex(0);
+        txtSoLuongToa.setText("");
+        txtSoLuongGhe.setText("");
     }
 
     @Override
@@ -277,8 +305,13 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) {
             txtMaTau.setText(modelTau.getValueAt(selectedRow, 0).toString());
-            cboMaNhaGa.setSelectedItem(modelTau.getValueAt(selectedRow, 1).toString());
+            Object maNhaGaValue = modelTau.getValueAt(selectedRow, 1);
+            if (maNhaGaValue != null) {
+                cboMaNhaGa.setSelectedItem(maNhaGaValue.toString());
+            }
             cboLoaiTau.setSelectedItem(modelTau.getValueAt(selectedRow, 2).toString());
+            txtSoLuongToa.setText(modelTau.getValueAt(selectedRow, 3).toString());
+            txtSoLuongGhe.setText(modelTau.getValueAt(selectedRow, 4).toString());
         }
     }
 
