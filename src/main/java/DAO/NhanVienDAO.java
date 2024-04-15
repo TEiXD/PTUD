@@ -109,11 +109,16 @@ public class NhanVienDAO {
 	    try {
 	        Connection conn = ConnectDB.getConnection();
 	        String SQL = "SELECT nv.MaNV, nv.HoTen, nv.CCCD, nv.GioiTinh, nv.SDT, nv.Email, nv.NgaySinh, nv.TrinhDo, ng.MaNhaGa " +
-	                     "FROM NhanVien nv INNER JOIN NhaGa ng ON nv.MaNhaGa = ng.MaNhaGa " +
-	                     "WHERE nv.MaNV = ? OR nv.HoTen = ?";
+	                "FROM NhanVien nv INNER JOIN NhaGa ng ON nv.MaNhaGa = ng.MaNhaGa " +
+	                "WHERE nv.MaNV = ? OR nv.HoTen = ?  OR nv.GioiTinh = ? OR nv.TrinhDo = ? OR ng.MaNhaGa = ?";
+	        
 	        try (PreparedStatement ps = conn.prepareStatement(SQL)) {
 	            ps.setString(1, nv.getMaNV());
 	            ps.setString(2, nv.getHoTen());
+	            ps.setString(3, nv.getGioiTinh());
+	            ps.setString(4, nv.getTrinhDo());
+	            ps.setString(5, nv.getNhaGa().getMaNhaGa());
+	            
 	            
 	            try (ResultSet rs = ps.executeQuery()) {
 	                while (rs.next()) {

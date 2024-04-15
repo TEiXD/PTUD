@@ -29,7 +29,9 @@ public class TimKiemNV extends JPanel implements ActionListener {
     private JTextField txtSDT;
     private JTextField txtEmail;
     private TitledBorder inputPanelBorder;
-
+    private JComboBox<String> cboMaNhaGa;
+    
+    
     public TimKiemNV() {
     	
         ConnectDB.getInstance().connect();
@@ -125,6 +127,21 @@ public class TimKiemNV extends JPanel implements ActionListener {
         gbc.gridy = 3;
         inputPanel.add(cboTrinhDo, gbc);
         
+        JLabel lblMaNhaGa = new JLabel("Mã nhà ga");
+        lblMaNhaGa.setFont(lblMaNhaGa.getFont().deriveFont(Font.BOLD, 14));
+        gbc.gridx = 3;
+        gbc.gridy = 3;
+        inputPanel.add(lblMaNhaGa, gbc);
+
+        cboMaNhaGa = new JComboBox<>(new String[]{"None"});
+        List<NhaGa> listNG = NhaGaDAO.layThongTin();
+        for(NhaGa ng : listNG) {
+        	cboMaNhaGa.addItem(ng.getMaNhaGa());
+        }
+        gbc.gridx = 4;
+        gbc.gridy = 3;
+        inputPanel.add(cboMaNhaGa, gbc);
+        
         inputPanelBorder = BorderFactory.createTitledBorder("Tìm kiếm nhân viên");
         inputPanelBorder.setTitleFont(new Font("Times New Roman", Font.ITALIC, 18));
         inputPanelBorder.setTitleJustification(TitledBorder.LEFT);
@@ -135,7 +152,7 @@ public class TimKiemNV extends JPanel implements ActionListener {
         
         //
         String[] columns = {
-        		"Mã nhân viên", "Họ tên", "Giới tính", "Số điện thoại", "Email", "Ngày Sinh", "Trình độ"
+        		"Mã nhân viên", "Họ tên", "Giới tính", "Số điện thoại", "Email", "Ngày Sinh", "Trình độ", "Mã nhà ga"
         };
         modelNV = new DefaultTableModel(columns, 0);
         table = new JTable(modelNV);
@@ -174,7 +191,7 @@ public class TimKiemNV extends JPanel implements ActionListener {
         List<NhanVien> listNV = nvDAO.layThongTin();
         for (NhanVien nv : listNV) {
             Object[] rowData = {
-                    nv.getMaNV(), nv.getHoTen(), nv.getGioiTinh(), nv.getSDT(), nv.getEmail(), nv.getNgaySinh(), nv.getTrinhDo()};
+                    nv.getMaNV(), nv.getHoTen(), nv.getGioiTinh(), nv.getSDT(), nv.getEmail(), nv.getNgaySinh(), nv.getTrinhDo(), nv.getNhaGa().getMaNhaGa()};
             modelNV.addRow(rowData);
         }
     }
@@ -195,8 +212,9 @@ public class TimKiemNV extends JPanel implements ActionListener {
         String email = txtEmail.getText().trim();
         String ngaySinh = txtNgaySinh.getText().trim();
         String trinhDo = (String) cboTrinhDo.getSelectedItem();
-
-        NhanVien nv = new NhanVien(maNV, hoTen, gioiTinh, sdt, email, ngaySinh, trinhDo, trinhDo, null);
+        String maNhaGa = (String) cboMaNhaGa.getSelectedItem();
+        NhaGa ng = new NhaGa(maNhaGa);
+        NhanVien nv = new NhanVien(maNV, hoTen, gioiTinh, sdt, email, ngaySinh, trinhDo, trinhDo, ng);
         List<NhanVien> dsNV = nvDAO.timKiemNhanVien(nv);
 
         modelNV.setRowCount(0);

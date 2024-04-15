@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
 
+import DAO.NhaGaDAO;
 import DAO.NhanVienDAO;
 import connectDB.ConnectDB;
 import entity.*;
@@ -35,7 +36,7 @@ public class ThongTinNV extends JPanel implements ActionListener {
     private JTextField txtCCCD;
     private JTextField txtSDT;
     private JTextField txtEmail;
-    private JTextField txtMaNhaGa;
+    private JComboBox<String> cboMaNhaGa;
     private TitledBorder inputPanelBorder;
     private JSpinner spinNgaySinh;
 
@@ -126,9 +127,13 @@ public class ThongTinNV extends JPanel implements ActionListener {
         JLabel lblMaNhaGa = new JLabel("Mã nhà ga");
         lblMaNhaGa.setFont(lblMaNhaGa.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
         inputPanel.add(lblMaNhaGa);
-        txtMaNhaGa = new JTextField();
-        txtMaNhaGa.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        inputPanel.add(txtMaNhaGa);
+        cboMaNhaGa = new JComboBox<String>();
+        List<NhaGa> listNG = NhaGaDAO.layThongTin();
+        for(NhaGa ng : listNG) {
+        	cboMaNhaGa.addItem(ng.getMaNhaGa());
+        }
+        cboMaNhaGa.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        inputPanel.add(cboMaNhaGa);
 
         inputPanelBorder = BorderFactory.createTitledBorder("Thông Tin Nhân Viên");
         inputPanelBorder.setTitleFont(new Font("Times New Roman", Font.ITALIC, 18));
@@ -163,7 +168,7 @@ public class ThongTinNV extends JPanel implements ActionListener {
                     }
 
                 	cboTrinhDo.setSelectedItem(modelNV.getValueAt(SelectedRows, 7).toString());
-                	txtMaNhaGa.setText(modelNV.getValueAt(SelectedRows, 8).toString());
+                	cboMaNhaGa.setSelectedItem(modelNV.getValueAt(SelectedRows, 8).toString());
                 }
         	}
         });
@@ -235,7 +240,7 @@ public class ThongTinNV extends JPanel implements ActionListener {
 	    	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	    	    String ngaySinhstr = sdf.format((java.util.Date) spinNgaySinh.getValue());
 	    	    String trinhDo = cboTrinhDo.getSelectedItem().toString().trim();
-	    	    String maNhaGa = txtMaNhaGa.getText().trim();
+	    	    String maNhaGa = cboMaNhaGa.getSelectedItem().toString().trim();
 	
 	    	    // Check for empty inputs
 	    	    if (maNV.isEmpty() || hoTen.isEmpty() || cccd.isEmpty() || sdt.isEmpty() || email.isEmpty() || trinhDo.isEmpty() || maNhaGa.isEmpty()) {
@@ -276,7 +281,7 @@ public class ThongTinNV extends JPanel implements ActionListener {
         	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         	    String ngaySinhstr = sdf.format((java.util.Date) spinNgaySinh.getValue());
         	    String trinhDo = cboTrinhDo.getSelectedItem().toString();
-        	    String maNhaGa = txtMaNhaGa.getText();
+        	    String maNhaGa = cboMaNhaGa.getSelectedItem().toString();
 
         	    NhaGa ng = new NhaGa(maNhaGa);
         	    NhanVien nv = new NhanVien(maNV, hoTen, cccd, gioiTinh, sdt, email, ngaySinhstr, trinhDo, ng);
