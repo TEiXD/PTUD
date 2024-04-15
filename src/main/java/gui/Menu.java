@@ -51,7 +51,7 @@ public class Menu extends JFrame {
         ThongTInVe = new JMenuItem();
         Tau = new JMenu();
         ThongTinTAu = new JMenuItem();
-        TimKiemTau = new JMenuItem(); // Khởi tạo JMenuItem TimKiemTau
+        TimKiemTau = new JMenuItem();
         ChuyenTau = new JMenu();
         ThongTInChuyenTau = new JMenuItem();
         Tk = new JMenu();
@@ -66,7 +66,7 @@ public class Menu extends JFrame {
         lblBg.setIcon(new ImageIcon(getClass().getResource("/images/dangnhapimg.jpg")));
         panelChucNang.add(lblBg, "card2");
 
-        jMenuBar1.setFont(new Font("Segoe UI", 0, 18)); // NOI18N
+        jMenuBar1.setFont(new Font("Segoe UI", 0, 18));
         jMenuBar1.setMargin(new Insets(0, 0, 0, 30));
 
         Home.setText("Home");

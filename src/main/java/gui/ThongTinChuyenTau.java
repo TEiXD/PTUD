@@ -130,8 +130,8 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
         table.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int SelectedRows = table.getSelectedRow(); // Get the selected row index
-                if (SelectedRows != -1) { // Check if a row is selected
+                int SelectedRows = table.getSelectedRow(); 
+                if (SelectedRows != -1) { 
                     txtMaChuyenTau.setText(modelCT.getValueAt(SelectedRows, 0).toString());
                     cboMaTau.setSelectedItem(modelCT.getValueAt(SelectedRows, 1).toString());
                     cboGaDi.setSelectedItem(modelCT.getValueAt(SelectedRows, 2));
@@ -179,7 +179,6 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
         btnSua.setFont(textFieldFont);
         btnXoa.setFont(textFieldFont);
 
-        // Thêm panelButton vào phần SOUTH của JPanel
         add(panelButton, BorderLayout.SOUTH);
 
         // Đăng ký ActionListener cho các nút
@@ -187,11 +186,9 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
         btnSua.addActionListener(this);
         btnXoa.addActionListener(this);
 
-        // Load data from database into the table
         docDuLieuDBVaoTable();
     }
 
-    // Action handling for buttons
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
         if (o.equals(btnThem)) {
@@ -221,7 +218,9 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
             ChuyenTau chuyenTau = new ChuyenTau(maCT, tau, gaDi, gaDen, gioDiStr, gioDenStr);
 
             boolean trungMa = false;
+            // Cho vòng lặp chạy hết bảng
             for (int i = 0; i < modelCT.getRowCount(); i++) {
+            	// Lấy giá trị maCT của từng dòng để so
                 if (maCT.equals(modelCT.getValueAt(i, 0))) {
                     trungMa = true;
                     break;
@@ -229,19 +228,16 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
             }
 
             if (trungMa) {
-                JOptionPane.showMessageDialog(this, "Mã chuyến tàu đã tồn tại. Vui lòng chọn mã tàu khác.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Mã chuyến tàu đã tồn tại. Vui lòng chọn mã chuyến tàu khác.", "Lỗi", JOptionPane.ERROR_MESSAGE);
             } else {
-                if(trungMa = true) {
-                	ctDAO.addCT(chuyenTau);
-                    modelCT.addRow(new Object[]{chuyenTau.getMaChuyenTau(), chuyenTau.getMaTau().getMaTau(), chuyenTau.getGaDi(), chuyenTau.getGaDen(), chuyenTau.getGioDi(), chuyenTau.getGioDen()});
-                    JOptionPane.showMessageDialog(this, "Thêm thành công");
-                    xoaRong();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Lỗi khi thêm vào cơ sở dữ liệu!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                }
+            	ctDAO.addCT(chuyenTau);
+                modelCT.addRow(new Object[]{chuyenTau.getMaChuyenTau(), chuyenTau.getMaTau().getMaTau(), chuyenTau.getGaDi(), chuyenTau.getGaDen(), chuyenTau.getGioDi(), chuyenTau.getGioDen()});
+                JOptionPane.showMessageDialog(this, "Thêm thành công");
+                xoaRong();
+                } 
             }    
             
-        } else if (o.equals(btnSua)) {
+        else if (o.equals(btnSua)) {
             int selectedRow = table.getSelectedRow();
             if (selectedRow != -1) {
                 String maCT = txtMaChuyenTau.getText();
@@ -262,7 +258,6 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
                 ChuyenTau chuyenTau = new ChuyenTau(maCT, tau, gaDi, gaDen, gioDiStr, gioDenStr);
 
                 try {
-                    // Update data in the database
                     ctDAO.updateCT(chuyenTau);
 
                     // Update data in the table
@@ -302,7 +297,6 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
         }
     }
 
-    // Method to fetch data from the database and populate the table
     public void docDuLieuDBVaoTable() {
         List<ChuyenTau> listCT = ctDAO.layThongTin();
         for (ChuyenTau ct : listCT) {
