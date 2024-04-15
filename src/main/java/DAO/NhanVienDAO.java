@@ -1,7 +1,6 @@
 package DAO;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -103,5 +102,41 @@ public class NhanVienDAO {
 	        return false;
 	    }
 	}
+
+	//TimkiemNV
+	public List<NhanVien> timKiemNhanVien(NhanVien nv) {
+	    List<NhanVien> dsNhanVien = new ArrayList<>();
+	    try {
+	        Connection conn = ConnectDB.getConnection();
+	        String SQL = "SELECT nv.MaNV, nv.HoTen, nv.CCCD, nv.GioiTinh, nv.SDT, nv.Email, nv.NgaySinh, nv.TrinhDo, ng.MaNhaGa " +
+	                     "FROM NhanVien nv INNER JOIN NhaGa ng ON nv.MaNhaGa = ng.MaNhaGa " +
+	                     "WHERE nv.MaNV = ? OR nv.HoTen = ?";
+	        try (PreparedStatement ps = conn.prepareStatement(SQL)) {
+	            ps.setString(1, nv.getMaNV());
+	            ps.setString(2, nv.getHoTen());
+	            
+	            try (ResultSet rs = ps.executeQuery()) {
+	                while (rs.next()) {
+	                    String maNV = rs.getString(1);
+	                    String hoTen = rs.getString(2);
+	                    String CCCD = rs.getString(3);
+	                    String gioiTinh = rs.getString(4);
+	                    String SDT = rs.getString(5);
+	                    String email = rs.getString(6);
+	                    String ngaySinh = rs.getString(7);
+	                    String trinhDo = rs.getString(8);
+	                    String maNhaGa = rs.getString(9);
+	                    NhaGa ng = new NhaGa(maNhaGa);
+	                    NhanVien nhanVien = new NhanVien(maNV, hoTen, CCCD, gioiTinh, SDT, email, ngaySinh, trinhDo, ng);
+	                    dsNhanVien.add(nhanVien);
+	                }
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return dsNhanVien;
+	}
+
 
 }

@@ -1,4 +1,4 @@
-CREATE DATABASE BanVeTau;
+﻿CREATE DATABASE BanVeTau;
 use BanVeTau
 
 CREATE TABLE NhaGa (
@@ -35,6 +35,8 @@ CREATE TABLE Tau (
     MaTau NVARCHAR(10) PRIMARY KEY,
     LoaiTau NVARCHAR(50) NOT NULL,
     MaNhaGa NVARCHAR(3),
+    SoLuongToa INT,
+    SoLuongGhe INT,
     FOREIGN KEY (MaNhaGa) REFERENCES NhaGa(MaNhaGa)
 );
 GO
@@ -48,7 +50,6 @@ CREATE TABLE ChuyenTau (
     GioDen DATETIME NOT NULL,
     FOREIGN KEY (MaTau) REFERENCES Tau(MaTau)
 );
-
 GO
 
 CREATE TABLE Ve (
@@ -76,6 +77,9 @@ CREATE TABLE Toa (
     FOREIGN KEY (MaTau) REFERENCES Tau(MaTau)
 );
 GO
+
+ALTER TABLE ChuyenTau
+DROP CONSTRAINT FK_ChuyenTau_MaTau;
 
 ALTER TABLE ChuyenTau
 ADD CONSTRAINT FK_ChuyenTau_MaTau
@@ -132,17 +136,17 @@ INSERT INTO NhanVien (MaNV, HoTen, CCCD, GioiTinh, SDT, Email, NgaySinh, TrinhDo
 SELECT * FROM [dbo].[NhanVien];
 
 --Dữ liệu mẫu cho bảng Tau
-INSERT INTO Tau (MaTau, LoaiTau, MaNhaGa) VALUES 
-	(N'TT001', N'Tàu hỏa', N'NGA'),
-    (N'TT002', N'Tàu hỏa', N'NGB'),
-    (N'TT003', N'Tàu cao tốc', N'NGC'),
-    (N'TT004', N'Tàu cao tốc', N'NGD'),
-    (N'TT005', N'Tàu hỏa', N'NGE'),
-    (N'TT006', N'Tàu cao tốc', N'NGF'),
-    (N'TT007', N'Tàu hỏa', N'NGG'),
-    (N'TT008', N'Tàu cao tốc', N'NGH'),
-    (N'TT009', N'Tàu hỏa', N'NGI'),
-    (N'TT010', N'Tàu cao tốc', N'NGK');
+INSERT INTO Tau (MaTau, LoaiTau, MaNhaGa, SoLuongToa, SoLuongGhe) VALUES 
+    (N'TT001', N'Tàu hỏa', N'NGA', 7, 264),
+    (N'TT002', N'Tàu hỏa', N'NGB', 7, 264),
+    (N'TT003', N'Tàu cao tốc', N'NGC', 7, 264),
+    (N'TT004', N'Tàu cao tốc', N'NGD', 7, 264),
+    (N'TT005', N'Tàu hỏa', N'NGE', 7, 264),
+    (N'TT006', N'Tàu cao tốc', N'NGF', 7, 264),
+    (N'TT007', N'Tàu hỏa', N'NGG', 7, 264),
+    (N'TT008', N'Tàu cao tốc', N'NGH', 7, 264),
+    (N'TT009', N'Tàu hỏa', N'NGI', 7, 264),
+    (N'TT010', N'Tàu cao tốc', N'NGK', 7, 264);
 SELECT * FROM Tau;
 
 ----Dữ liệu mẫu cho bảng ChuyenTau
