@@ -191,14 +191,11 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
             if (trungMa) {
                 JOptionPane.showMessageDialog(this, "Mã tàu đã tồn tại. Vui lòng chọn mã tàu khác.", "Lỗi", JOptionPane.ERROR_MESSAGE);
             } else {
-                if(trungMa = true) {
                 	tauDAO.addTau(tau);
                     modelTau.addRow(new Object[]{tau.getMaTau(), tau.getNhaGa().getMaNhaGa(), tau.getLoaiTau(), tau.getSoLuongToa(), tau.getSoLuongGhe()});
                     JOptionPane.showMessageDialog(this, "Thêm thành công");
                     xoaRong();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Lỗi khi thêm vào cơ sở dữ liệu!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                }
+                
             }    
 
 

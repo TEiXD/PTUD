@@ -47,7 +47,8 @@ public class TauDAO {
         List<String> danhSachMaNhaGa = new ArrayList<>();
         String sql = "SELECT MaNhaGa FROM NhaGa";
 
-        try (Connection conn = ConnectDB.getInstance().getConnection();
+        ConnectDB.getInstance();
+		try (Connection conn = ConnectDB.getConnection();
              PreparedStatement st = conn.prepareStatement(sql);
              ResultSet rs = st.executeQuery()) {
 
@@ -155,13 +156,15 @@ public class TauDAO {
         PreparedStatement st = null;
         ResultSet rs = null;
         try {
-        	conn = ConnectDB.getInstance().connect();
+            conn = ConnectDB.getInstance().connect();
             String SQL = "SELECT t.MaTau, ng.MaNhaGa, t.LoaiTau, t.SoLuongToa, t.SoLuongGhe " +
-                         "FROM Tau t " +
-                         "INNER JOIN NhaGa ng ON t.MaNhaGa = ng.MaNhaGa " +
-                         "WHERE t.MaTau = ?";
+                    "FROM Tau t " +
+                    "INNER JOIN NhaGa ng ON t.MaNhaGa = ng.MaNhaGa " +
+                    "WHERE t.MaTau = ? OR t.LoaiTau = ? OR ng.MaNhaGa = ?";
             st = conn.prepareStatement(SQL);
             st.setString(1, tau.getMaTau());
+            st.setString(2, tau.getLoaiTau());
+            st.setString(3, tau.getNhaGa().getMaNhaGa());
             rs = st.executeQuery();
             while (rs.next()) {
                 String maTau = rs.getString(1);
@@ -169,7 +172,7 @@ public class TauDAO {
                 String loaiTau = rs.getString(3);
                 int soLuongToa = rs.getInt(4);
                 int soLuongGhe = rs.getInt(5);
-                        
+
                 NhaGa ng = new NhaGa(maNhaGa);
                 Tau foundTau = new Tau(maTau, ng, loaiTau, soLuongToa, soLuongGhe);
                 dsTau.add(foundTau);
@@ -179,6 +182,7 @@ public class TauDAO {
         }
         return dsTau;
     }
+
 
     
 }
