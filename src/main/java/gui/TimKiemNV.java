@@ -216,5 +216,6 @@ public class TimKiemNV extends JPanel implements ActionListener {
         txtNgaySinh.setText("");
         cboTrinhDo.setSelectedIndex(0);
         modelNV.setRowCount(0);
+        docDuLieuVaoTable();
     }
 }
