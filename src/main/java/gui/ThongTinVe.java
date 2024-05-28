@@ -1,8 +1,11 @@
 package gui;
 
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -32,6 +35,7 @@ import javax.swing.JLabel;
 import java.awt.GridLayout;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -69,6 +73,10 @@ public class ThongTinVe extends javax.swing.JPanel implements ActionListener, Mo
         ConnectDB.getInstance().connect();
         veDAO = new VeDAO();
         ctDAO = new ChuyenTauDAO();
+        
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        SpinnerDateModel ngayDiModel = new SpinnerDateModel(new Date(), null, null, Calendar.SECOND);
+        SpinnerDateModel ngayVeModel = new SpinnerDateModel(new Date(), null, null, Calendar.SECOND);
         
     	setLayout(new BorderLayout());
 
@@ -117,14 +125,14 @@ public class ThongTinVe extends javax.swing.JPanel implements ActionListener, Mo
         lblNgayDi.setFont(lblNgayDi.getFont().deriveFont(Font.BOLD, 14));
         inputPanel.add(lblNgayDi);
         
-        spinNgayDi = new JSpinner();
+        spinNgayDi = new JSpinner(ngayDiModel);
         inputPanel.add(spinNgayDi);
 
         JLabel lblNgayVe = new JLabel("Ngày về");
         lblNgayVe.setFont(lblNgayVe.getFont().deriveFont(Font.BOLD, 14));
         inputPanel.add(lblNgayVe);
         
-        spinNgayVe = new JSpinner();
+        spinNgayVe = new JSpinner(ngayVeModel);
         inputPanel.add(spinNgayVe);
 
         JLabel lblMaKH = new JLabel("Mã khách hàng");
@@ -177,15 +185,25 @@ public class ThongTinVe extends javax.swing.JPanel implements ActionListener, Mo
         table.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		int SelectedRows = table.getSelectedRow();
-        		if(SelectedRows !=-1) {
-        			txtMaVe.setText(modelVe.getValueAt(SelectedRows, 0).toString());
-        			txtTenVe.setText(modelVe.getValueAt(SelectedRows, 1).toString());
-        			cboLoaiVe.setSelectedItem(modelVe.getValueAt(SelectedRows, 2));
-        			txtMaKH.setText(modelVe.getValueAt(SelectedRows, 3).toString());
-        			txtMaNV.setText(modelVe.getValueAt(SelectedRows, 4).toString());
-        			cboMaChuyenTau.setSelectedItem(modelVe.getValueAt(SelectedRows, 5));
-        		}
+        	    int selectedRow = table.getSelectedRow();
+        	    if (selectedRow != -1) {
+        	        txtMaVe.setText(modelVe.getValueAt(selectedRow, 0).toString());
+        	        txtTenVe.setText(modelVe.getValueAt(selectedRow, 1).toString());
+        	        cboLoaiVe.setSelectedItem(modelVe.getValueAt(selectedRow, 2).toString());
+
+        	        try {
+        	            Date ngayDi = dateFormat.parse(modelVe.getValueAt(selectedRow, 3).toString());
+        	            Date ngayVe = dateFormat.parse(modelVe.getValueAt(selectedRow, 4).toString());
+        	            ((SpinnerDateModel) spinNgayDi.getModel()).setValue(ngayDi);
+        	            ((SpinnerDateModel) spinNgayVe.getModel()).setValue(ngayVe);
+        	        } catch (ParseException ex) {
+        	            ex.printStackTrace();
+        	        }
+
+        	        txtMaKH.setText(modelVe.getValueAt(selectedRow, 5).toString());
+        	        txtMaNV.setText(modelVe.getValueAt(selectedRow, 6).toString());
+        	        cboMaChuyenTau.setSelectedItem(modelVe.getValueAt(selectedRow, 7).toString());
+        	    }
         	}
         });
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);

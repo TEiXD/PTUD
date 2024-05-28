@@ -176,8 +176,8 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
             String maTau = txtMaTau.getText().trim();
             String maNhaGa = cboMaNhaGa.getSelectedItem().toString().trim();
             String loaiTau = cboLoaiTau.getSelectedItem().toString().trim();
-            int soLuongToa = Integer.parseInt((String) SLToa.getValue());
-            int soLuongGhe = Integer.parseInt((String) SLGhe.getValue());
+            int soLuongToa = (int) SLToa.getValue(); 
+            int soLuongGhe = (int) SLGhe.getValue(); 
 
             if (maTau.isEmpty() || loaiTau.isEmpty() || maNhaGa.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
