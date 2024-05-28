@@ -28,8 +28,6 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
     private JComboBox<String> cboGaDi;
     private JComboBox<String> cboMaTau;
     private JComboBox<String> cboGaDen;
-    private SpinnerDateModel dateModelGioDi;
-    private SpinnerDateModel dateModelGioDen;
     private JSpinner spinGioDi;
     private JSpinner spinGioDen;
     private TitledBorder inputPanelBorder;
@@ -41,6 +39,10 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
         ctDAO = new ChuyenTauDAO();
         tauDao = new TauDAO();
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        SpinnerDateModel GioDiModel = new SpinnerDateModel(new Date(), null, null, Calendar.SECOND);
+        SpinnerDateModel GioVeModel = new SpinnerDateModel(new Date(), null, null, Calendar.SECOND);
+        
         setLayout(new BorderLayout());
 
         contentPanel.setBorder(new EmptyBorder(30, 20, 0, 20));
@@ -76,14 +78,10 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
         }
         inputPanel.add(cboGaDi);
 
-        dateModelGioDi = new SpinnerDateModel();
-        dateModelGioDi.setCalendarField(Calendar.MINUTE);
-
         JLabel lblGioDi = new JLabel("Thời gian đi:");
         lblGioDi.setFont(lblGioDi.getFont().deriveFont(Font.BOLD, 14));
         inputPanel.add(lblGioDi);
-        spinGioDi = new JSpinner(dateModelGioDi);
-        spinGioDi.setEditor(new JSpinner.DateEditor(spinGioDi, "yyyy-MM-dd HH:mm:ss"));
+        spinGioDi = new JSpinner(GioDiModel);
         inputPanel.add(spinGioDi);
 
         JLabel lblMaTau = new JLabel("Mã tàu:");
@@ -109,10 +107,7 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
         JLabel lblGioDen = new JLabel("Thời gian đến:");
         lblGioDen.setFont(lblGioDen.getFont().deriveFont(Font.BOLD, 14));
         inputPanel.add(lblGioDen);
-        dateModelGioDen = new SpinnerDateModel();
-        dateModelGioDen.setCalendarField(Calendar.MINUTE);
-        spinGioDen = new JSpinner(dateModelGioDen);
-        spinGioDen.setEditor(new JSpinner.DateEditor(spinGioDen, "yyyy-MM-dd HH:mm:ss"));
+        spinGioDen = new JSpinner(GioVeModel);
         inputPanel.add(spinGioDen);
 
         inputPanelBorder = BorderFactory.createTitledBorder("Thông Tin Chuyến Tàu");
@@ -143,6 +138,14 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
         	            cboMaTau.setSelectedItem(modelCT.getValueAt(SelectedRows, 1).toString());
         	            cboGaDi.setSelectedItem(modelCT.getValueAt(SelectedRows, 2));
         	            cboGaDen.setSelectedItem(modelCT.getValueAt(SelectedRows, 3));
+        	            try {
+            	            Date ngayDi = dateFormat.parse(modelCT.getValueAt(SelectedRows, 4).toString());
+            	            Date ngayVe = dateFormat.parse(modelCT.getValueAt(SelectedRows, 5).toString());
+            	            ((SpinnerDateModel) spinGioDi.getModel()).setValue(ngayDi);
+            	            ((SpinnerDateModel) spinGioDen.getModel()).setValue(ngayVe);
+            	        } catch (ParseException ex) {
+            	            ex.printStackTrace();
+            	        }
         	        }
         	    }
         	});
