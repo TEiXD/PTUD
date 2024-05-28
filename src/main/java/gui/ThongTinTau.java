@@ -26,8 +26,6 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
     private JComboBox<String> cboLoaiTau;
     private JComboBox<String> cboMaNhaGa;
     private TitledBorder inputPanelBorder;
-    private JLabel lblNhap;
-    private JTextField txtNhap;
     private NhaGaDAO nhagaDAO;
     private JSpinner SLToa;
     private JSpinner SLGhe;

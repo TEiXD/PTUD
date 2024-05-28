@@ -13,7 +13,8 @@ import java.sql.SQLException;
 import javax.swing.*;
 
 public class Menu extends JFrame {
-    private JPanel panelChucNang;
+    private static final long serialVersionUID = 1L;
+	private JPanel panelChucNang;
     private JLabel lblBg;
     private JMenuBar jMenuBar1;
     private JMenu Home;

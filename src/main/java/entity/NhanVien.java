@@ -11,7 +11,7 @@ public class NhanVien {
 
     
     public NhanVien(String maNV, String hoTen, String cCCD, String gioiTinh, String sDT, String email, String ngaySinh,
-			String trinhDo, NhaGa nhaGa) {
+			String trinhDo, NhaGa ng) {
 		super();
 		this.maNV = maNV;
 		this.hoTen = hoTen;
@@ -21,7 +21,7 @@ public class NhanVien {
 		this.email = email;
 		this.ngaySinh = ngaySinh;
 		this.trinhDo = trinhDo;
-		this.nhaGa = nhaGa;
+		this.nhaGa = ng;
 	}
     
     public NhanVien(String maNV) {

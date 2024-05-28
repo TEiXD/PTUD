@@ -45,6 +45,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class ThongTinVe extends javax.swing.JPanel implements ActionListener, MouseListener {
+	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private JTable table;
 	private JTextField txtMaNV;
@@ -52,7 +53,6 @@ public class ThongTinVe extends javax.swing.JPanel implements ActionListener, Mo
 	private JButton btnThem;
 	private JButton btnSua;
 	private JButton btnXoa;
-	private JButton btnXoaTrang;
 	private VeDAO veDAO;
 	private JPanel pNorth;
 	private JLabel lblTieuDe;
