@@ -15,13 +15,14 @@ public class NhaGaDAO {
         try {
             ConnectDB.getInstance().connect();
             Connection conn = ConnectDB.getConnection();
-            String SQL = "SELECT maNhaGa, tenNhaGa FROM NhaGa";
+            String SQL = "SELECT MaNhaGa, TenNhaGa, DiaDiem FROM NhaGa";
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(SQL);
             while (rs.next()) {
-                String maNhaGa = rs.getString("maNhaGa");
-                String tenNhaGa = rs.getString("tenNhaGa");
-                NhaGa nhaGa = new NhaGa(maNhaGa, tenNhaGa);
+                String maNhaGa = rs.getString("MaNhaGa");
+                String tenNhaGa = rs.getString("TenNhaGa");
+                String diaDiem = rs.getString("DiaDiem");
+                NhaGa nhaGa = new NhaGa(maNhaGa, tenNhaGa, diaDiem);
                 dsNG.add(nhaGa);
             }
         } catch (Exception e) {

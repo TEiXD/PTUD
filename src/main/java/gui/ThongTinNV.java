@@ -5,6 +5,7 @@ import javax.swing.border.*;
 import javax.swing.table.*;
 
 import DAO.NhanVienDAO;
+import DAO.NhaGaDAO;
 import connectDB.ConnectDB;
 import entity.*;
 
@@ -12,7 +13,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
 import java.text.*;
-import java.util.Calendar;
 import java.util.List;
 
 public class ThongTinNV extends JPanel implements ActionListener {
@@ -27,6 +27,7 @@ public class ThongTinNV extends JPanel implements ActionListener {
     private JButton btnXoa;
     private JButton btnXoaTrang;
     private NhanVienDAO nvDAO;
+    private NhaGaDAO ngDAO;
     private JPanel pNorth;
     private JLabel lblTieuDe;
     private JComboBox<String> cboGioiTinh;
@@ -35,15 +36,15 @@ public class ThongTinNV extends JPanel implements ActionListener {
     private JTextField txtCCCD;
     private JTextField txtSDT;
     private JTextField txtEmail;
-    private JTextField txtMaNhaGa;
     private TitledBorder inputPanelBorder;
     private JSpinner spinNgaySinh;
+    private JComboBox<String> cbo_MaNhaGa;
 
     public ThongTinNV() throws SQLException {
 
         ConnectDB.getInstance().connect();
         nvDAO = new NhanVienDAO();
-
+        ngDAO = new NhaGaDAO();
         setLayout(new BorderLayout());
 
         contentPanel.setBorder(new EmptyBorder(30, 20, 0, 20));
@@ -126,16 +127,19 @@ public class ThongTinNV extends JPanel implements ActionListener {
         JLabel lblMaNhaGa = new JLabel("Mã nhà ga");
         lblMaNhaGa.setFont(lblMaNhaGa.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
         inputPanel.add(lblMaNhaGa);
-        txtMaNhaGa = new JTextField();
-        txtMaNhaGa.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        inputPanel.add(txtMaNhaGa);
 
         inputPanelBorder = BorderFactory.createTitledBorder("Thông Tin Nhân Viên");
         inputPanelBorder.setTitleFont(new Font("Times New Roman", Font.ITALIC, 18));
         inputPanelBorder.setTitleJustification(TitledBorder.LEFT);
         inputPanelBorder.setBorder(BorderFactory.createLineBorder(Color.BLACK)); // Thay đổi màu của LineBorder thành đen
         inputPanel.setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(10, 10, 10, 10), inputPanelBorder));
-
+        
+        cbo_MaNhaGa = new JComboBox<String>();
+        List<NhaGa> listNG = ngDAO.layThongTin();
+        for(NhaGa ng : listNG) {
+        	cbo_MaNhaGa.addItem(ng.getMaNhaGa());
+        }
+        inputPanel.add(cbo_MaNhaGa);
         // Table
         String[] columns = {
                 "Mã nhân viên", "Họ tên", "CCCD", "Giới tính", "Số điện thoại", "Email", "Ngày sinh", "Trình độ", "Mã nhà ga"
@@ -163,7 +167,7 @@ public class ThongTinNV extends JPanel implements ActionListener {
                     }
 
                 	cboTrinhDo.setSelectedItem(modelNV.getValueAt(SelectedRows, 7).toString());
-                	txtMaNhaGa.setText(modelNV.getValueAt(SelectedRows, 8).toString());
+                	cbo_MaNhaGa.setSelectedItem(modelNV.getValueAt(SelectedRows, 8).toString());
                 }
         	}
         });
@@ -235,7 +239,7 @@ public class ThongTinNV extends JPanel implements ActionListener {
 	    	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	    	    String ngaySinhstr = sdf.format((java.util.Date) spinNgaySinh.getValue());
 	    	    String trinhDo = cboTrinhDo.getSelectedItem().toString().trim();
-	    	    String maNhaGa = txtMaNhaGa.getText().trim();
+	    	    String maNhaGa = (String) cbo_MaNhaGa.getSelectedItem();
 	
 	    	    // Check for empty inputs
 	    	    if (maNV.isEmpty() || hoTen.isEmpty() || cccd.isEmpty() || sdt.isEmpty() || email.isEmpty() || trinhDo.isEmpty() || maNhaGa.isEmpty()) {
@@ -276,7 +280,7 @@ public class ThongTinNV extends JPanel implements ActionListener {
         	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         	    String ngaySinhstr = sdf.format((java.util.Date) spinNgaySinh.getValue());
         	    String trinhDo = cboTrinhDo.getSelectedItem().toString();
-        	    String maNhaGa = txtMaNhaGa.getText();
+        	    String maNhaGa = (String) cbo_MaNhaGa.getSelectedItem();
 
         	    NhaGa ng = new NhaGa(maNhaGa);
         	    NhanVien nv = new NhanVien(maNV, hoTen, cccd, gioiTinh, sdt, email, ngaySinhstr, trinhDo, ng);

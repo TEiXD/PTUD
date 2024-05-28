@@ -3,7 +3,8 @@ use BanVeTau
 
 CREATE TABLE NhaGa (
     MaNhaGa NVARCHAR(3) PRIMARY KEY,
-    TenNhaGa NVARCHAR(100) NOT NULL
+    TenNhaGa NVARCHAR(100) NOT NULL,
+	DiaDiem nvarchar(100) not null
 );
 GO
 
@@ -61,6 +62,7 @@ CREATE TABLE Ve (
     MaKH NVARCHAR(8),
     MaNV NVARCHAR(8),
     MaChuyenTau NVARCHAR(10),
+	GiaTien varchar(100) not null,
     FOREIGN KEY (MaKH) REFERENCES KhachHang(MaKH),
     FOREIGN KEY (MaNV) REFERENCES NhanVien(MaNV),
     FOREIGN KEY (MaChuyenTau) REFERENCES ChuyenTau(MaChuyenTau)
@@ -78,30 +80,18 @@ CREATE TABLE Toa (
 );
 GO
 
-ALTER TABLE ChuyenTau
-DROP CONSTRAINT FK_ChuyenTau_MaTau;
-
-ALTER TABLE ChuyenTau
-ADD CONSTRAINT FK_ChuyenTau_MaTau
-FOREIGN KEY (MaTau)
-REFERENCES Tau(MaTau)
-ON DELETE CASCADE;
-
-
-
 --Dữ liệu mẫu cho bảng NhaGa
-INSERT INTO NhaGa (MaNhaGa, TenNhaGa) VALUES
-    (N'NGA', N'Nhà ga A'),
-    (N'NGB', N'Nhà ga B'),
-    (N'NGC', N'Nhà ga C'),
-    (N'NGD', N'Nhà ga D'),
-    (N'NGE', N'Nhà ga E'),
-    (N'NGF', N'Nhà ga F'),
-    (N'NGG', N'Nhà ga G'),
-    (N'NGH', N'Nhà ga H'),
-    (N'NGI', N'Nhà ga I'),
-    (N'NGK', N'Nhà ga K');
-
+INSERT INTO NhaGa (MaNhaGa, TenNhaGa, DiaDiem) VALUES
+    (N'NGA', N'Nhà ga A', 'HCM'),
+    (N'NGB', N'Nhà ga B', 'Hanoi'),
+    (N'NGC', N'Nhà ga C', 'Da Nang'),
+    (N'NGD', N'Nhà ga D', 'Hue'),
+    (N'NGE', N'Nhà ga E', 'Nha Trang'),
+    (N'NGF', N'Nhà ga F', 'Can Tho'),
+    (N'NGG', N'Nhà ga G', 'Vung Tau'),
+    (N'NGH', N'Nhà ga H', 'Phu Quoc'),
+    (N'NGI', N'Nhà ga I', 'Quy Nhon'),
+    (N'NGK', N'Nhà ga K', 'Da Lat');
 SELECT * FROM [dbo].[NhaGa];
 
 --Dữ liệu mẫu cho bảng KhachHang
@@ -163,21 +153,21 @@ INSERT INTO ChuyenTau (MaChuyenTau, GaDi, GaDen, GioDi, GioDen, MaTau) VALUES
     (N'CT010', N'Ga K', N'Ga A', '2024-04-02 06:30:00', '2024-04-02 08:30:00', N'TT010');
 
 
-
 SELECT * FROM [dbo].[ChuyenTau];
 
 --Dữ liệu mẫu cho bảng Ve
-INSERT INTO Ve (MaVe, TenVe, LoaiVe, NgayDi, NgayVe, MaKH, MaNV, MaChuyenTau) VALUES 
-    (N'V001', N'Vé 1', N'Loại 1', '2024-04-01 08:00:00', '2024-04-01 10:00:00', N'KH001', N'NV001', N'CT001'),
-    (N'V002', N'Vé 2', N'Loại 2', '2024-04-01 10:30:00', '2024-04-01 12:30:00', N'KH002', N'NV002', N'CT002'),
-    (N'V003', N'Vé 3', N'Loại 1', '2024-04-01 13:00:00', '2024-04-01 15:00:00', N'KH003', N'NV003', N'CT003'),
-    (N'V004', N'Vé 4', N'Loại 2', '2024-04-01 15:30:00', '2024-04-01 17:30:00', N'KH004', N'NV004', N'CT004'),
-    (N'V005', N'Vé 5', N'Loại 1', '2024-04-01 18:00:00', '2024-04-01 20:00:00', N'KH005', N'NV005', N'CT005'),
-    (N'V006', N'Vé 6', N'Loại 2', '2024-04-01 20:30:00', '2024-04-01 22:30:00', N'KH006', N'NV006', N'CT006'),
-    (N'V007', N'Vé 7', N'Loại 1', '2024-04-01 23:00:00', '2024-04-02 01:00:00', N'KH007', N'NV007', N'CT007'),
-    (N'V008', N'Vé 8', N'Loại 2', '2024-04-02 01:30:00', '2024-04-02 03:30:00', N'KH008', N'NV008', N'CT008'),
-    (N'V009', N'Vé 9', N'Loại 1', '2024-04-02 04:00:00', '2024-04-02 06:00:00', N'KH009', N'NV009', N'CT009'),
-    (N'V010', N'Vé 10', N'Loại 2', '2024-04-02 06:30:00', '2024-04-02 08:30:00', N'KH010', N'NV010', N'CT010');
+	INSERT INTO Ve (MaVe, TenVe, LoaiVe, NgayDi, NgayVe, MaKH, MaNV, MaChuyenTau, GiaTien) VALUES 
+		(N'V001', N'Vé 1', N'Loại 1', '2024-04-01 08:00:00', '2024-04-01 10:00:00', N'KH001', N'NV001', N'CT001', '150.000đ'),
+		(N'V002', N'Vé 2', N'Loại 2', '2024-04-01 10:30:00', '2024-04-01 12:30:00', N'KH002', N'NV002', N'CT002', '200.000đ'),
+		(N'V003', N'Vé 3', N'Loại 1', '2024-04-01 13:00:00', '2024-04-01 15:00:00', N'KH003', N'NV003', N'CT003', '250.000đ'),
+		(N'V004', N'Vé 4', N'Loại 2', '2024-04-01 15:30:00', '2024-04-01 17:30:00', N'KH004', N'NV004', N'CT004', '300.000đ'),
+		(N'V005', N'Vé 5', N'Loại 1', '2024-04-01 18:00:00', '2024-04-01 20:00:00', N'KH005', N'NV005', N'CT005', '350.000đ'),
+		(N'V006', N'Vé 6', N'Loại 2', '2024-04-01 20:30:00', '2024-04-01 22:30:00', N'KH006', N'NV006', N'CT006', '400.000đ'),
+		(N'V007', N'Vé 7', N'Loại 1', '2024-04-01 23:00:00', '2024-04-02 01:00:00', N'KH007', N'NV007', N'CT007', '450.000đ'),
+		(N'V008', N'Vé 8', N'Loại 2', '2024-04-02 01:30:00', '2024-04-02 03:30:00', N'KH008', N'NV008', N'CT008', '500.000đ'),
+		(N'V009', N'Vé 9', N'Loại 1', '2024-04-02 04:00:00', '2024-04-02 06:00:00', N'KH009', N'NV009', N'CT009', '550.000đ'),
+		(N'V010', N'Vé 10', N'Loại 2', '2024-04-02 06:30:00', '2024-04-02 08:30:00', N'KH010', N'NV010', N'CT010', '600.000đ');
+
 
 SELECT * FROM [dbo].[Ve];
 
