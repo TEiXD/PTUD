@@ -10,7 +10,7 @@ import connectDB.ConnectDB;
 import entity.NhaGa;
 
 public class NhaGaDAO {
-    public static List<NhaGa> layThongTin() {
+    public List<NhaGa> layThongTin() {
         List<NhaGa> dsNG = new ArrayList<>();
         try {
             ConnectDB.getInstance().connect();

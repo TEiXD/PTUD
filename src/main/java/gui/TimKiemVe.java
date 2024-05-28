@@ -1,18 +1,18 @@
 package gui;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 import DAO.ChuyenTauDAO;
 import connectDB.ConnectDB;
+import entity.ChuyenTau;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class TimKiemVe extends JPanel implements ActionListener {
     private static final long serialVersionUID = 1L;
@@ -22,12 +22,6 @@ public class TimKiemVe extends JPanel implements ActionListener {
     private JPanel pNorth;
     private JLabel lblTieuDe;
 
-    private JTextField txtgadi;
-    private JTextField txtgaden;
-    private JTextField txtngaydi;
-    private JTextField txtngayve;
-    private JComboBox<String> cboMckh;
-
     private JPanel panelThongTinKhachHang;
     private JLabel lblTenKhachHang;
     private JTextField txtTenKhachHang;
@@ -36,18 +30,22 @@ public class TimKiemVe extends JPanel implements ActionListener {
     private JLabel lblMaVe;
     private JTextField txtMaVe;
     private JLabel lblLoaiVe;
-    private JComboBox<String> cboLoaive;
+    private JTextField txtLoaiVe;
     private JLabel lblToa;
     private JTextField txtToa;
     private JLabel lblMaSoGhe;
     private JTextField txtMaSoGhe;
-    private JLabel lblGiaTien;	
+    private JLabel lblGiaTien;
     private JTextField txtGiaTien;
-    private TitledBorder inputPanelBorder;
+    private JComboBox<Object> cbb_gadi;
+    private JComboBox<Object> cbb_gaden;
+    private JComboBox<Object> cbb_ngaydi;
+    private JComboBox<Object> cbb_ngayve;
 
     public TimKiemVe(){
-    	ConnectDB.getInstance().connect();
-        new ChuyenTauDAO();
+        ConnectDB.getInstance().connect();
+        ChuyenTauDAO ctDAO = new ChuyenTauDAO();
+        ArrayList<ChuyenTau> listCT = ctDAO.layThongTin();
         setLayout(new BorderLayout());
 
         JPanel panel = new JPanel();
@@ -62,92 +60,85 @@ public class TimKiemVe extends JPanel implements ActionListener {
         lblTieuDe.setFont(new Font("Times New Roman", Font.BOLD, 50));
         lblTieuDe.setForeground(Color.blue);
 
-        JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new GridBagLayout());
-        inputPanel.setBorder(new EmptyBorder(10, 20, 30, 20));
-        contentPanel.add(inputPanel);
-
-        panel.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(5, 5, 5, 5);
-
         JLabel lblgadi = new JLabel("Ga đi:");
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        panel.add(lblgadi, gbc);
+        panel.add(lblgadi);
+        
+        cbb_gadi = new JComboBox<Object>();
+        
+        for(ChuyenTau ct : listCT) {
+        	cbb_gadi.addItem(ct.getGaDi());
+        }
+        panel.add(cbb_gadi);
 
-        txtgadi = new JTextField(20);
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel.add(txtgadi, gbc);
-
+        panel.add(Box.createVerticalStrut(5));
+        
         JLabel lblgaden = new JLabel("Ga đến:");
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        panel.add(lblgaden, gbc);
+        panel.add(lblgaden);
+        
+        cbb_gaden = new JComboBox<Object>();
+        for(ChuyenTau ct : listCT) {
+        	cbb_gaden.addItem(ct.getGaDen());
+        }
+        panel.add(cbb_gaden);
 
-        txtgaden = new JTextField(20);
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel.add(txtgaden, gbc);
+        panel.add(Box.createVerticalStrut(10));
 
         JLabel lblngaydi = new JLabel("Ngày đi:");
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        panel.add(lblngaydi, gbc);
+        panel.add(lblngaydi);
+        
+        cbb_ngaydi = new JComboBox<Object>();
+        for(ChuyenTau ct : listCT) {
+        	cbb_ngaydi.addItem(ct.getGioDi());
+        }
+        panel.add(cbb_ngaydi);
 
-        txtngaydi = new JTextField(20);
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel.add(txtngaydi, gbc);
+        panel.add(Box.createVerticalStrut(10)); 
 
         JLabel lblngayve = new JLabel("Ngày về:");
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        panel.add(lblngayve, gbc);
+        panel.add(lblngayve);
+        
+        cbb_ngayve = new JComboBox<Object>();
+        for(ChuyenTau ct : listCT) {
+        	cbb_ngayve.addItem(ct.getGioDen());
+        }
+        panel.add(cbb_ngayve);
+        
+        panel.add(Box.createVerticalStrut(10)); 
+        
+        JLabel lblTripType = new JLabel("Một chiều hoặc khứ hồi:");
+        JRadioButton rbtnmotchieu = new JRadioButton("Một chiều");
+        JRadioButton rbtnkhuhoi = new JRadioButton("Khứ hồi");
+        ButtonGroup tripTypeGroup = new ButtonGroup();
+        tripTypeGroup.add(rbtnmotchieu);
+        tripTypeGroup.add(rbtnkhuhoi);
+        panel.add(lblTripType);
 
-        txtngayve = new JTextField(20);
-        gbc.gridx = 1;
-        gbc.gridy = 3;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel.add(txtngayve, gbc);
-
-        JLabel lblMckh = new JLabel();
-        lblMckh.setFont(lblMckh.getFont().deriveFont(Font.BOLD, 14));
+        GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 4;
-        gbc.gridwidth = 2;
-        panel.add(lblMckh, gbc);
+        gbc.anchor = GridBagConstraints.WEST; 
+        gbc.insets = new Insets(0, 10, 0, 0);
+        panel.add(rbtnmotchieu, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 5;
-        gbc.gridwidth = 2;
-        cboMckh = new JComboBox<>(new String[]{"Một chiều", "Khứ Hồi"});
-        panel.add(cboMckh, gbc);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.WEST; 
+        panel.add(rbtnkhuhoi, gbc);
+
+        contentPanel.add(panel);
+        
         
         JButton btnTimVe = new JButton("Tìm Vé");
         btnTimVe.addActionListener(this);
-        
-        inputPanelBorder = BorderFactory.createTitledBorder("Thông tin lộ trình");
-        inputPanelBorder.setTitleFont(new Font("Times New Roman", Font.ITALIC, 18));
-        inputPanelBorder.setTitleJustification(TitledBorder.LEFT);
-        inputPanelBorder.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
-        inputPanel.setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(10, 10, 10, 10), inputPanelBorder));
-        
-
-        inputPanel.add(panel);
-        inputPanel.add(btnTimVe);
+        contentPanel.add(btnTimVe);
 
         // Bảng
-        String[] columns = { "Mã vé", "Mã tàu", "Thời gian đi", "Thời gian về" };
+        String[] columns = { "Mã vé", "Mã tàu", "Thời gian đi", "Thời gian về","Ga đi", "Ga đến", "Giá tiền" };
         modelCT = new DefaultTableModel(columns, 0);
         table = new JTable(modelCT);
         table.setBorder(new EmptyBorder(100, 10, 100, 10));
-        table.setPreferredSize(new Dimension(50, 300));
+        table.setPreferredSize(new Dimension(50, 500));
         table.setFont(new Font("Times New Roman", Font.BOLD, 18));
         table.setRowHeight(25);
 
@@ -180,12 +171,10 @@ public class TimKiemVe extends JPanel implements ActionListener {
         panelThongTinKhachHang.add(lblMaVe);
         panelThongTinKhachHang.add(txtMaVe);
 
-        
-        JLabel lblLoaive = new JLabel("Loại vé");
-        lblLoaive.setFont(lblLoaive.getFont().deriveFont(Font.BOLD, 14));
-        panelThongTinKhachHang.add(lblLoaive, gbc);
-        cboLoaive = new JComboBox<>(new String[]{"Loại 1", "Loại 2"});
-        panelThongTinKhachHang.add(cboLoaive, gbc);
+        lblLoaiVe = new JLabel("Loại vé:");
+        txtLoaiVe = new JTextField();
+        panelThongTinKhachHang.add(lblLoaiVe);
+        panelThongTinKhachHang.add(txtLoaiVe);
 
         lblToa = new JLabel("Toa:");
         txtToa = new JTextField();
@@ -205,37 +194,12 @@ public class TimKiemVe extends JPanel implements ActionListener {
         JButton btnDatVe = new JButton("Đặt vé");
         btnDatVe.addActionListener(this);
         contentPanel.add(btnDatVe);
-        
-        // Thêm panel trung gian vào inputPanelBorder
-        Border lineBorder = BorderFactory.createLineBorder(Color.BLACK);
-        Border emptyBorder = BorderFactory.createEmptyBorder(10, 10, 10, 10);
-        Border compoundBorder = BorderFactory.createCompoundBorder(lineBorder, emptyBorder);
-        TitledBorder inputPanelBorder = BorderFactory.createTitledBorder(compoundBorder, "Thông tin khách hàng");
-        inputPanelBorder.setTitleFont(new Font("Times New Roman", Font.ITALIC, 18));
-        inputPanelBorder.setTitleJustification(TitledBorder.LEFT);
-        panelThongTinKhachHang.setBorder(inputPanelBorder);
     }
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		
-	}
-
-	public JComboBox<String> getCboLoaive() {
-		return cboLoaive;
-	}
-
-	public void setCboLoaive(JComboBox<String> cboLoaive) {
-		this.cboLoaive = cboLoaive;
-	}
-
-	public JLabel getLblLoaiVe() {
-		return lblLoaiVe;
-	}
-
-	public void setLblLoaiVe(JLabel lblLoaiVe) {
-		this.lblLoaiVe = lblLoaiVe;
 	}
 
     /*public void actionPerformed(ActionEvent e) {

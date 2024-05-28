@@ -86,7 +86,7 @@ public class TimKiemTau extends JPanel implements ActionListener {
         gbc.gridx = 0;
         gbc.gridy = 1;
         inputPanel.add(lblLoaiTau, gbc);
-        cboLoaiTau = new JComboBox<>(new String[]{"None","Tàu cao tốc", "Tàu hỏa"});
+        cboLoaiTau = new JComboBox<>(new String[]{"Tàu cao tốc", "Tàu hỏa"});
         gbc.gridx = 1;
         gbc.gridy = 1;
         inputPanel.add(cboLoaiTau, gbc);
@@ -96,7 +96,7 @@ public class TimKiemTau extends JPanel implements ActionListener {
         gbc.gridx = 3;
         gbc.gridy = 1;
         inputPanel.add(lblMaNhaGa, gbc);
-        cboMaNhaGa = new JComboBox<>(new String[] {"None"});
+        cboMaNhaGa = new JComboBox<>();
         gbc.gridx = 4;
         gbc.gridy = 1;
         inputPanel.add(cboMaNhaGa, gbc);
@@ -109,7 +109,7 @@ public class TimKiemTau extends JPanel implements ActionListener {
         
         
         String[] columns = {
-            "Mã tàu","Mã nhà ga", "Loại tàu",  "Số lượng toa", "Số lượng ghế"
+            "Mã tàu", "Loại tàu", "Mã nhà ga", "Số lượng toa", "Số lượng ghế"
         };
         modelTau = new DefaultTableModel(columns, 0);
         table = new JTable(modelTau);
@@ -152,7 +152,7 @@ public class TimKiemTau extends JPanel implements ActionListener {
         List<Tau> listTau = tauDAO.layThongTin();
         for (Tau tau : listTau) {
             Object[] rowData = {
-                tau.getMaTau(),  tau.getNhaGa().getMaNhaGa(), tau.getLoaiTau(), tau.getSoLuongToa(), tau.getSoLuongGhe()};
+                tau.getMaTau(), tau.getLoaiTau(), tau.getNhaGa().getMaNhaGa(), tau.getSoLuongToa(), tau.getSoLuongGhe()};
             modelTau.addRow(rowData);
         }
     }
@@ -169,7 +169,7 @@ public class TimKiemTau extends JPanel implements ActionListener {
         String maTau = txtMaTau.getText().trim();
         String loaiTau = (String) cboLoaiTau.getSelectedItem();
         String maNhaGa = (String) cboMaNhaGa.getSelectedItem();
-        NhaGa ng = new NhaGa(maNhaGa);
+        
         int soLuongToa = 0;
         int soLuongGhe = 0;
         if (!txtSoLuongToa.getText().trim().isEmpty()) {
@@ -179,7 +179,7 @@ public class TimKiemTau extends JPanel implements ActionListener {
             soLuongGhe = Integer.parseInt(txtSoLuongGhe.getText().trim());
         }
 
-        Tau tau = new Tau(maTau, ng, loaiTau, soLuongToa, soLuongGhe);
+        Tau tau = new Tau(maTau, null, loaiTau, soLuongToa, soLuongGhe);
         List<Tau> dsTau = tauDAO.timKiemTau(tau);
 
         modelTau.setRowCount(0);
@@ -187,7 +187,7 @@ public class TimKiemTau extends JPanel implements ActionListener {
         for (Tau t : dsTau) {
             modelTau.addRow(new Object[]{t.getMaTau(), t.getLoaiTau(), t.getNhaGa().getMaNhaGa(),
                 t.getSoLuongToa(), t.getSoLuongGhe()});
-        }	
+        }
     }
 
     private void lamMoi() {

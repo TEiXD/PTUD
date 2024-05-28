@@ -32,6 +32,8 @@ public class Menu extends JFrame {
     private JMenuItem DangNhap;
     private DangNhap dangNhapPanel;
     private JMenuItem Dangxuat;
+    private JMenu mnNewMenu;
+    private JMenuItem mntmNewMenuItem;
     
 
     public Menu() {
@@ -197,6 +199,22 @@ public class Menu extends JFrame {
                 DangxuatActionPerformed(evt);
             }
         });
+        
+        mnNewMenu = new JMenu("Nhà ga");
+        jMenuBar1.add(mnNewMenu);
+        
+        mntmNewMenuItem = new JMenuItem("Thông tin nhà ga");
+        mntmNewMenuItem.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        	try {
+				ThongTinNGActionPerformed(e);
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+        	}
+        });
+        mnNewMenu.add(mntmNewMenuItem);
         Tk.add(Dangxuat);
 
         jMenuBar1.add(Tk);
@@ -223,6 +241,17 @@ public class Menu extends JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_NVMouseEntered
 
+    private void ThongTinNGActionPerformed(ActionEvent evt) throws SQLException{
+    	 panelChucNang.removeAll();
+         panelChucNang.repaint();
+         panelChucNang.revalidate();
+         ThongTinNG thongtinng = new ThongTinNG();
+         panelChucNang.add(thongtinng);
+         ThongTinNG.setVisible(true);
+         panelChucNang.repaint();
+         panelChucNang.revalidate();
+    }
+    
     private void ThongTinNVActionPerformed(ActionEvent evt) throws SQLException {//GEN-FIRST:event_ThongTinNVActionPerformed
         panelChucNang.removeAll();
         panelChucNang.repaint();

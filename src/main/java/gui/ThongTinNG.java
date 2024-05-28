@@ -15,7 +15,7 @@ import java.text.*;
 import java.util.Calendar;
 import java.util.List;
 
-public class ThongTinNV extends JPanel implements ActionListener {
+public class ThongTinNG extends JPanel implements ActionListener {
 
     private static final long serialVersionUID = 1L;
     private final JPanel contentPanel = new JPanel();
@@ -39,7 +39,7 @@ public class ThongTinNV extends JPanel implements ActionListener {
     private TitledBorder inputPanelBorder;
     private JSpinner spinNgaySinh;
 
-    public ThongTinNV() throws SQLException {
+    public ThongTinNG() throws SQLException {
 
         ConnectDB.getInstance().connect();
         nvDAO = new NhanVienDAO();

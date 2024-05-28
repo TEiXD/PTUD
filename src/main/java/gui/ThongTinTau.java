@@ -16,8 +16,6 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
     private final JPanel contentPanel = new JPanel();
     private JTable table;
     private JTextField txtMaTau;
-    private JTextField txtSoLuongToa;
-    private JTextField txtSoLuongGhe;
     private DefaultTableModel modelTau;
     private JButton btnThem;
     private JButton btnSua;
@@ -32,6 +30,8 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
     private JLabel lblNhap;
     private JTextField txtNhap;
     private NhaGaDAO nhagaDAO;
+    private JSpinner SLToa;
+    private JSpinner SLGhe;
 
     public ThongTinTau() {
         ConnectDB.getInstance().connect();
@@ -82,14 +82,13 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
         JLabel lblSoLuongToa = new JLabel("Số lượng toa:");
         lblSoLuongToa.setFont(lblSoLuongToa.getFont().deriveFont(Font.BOLD, 14));
         inputPanel.add(lblSoLuongToa);
-        txtSoLuongToa = new JTextField();
-        inputPanel.add(txtSoLuongToa);
+        
+        SLToa = new JSpinner();
+        inputPanel.add(SLToa);
 
         JLabel lblSoLuongGhe = new JLabel("Số lượng ghế:");
         lblSoLuongGhe.setFont(lblSoLuongGhe.getFont().deriveFont(Font.BOLD, 14));
         inputPanel.add(lblSoLuongGhe);
-        txtSoLuongGhe = new JTextField();
-        inputPanel.add(txtSoLuongGhe);
 
         inputPanelBorder = BorderFactory.createTitledBorder("Thông Tin Tàu");
         inputPanelBorder.setTitleFont(new Font("Times New Roman", Font.ITALIC, 18));
@@ -97,6 +96,9 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
         inputPanelBorder.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         inputPanel.setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(10, 10, 10, 10), inputPanelBorder));
         inputPanel.setPreferredSize(new Dimension(300, 250));
+        
+        SLGhe = new JSpinner();
+        inputPanel.add(SLGhe);
 
         String[] columns = {"Mã tàu", "Mã nhà ga", "Loại tàu", "Số lượng toa", "Số lượng ghế"};
         modelTau = new DefaultTableModel(columns, 0);
@@ -112,8 +114,8 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
                         cboMaNhaGa.setSelectedItem(maNhaGaValue.toString());
                     }
                     cboLoaiTau.setSelectedItem(modelTau.getValueAt(selectedRow, 2).toString());
-                    txtSoLuongToa.setText(modelTau.getValueAt(selectedRow, 3).toString());
-                    txtSoLuongGhe.setText(modelTau.getValueAt(selectedRow, 4).toString());
+                    SLToa.setValue((int)modelTau.getValueAt(selectedRow, 3));
+                    SLGhe.setValue((int)modelTau.getValueAt(selectedRow, 4));
                 }
             }
         });
@@ -169,8 +171,8 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
             String maTau = txtMaTau.getText().trim();
             String maNhaGa = cboMaNhaGa.getSelectedItem().toString().trim();
             String loaiTau = cboLoaiTau.getSelectedItem().toString().trim();
-            int soLuongToa = Integer.parseInt(txtSoLuongToa.getText().trim());
-            int soLuongGhe = Integer.parseInt(txtSoLuongGhe.getText().trim());
+            int soLuongToa = Integer.parseInt((String) SLToa.getValue());
+            int soLuongGhe = Integer.parseInt((String) SLGhe.getValue());
 
             if (maTau.isEmpty() || loaiTau.isEmpty() || maNhaGa.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -210,8 +212,8 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
             String maTau = txtMaTau.getText().trim();
             String maNhaGa = cboMaNhaGa.getSelectedItem().toString().trim();
             String loaiTau = cboLoaiTau.getSelectedItem().toString().trim();
-            int soLuongToa = Integer.parseInt(txtSoLuongToa.getText().trim());
-            int soLuongGhe = Integer.parseInt(txtSoLuongGhe.getText().trim());
+            int soLuongToa = Integer.parseInt((String) SLToa.getValue());
+            int soLuongGhe = Integer.parseInt((String) SLGhe.getValue());
 
             if (maTau.isEmpty() || loaiTau.isEmpty() || maNhaGa.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -269,8 +271,8 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
         txtMaTau.setText("");
         cboLoaiTau.setSelectedIndex(0);
         cboMaNhaGa.setSelectedIndex(0);
-        txtSoLuongToa.setText("");
-        txtSoLuongGhe.setText("");
+        SLToa.setValue(0);
+        SLGhe.setValue(0);
     }
 
     @Override
@@ -283,8 +285,8 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
                 cboMaNhaGa.setSelectedItem(maNhaGaValue.toString());
             }
             cboLoaiTau.setSelectedItem(modelTau.getValueAt(selectedRow, 2).toString());
-            txtSoLuongToa.setText(modelTau.getValueAt(selectedRow, 3).toString());
-            txtSoLuongGhe.setText(modelTau.getValueAt(selectedRow, 4).toString());
+            SLToa.setValue((int)modelTau.getValueAt(selectedRow, 3));
+            SLGhe.setValue((int)modelTau.getValueAt(selectedRow, 4));
         }
     }
 
