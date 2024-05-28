@@ -135,9 +135,16 @@ public class TimKiemNV extends JPanel implements ActionListener {
         
         //
         String[] columns = {
-        		"Mã nhân viên", "Họ tên", "Giới tính", "Số điện thoại", "Email", "Ngày Sinh", "Trình độ"
-        };
-        modelNV = new DefaultTableModel(columns, 0);
+        	    "Mã nhân viên", "Họ tên", "Giới tính", "Số điện thoại", "Email", "Ngày Sinh", "Trình độ"
+        	};
+        	modelNV = new DefaultTableModel(columns, 0) {
+        	    private static final long serialVersionUID = 1L;
+        	    //Ko cho chỉnh table :V
+				@Override
+        	    public boolean isCellEditable(int row, int column) {
+        	        return false;
+        	    }
+        	};
         table = new JTable(modelNV);
         table.setBorder(new EmptyBorder(100, 10, 100, 10));
         table.setPreferredSize(new Dimension(50, 550));

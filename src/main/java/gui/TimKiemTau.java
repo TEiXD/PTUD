@@ -109,10 +109,17 @@ public class TimKiemTau extends JPanel implements ActionListener {
         
         
         String[] columns = {
-            "Mã tàu", "Loại tàu", "Mã nhà ga", "Số lượng toa", "Số lượng ghế"
-        };
-        modelTau = new DefaultTableModel(columns, 0);
-        table = new JTable(modelTau);
+        	    "Mã tàu", "Loại tàu", "Mã nhà ga", "Số lượng toa", "Số lượng ghế"
+        	};
+        	modelTau = new DefaultTableModel(columns, 0) {
+        	    private static final long serialVersionUID = 1L;
+        	    //no no chỉnh bảng :D
+				@Override
+        	    public boolean isCellEditable(int row, int column) {
+        	        return false;
+        	    }
+        	};
+        	table = new JTable(modelTau);
         table.setBorder(new EmptyBorder(100, 10, 100, 10));
         table.setPreferredSize(new Dimension(50, 550));
         table.setFont(new Font("Times New Roman", Font.BOLD, 18));

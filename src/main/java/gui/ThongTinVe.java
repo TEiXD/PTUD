@@ -163,10 +163,17 @@ public class ThongTinVe extends javax.swing.JPanel implements ActionListener, Mo
 
         // Table
         String[] columns = {
-                "Mã vé", "Tên vé", "Loại vé", "Ngày đi", "Ngày về", "Mã khách hàng", "Mã nhân viên", "Mã chuyến tàu"
-        };
-        modelVe = new DefaultTableModel(columns, 0);
-        table = new JTable(modelVe);
+        	    "Mã vé", "Tên vé", "Loại vé", "Ngày đi", "Ngày về", "Mã khách hàng", "Mã nhân viên", "Mã chuyến tàu"
+        	};
+        	modelVe = new DefaultTableModel(columns, 0) {
+        	    private static final long serialVersionUID = 1L;
+        	    //Ko chỉnh table i mean code...
+				@Override
+        	    public boolean isCellEditable(int row, int column) {
+        	        return false;
+        	    }
+        	};
+        	table = new JTable(modelVe);
         table.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {

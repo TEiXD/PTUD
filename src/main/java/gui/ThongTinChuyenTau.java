@@ -123,24 +123,29 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
 
         // Table
         String[] columns = {
-                "Mã chuyến tàu", "Mã tàu", "Ga đi", "Ga đến", "Thời gian đi", "Thời gian đến"
-        };
-        modelCT = new DefaultTableModel(columns, 0);
-        table = new JTable(modelCT);
-        table.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int SelectedRows = table.getSelectedRow(); 
-                if (SelectedRows != -1) { 
-                    txtMaChuyenTau.setText(modelCT.getValueAt(SelectedRows, 0).toString());
-                    cboMaTau.setSelectedItem(modelCT.getValueAt(SelectedRows, 1).toString());
-                    cboGaDi.setSelectedItem(modelCT.getValueAt(SelectedRows, 2));
-                    cboGaDen.setSelectedItem(modelCT.getValueAt(SelectedRows, 3));
-
-                }
-            }
-
-        });
+        	    "Mã chuyến tàu", "Mã tàu", "Ga đi", "Ga đến", "Thời gian đi", "Thời gian đến"
+        	};
+        	modelCT = new DefaultTableModel(columns, 0) {
+        	    private static final long serialVersionUID = 1L;
+        	    //Defi no chỉnh bảng...
+				@Override
+        	    public boolean isCellEditable(int row, int column) {
+        	        return false;
+        	    }
+        	};
+        	table = new JTable(modelCT);
+        	table.addMouseListener(new MouseAdapter() {
+        	    @Override
+        	    public void mouseClicked(MouseEvent e) {
+        	        int SelectedRows = table.getSelectedRow(); 
+        	        if (SelectedRows != -1) { 
+        	            txtMaChuyenTau.setText(modelCT.getValueAt(SelectedRows, 0).toString());
+        	            cboMaTau.setSelectedItem(modelCT.getValueAt(SelectedRows, 1).toString());
+        	            cboGaDi.setSelectedItem(modelCT.getValueAt(SelectedRows, 2));
+        	            cboGaDen.setSelectedItem(modelCT.getValueAt(SelectedRows, 3));
+        	        }
+        	    }
+        	});
         table.setBorder(new EmptyBorder(100, 10, 100, 10));
         table.setPreferredSize(new Dimension(50, 550));
         table.setFont(new Font("Times New Roman", Font.BOLD, 18));

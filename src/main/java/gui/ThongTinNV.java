@@ -142,10 +142,17 @@ public class ThongTinNV extends JPanel implements ActionListener {
         inputPanel.add(cbo_MaNhaGa);
         // Table
         String[] columns = {
-                "Mã nhân viên", "Họ tên", "CCCD", "Giới tính", "Số điện thoại", "Email", "Ngày sinh", "Trình độ", "Mã nhà ga"
-        };
-        modelNV = new DefaultTableModel(columns, 0);
-        table = new JTable(modelNV);
+        	    "Mã nhân viên", "Họ tên", "CCCD", "Giới tính", "Số điện thoại", "Email", "Ngày sinh", "Trình độ", "Mã nhà ga"
+        	};
+        	modelNV = new DefaultTableModel(columns, 0) {
+        	    private static final long serialVersionUID = 1L;
+        	    //the same thing :v (ko chỉnh bảng)
+				@Override
+        	    public boolean isCellEditable(int row, int column) {
+        	        return false;
+        	    }
+        	};
+        	table = new JTable(modelNV);
         table.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {

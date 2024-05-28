@@ -26,7 +26,6 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
     private JComboBox<String> cboLoaiTau;
     private JComboBox<String> cboMaNhaGa;
     private TitledBorder inputPanelBorder;
-    private JButton btnTim;
     private JLabel lblNhap;
     private JTextField txtNhap;
     private NhaGaDAO nhagaDAO;
@@ -101,7 +100,13 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
         inputPanel.add(SLGhe);
 
         String[] columns = {"Mã tàu", "Mã nhà ga", "Loại tàu", "Số lượng toa", "Số lượng ghế"};
-        modelTau = new DefaultTableModel(columns, 0);
+        modelTau = new DefaultTableModel(columns, 0) {
+            private static final long serialVersionUID = 1L;
+			@Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         table = new JTable(modelTau);
         table.addMouseListener(new MouseAdapter() {
             @Override
