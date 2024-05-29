@@ -13,8 +13,7 @@ import java.sql.SQLException;
 import javax.swing.*;
 
 public class Menu extends JFrame {
-    private static final long serialVersionUID = 1L;
-	private JPanel panelChucNang;
+    private JPanel panelChucNang;
     private JLabel lblBg;
     private JMenuBar jMenuBar1;
     private JMenu Home;
@@ -33,8 +32,9 @@ public class Menu extends JFrame {
     private JMenuItem DangNhap;
     private DangNhap dangNhapPanel;
     private JMenuItem Dangxuat;
-    private JMenu mnNewMenu;
-    private JMenuItem mntmNewMenuItem;
+    private JMenu NhaGa;
+    private JMenuItem ThongTinNhaGa;
+
     
 
     public Menu() {
@@ -128,7 +128,8 @@ public class Menu extends JFrame {
         jMenuBar1.add(NV);
 
         Ve.setText("Vé");
-
+        
+        
         DatVe.setIcon(new ImageIcon(getClass().getResource("/images/ticket.png")));
         DatVe.setText("Đặt vé");
         DatVe.addActionListener(new ActionListener() {
@@ -201,21 +202,21 @@ public class Menu extends JFrame {
             }
         });
         
-        mnNewMenu = new JMenu("Nhà ga");
-        jMenuBar1.add(mnNewMenu);
+        NhaGa = new JMenu("Nhà ga");
+        jMenuBar1.add(NhaGa);
         
-        mntmNewMenuItem = new JMenuItem("Thông tin nhà ga");
-        mntmNewMenuItem.addActionListener(new ActionListener() {
+        ThongTinNhaGa = new JMenuItem("Thông tin nhà ga");
+        ThongTinNhaGa.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         	try {
-				ThongTinNGActionPerformed(e);
+				ThongTinNhaGaActionPerformed(e);
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
         	}
         });
-        mnNewMenu.add(mntmNewMenuItem);
+        NhaGa.add(ThongTinNhaGa);
         Tk.add(Dangxuat);
 
         jMenuBar1.add(Tk);
@@ -242,15 +243,15 @@ public class Menu extends JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_NVMouseEntered
 
-    private void ThongTinNGActionPerformed(ActionEvent evt) throws SQLException{
-    	 panelChucNang.removeAll();
-         panelChucNang.repaint();
-         panelChucNang.revalidate();
-         ThongTinNG thongtinng = new ThongTinNG();
-         panelChucNang.add(thongtinng);
-         ThongTinNG.setVisible(true);
-         panelChucNang.repaint();
-         panelChucNang.revalidate();
+    private void ThongTinNhaGaActionPerformed(ActionEvent evt) throws SQLException {
+    	panelChucNang.removeAll();
+        panelChucNang.repaint();
+        panelChucNang.revalidate();
+        ThongTinNG thongTinNG = new ThongTinNG();
+        panelChucNang.add(thongTinNG);
+        thongTinNG.setVisible(true);
+        panelChucNang.repaint();
+        panelChucNang.revalidate();
     }
     
     private void ThongTinNVActionPerformed(ActionEvent evt) throws SQLException {//GEN-FIRST:event_ThongTinNVActionPerformed

@@ -4,37 +4,39 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JOptionPane;
 
 import connectDB.ConnectDB;
 import entity.NhaGa;
 import entity.NhanVien;
 
 public class NhanVienDAO {
-	//Add DS
 	public List<NhanVien> layThongTin() {
 	    List<NhanVien> dsNhanVien = new ArrayList<>();
 	    try {
+	    	ConnectDB.getInstance().connect();
 	        Connection conn = ConnectDB.getConnection();
 	        String SQL = "SELECT nv.MaNV, nv.HoTen, nv.CCCD, nv.GioiTinh, nv.SDT, nv.Email, nv.NgaySinh, nv.TrinhDo, ng.MaNhaGa " +
 	                     "FROM NhanVien nv INNER JOIN NhaGa ng ON nv.MaNhaGa = ng.MaNhaGa";
-	        try (PreparedStatement ps = conn.prepareStatement(SQL);
-	             ResultSet rs = ps.executeQuery()) {
-	            while (rs.next()) {
-	                String maNV = rs.getString(1);
-	                String hoTen = rs.getString(2);
-	                String CCCD = rs.getString(3);
-	                String gioiTinh = rs.getString(4);
-	                String SDT = rs.getString(5);
-	                String email = rs.getString(6);
-	                String ngaySinh = rs.getString(7);
-	                String trinhDo = rs.getString(8);
-	                String maNhaGa = rs.getString(9);
-	                NhaGa ng = new NhaGa(maNhaGa);
-	                NhanVien nv = new NhanVien(maNV, hoTen, CCCD, gioiTinh, SDT, email, ngaySinh, trinhDo, ng);
-	                dsNhanVien.add(nv);
-	            }
+	        Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(SQL);
+	        while (rs.next()) {
+	            String maNV = rs.getString(1);
+	            String hoTen = rs.getString(2);
+	            String CCCD = rs.getString(3);
+	            String gioiTinh = rs.getString(4);
+	            String SDT = rs.getString(5);
+	            String email = rs.getString(6);
+	            String ngaySinh = rs.getString(7);
+	            String trinhDo = rs.getString(8);
+	            String maNhaGa = rs.getString(9);
+	            NhaGa ng = new NhaGa(maNhaGa);
+	            NhanVien nv = new NhanVien(maNV, hoTen, CCCD, gioiTinh, SDT, email, ngaySinh, trinhDo, ng);
+	            dsNhanVien.add(nv);
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();
@@ -42,15 +44,42 @@ public class NhanVienDAO {
 	    return dsNhanVien;
 	}
 
+	public String getLastMaNV() {
+	    String lastMaNV = null;
+	    ConnectDB.getInstance();
+	    try (Connection con = ConnectDB.getConnection();
+	         PreparedStatement statement = con.prepareStatement("SELECT MaNV FROM NhanVien ORDER BY MaNV DESC LIMIT 1")) {
+	        ResultSet rs = statement.executeQuery();
+	        if (rs.next()) {
+	            lastMaNV = rs.getString("MaNV");
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return lastMaNV;
+	}
+	
+	public synchronized String generateMaNV() {
+	    // Giả sử mã nhân viên cuối cùng là NV999, bạn muốn mã tiếp theo là NV1000
+	    String lastMaNV = getLastMaNV(); // Phương thức này cần truy vấn CSDL để lấy mã NV lớn nhất
+	    String prefix = lastMaNV.substring(0, 2); // NV
+	    int number = Integer.parseInt(lastMaNV.substring(2)) + 1; // 999 + 1 = 1000
+	    return prefix + number; // NV1000
+	}
+
 	
 	//Them NV
 	public boolean addNV(NhanVien nhanVien) {
-	    try (Connection conn = ConnectDB.getConnection();
-	         PreparedStatement st = conn.prepareStatement(
-	         "INSERT INTO dbo.NhanVien (MaNV, HoTen, CCCD, GioiTinh, SDT, Email, NamSinh, TrinhDo, MaNhaGa)"
-	         + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
-	        
-	        st.setString(1, nhanVien.getMaNV().trim());
+	    ConnectDB.getInstance();
+	    Connection conn = ConnectDB.getConnection();
+	    PreparedStatement st = null;
+	    String SQL = "INSERT INTO dbo.NhanVien (MaNV, HoTen, CCCD, GioiTinh, SDT, Email, NamSinh, TrinhDo, MaNhaGa)" +
+	                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	    int n = 0;
+	    try {
+	        st = conn.prepareStatement(SQL);
+	        String newMaNV = generateMaNV(); // Sinh mã nhân viên mới
+	        st.setString(1, newMaNV);
 	        st.setString(2, nhanVien.getHoTen().trim());
 	        st.setString(3, nhanVien.getCCCD().trim());
 	        st.setString(4, nhanVien.getGioiTinh().trim());
@@ -59,74 +88,91 @@ public class NhanVienDAO {
 	        st.setObject(7, nhanVien.getNgaySinh());
 	        st.setString(8, nhanVien.getTrinhDo().trim());
 	        st.setString(9, nhanVien.getNhaGa().getMaNhaGa().trim());
-	        int rowsAff = st.executeUpdate();
-	        return rowsAff > 0;
+	        n = st.executeUpdate();
+	        return n > 0;
 	    } catch (SQLException e) {
 	        e.printStackTrace();
-	        return false;
+	        JOptionPane.showMessageDialog(null, "Lỗi khi thêm nhân viên vào cơ sở dữ liệu!");
 	    }
+	    return n > 0;
 	}
+
 	//xoa NV
 	public boolean xoaNV(String maNV) {
-	    try (Connection conn = ConnectDB.getConnection();
-	         PreparedStatement st = conn.prepareStatement("DELETE FROM dbo.NhanVien WHERE MaNV = ?")) {
+		ConnectDB.getInstance();
+        Connection conn = ConnectDB.getConnection();
+        PreparedStatement st = null;
+        int n = 0;
+	    try {
+	    	String SQL = "DELETE FROM dbo.NhanVien WHERE MaNV = ?";
 	        st.setString(1, maNV);
 	        int rowsAff = st.executeUpdate();
 	        return rowsAff > 0;
 	    } catch (SQLException e) {
 	        e.printStackTrace();
-	        return false;
+	        JOptionPane.showMessageDialog(null, "Lỗi khi xóa nhân viên khỏi cơ sở dữ liệu!");
 	    }
+	    return n > 0;
 	}
 
 	
 	//Sua NV
 	public boolean SuaNV(NhanVien nhanVien) {
-	    try (Connection conn = ConnectDB.getConnection();
-	         PreparedStatement st = conn.prepareStatement(
-	         "UPDATE dbo.NhanVien SET MaNV = ?, HoTen = ?, CCCD = ?, GioiTinh = ?, SDT = ?, Email = ?, NgaySinh = ?, TrinhDo = ?, MaNhaGa = ?"
-	         + " WHERE MaNV = ?")) {
-	        st.setString(1, nhanVien.getMaNV());
-	        st.setString(2, nhanVien.getHoTen());
-	        st.setString(3, nhanVien.getCCCD());
-	        st.setString(4, nhanVien.getGioiTinh());
-	        st.setString(5, nhanVien.getSDT());
-	        st.setString(6, nhanVien.getEmail());
-	        st.setObject(7, nhanVien.getNgaySinh());
-	        st.setString(8, nhanVien.getTrinhDo());
-	        st.setString(9, nhanVien.getNhaGa().getMaNhaGa().trim());
-	        int rowsAff = st.executeUpdate();
-	        return rowsAff > 0;
+		ConnectDB.getInstance();
+        Connection conn = ConnectDB.getConnection();
+        PreparedStatement st = null;
+        int n = 0;
+	    try {
+	    	String SQL = "UPDATE dbo.NhanVien SET MaNV = ?, HoTen = ?, CCCD = ?, GioiTinh = ?, SDT = ?, Email = ?, NgaySinh = ?, TrinhDo = ?, MaNhaGa = ? WHERE MaNV = ?";
+	        st.setString(1, nhanVien.getHoTen());
+	        st.setString(2, nhanVien.getCCCD());
+	        st.setString(3, nhanVien.getGioiTinh());
+	        st.setString(4, nhanVien.getSDT());
+	        st.setString(5, nhanVien.getEmail());
+	        st.setObject(6, nhanVien.getNgaySinh());
+	        st.setString(7, nhanVien.getTrinhDo());
+	        st.setString(8, nhanVien.getNhaGa().getMaNhaGa().trim());
+	        st.setString(9, nhanVien.getMaNV());
+	        n = st.executeUpdate();
+	        return n > 0;
 	    } catch (SQLException e) {
 	        e.printStackTrace();
-	        return false;
+	        JOptionPane.showMessageDialog(null, "Lỗi khi sửa nhân viên trên cơ sở dữ liệu!");
 	    }
+	    return n > 0;
 	}
 
 	//TimkiemNV
 	public List<NhanVien> timKiemNhanVien(NhanVien nv) {
 	    List<NhanVien> dsNhanVien = new ArrayList<>();
-	    try (Connection conn = ConnectDB.getConnection();
-	         PreparedStatement ps = conn.prepareStatement("SELECT nv.MaNV, nv.HoTen, nv.CCCD, nv.GioiTinh, nv.SDT, nv.Email, nv.NgaySinh, nv.TrinhDo, ng.MaNhaGa "
-	                                                    + "FROM NhanVien nv INNER JOIN NhaGa ng ON nv.MaNhaGa = ng.MaNhaGa "
-	                                                    + "WHERE nv.MaNV = ? OR nv.HoTen = ?")) {
-	        ps.setString(1, nv.getMaNV());
-	        ps.setString(2, nv.getHoTen());
-	        
-	        try (ResultSet rs = ps.executeQuery()) {
-	            while (rs.next()) {
-	                String maNV = rs.getString(1);
-	                String hoTen = rs.getString(2);
-	                String CCCD = rs.getString(3);
-	                String gioiTinh = rs.getString(4);
-	                String SDT = rs.getString(5);
-	                String email = rs.getString(6);
-	                String ngaySinh = rs.getString(7);
-	                String trinhDo = rs.getString(8);
-	                String maNhaGa = rs.getString(9);
-	                NhaGa ng = new NhaGa(maNhaGa);
-	                NhanVien nhanVien = new NhanVien(maNV, hoTen, CCCD, gioiTinh, SDT, email, ngaySinh, trinhDo, ng);
-	                dsNhanVien.add(nhanVien);
+	    try {
+	        Connection conn = ConnectDB.getConnection();
+	        String SQL = "SELECT nv.MaNV, nv.HoTen, nv.CCCD, nv.GioiTinh, nv.SDT, nv.Email, nv.NgaySinh, nv.TrinhDo, ng.MaNhaGa " +
+	                     "FROM NhanVien nv INNER JOIN NhaGa ng ON nv.MaNhaGa = ng.MaNhaGa " +
+	                     "WHERE nv.MaNV = ? OR nv.HoTen = ? OR nv.GioiTinh = ? OR nv.SDT = ? OR nv.Email = ? OR nv.TrinhDo = ?";
+	        try (PreparedStatement ps = conn.prepareStatement(SQL)) {
+	            ps.setString(1, nv.getMaNV());
+	            ps.setString(2, nv.getHoTen());
+		        ps.setString(3, nv.getGioiTinh());
+		        ps.setString(4, nv.getSDT());
+		        ps.setString(5, nv.getEmail());
+		        ps.setString(6, nv.getTrinhDo());
+	            
+	            try (ResultSet rs = ps.executeQuery()) {
+	                while (rs.next()) {
+	                    String maNV = rs.getString(1);
+	                    String hoTen = rs.getString(2);
+	                    String CCCD = rs.getString(3);
+	                    String gioiTinh = rs.getString(4);
+	                    String SDT = rs.getString(5);
+	                    String email = rs.getString(6);
+	                    String ngaySinh = rs.getString(7);
+	                    String trinhDo = rs.getString(8);
+	                    String maNhaGa = rs.getString(9);
+	                    NhaGa ng = new NhaGa(maNhaGa);
+	                    NhanVien nhanVien = new NhanVien(maNV, hoTen, CCCD, gioiTinh, SDT, email, ngaySinh, trinhDo, ng);
+	                    dsNhanVien.add(nhanVien);
+	                }
 	            }
 	        }
 	    } catch (SQLException e) {
@@ -134,4 +180,6 @@ public class NhanVienDAO {
 	    }
 	    return dsNhanVien;
 	}
+
 }
+	

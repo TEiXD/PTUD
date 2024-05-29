@@ -4,30 +4,38 @@ import java.util.Objects;
 
 public class Tau {
     private String MaTau;
+    private String TenTau;
     private NhaGa NhaGa;
     private String LoaiTau;
-    private int SoLuongToa, SoLuongGhe;
-
-	public Tau(String maTau, entity.NhaGa nhaGa, String loaiTau, int soLuongToa, int soLuongGhe) {
+	
+	public Tau(String maTau, String tenTau, entity.NhaGa nhaGa, String loaiTau) {
 		super();
 		MaTau = maTau;
+		TenTau = tenTau;
 		NhaGa = nhaGa;
 		LoaiTau = loaiTau;
-		SoLuongToa = soLuongToa;
-		SoLuongGhe = soLuongGhe;
 	}
+
+	public Tau() {}
 
 	public Tau(String maTau) {
 		this.MaTau = maTau;
 	}
-    
-	
+
 	public String getMaTau() {
 		return MaTau;
 	}
 
 	public void setMaTau(String maTau) {
 		MaTau = maTau;
+	}
+
+	public String getTenTau() {
+		return TenTau;
+	}
+
+	public void setTenTau(String tenTau) {
+		TenTau = tenTau;
 	}
 
 	public NhaGa getNhaGa() {
@@ -46,40 +54,25 @@ public class Tau {
 		LoaiTau = loaiTau;
 	}
 
-	public int getSoLuongToa() {
-		return SoLuongToa;
-	}
-
-	public void setSoLuongToa(int soLuongToa) {
-		SoLuongToa = soLuongToa;
-	}
-
-	public int getSoLuongGhe() {
-		return SoLuongGhe;
-	}
-
-	public void setSoLuongGhe(int soLuongGhe) {
-		SoLuongGhe = soLuongGhe;
+	@Override
+	public int hashCode() {
+		return Objects.hash(MaTau);
 	}
 
 	@Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Tau other = (Tau) obj;
-        return Objects.equals(MaTau, other.MaTau);
-    }
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Tau other = (Tau) obj;
+		return Objects.equals(MaTau, other.MaTau);
+	}
 
 	@Override
 	public String toString() {
-		return "Tau [MaTau=" + MaTau + ", NhaGa=" + NhaGa + ", LoaiTau=" + LoaiTau + ", SoLuongToa=" + SoLuongToa
-				+ ", SoLuongGhe=" + SoLuongGhe + "]";
+		return "Tau [MaTau=" + MaTau + ", TenTau=" + TenTau + ", NhaGa=" + NhaGa + ", LoaiTau=" + LoaiTau + "]";
 	}
-
-	
-	
 }

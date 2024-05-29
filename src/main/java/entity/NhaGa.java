@@ -1,42 +1,53 @@
 package entity;
 
 public class NhaGa {
-    private String MaNhaGa;
-    private String TenNhaGa;
-    private String DiaDiem;
+    private String MaNhaGa, TenNhaGa, DiaChi;
+    
+    public NhaGa(String maNhaGa, String tenNhaGa, String diaChi) {
+		super();
+		MaNhaGa = maNhaGa;
+		TenNhaGa = tenNhaGa;
+		DiaChi = diaChi;
+	}
 
-    public NhaGa(String MaNhaGa, String TenNhaGa, String DiaDiem) {
-        this.MaNhaGa = MaNhaGa;
-        this.TenNhaGa = TenNhaGa;
-        this.DiaDiem = DiaDiem;
-    }
-
+	public NhaGa() {}
+    
     public NhaGa(String maNhaGa) {
-        this.MaNhaGa = maNhaGa;
-    }
+		this.MaNhaGa=maNhaGa;
+	}
 
+
+    
     public String getMaNhaGa() {
-        return MaNhaGa;
-    }
+		return MaNhaGa;
+	}
 
-    public void setMaNhaGa(String maNhaGa) {
-        this.MaNhaGa = maNhaGa;
-    }
+	public void setMaNhaGa(String maNhaGa) {
+		MaNhaGa = maNhaGa;
+	}
 
-    public String getTenNhaGa() {
-        return TenNhaGa;
-    }
+	public String getTenNhaGa() {
+		return TenNhaGa;
+	}
 
-    public void setTenNhaGa(String tenNhaGa) {
-        this.TenNhaGa = tenNhaGa;
-    }
+	public void setTenNhaGa(String tenNhaGa) {
+		TenNhaGa = tenNhaGa;
+	}
 
-    public String getDiaDiem() {
-        return DiaDiem;
-    }
+	public String getDiaChi() {
+		return DiaChi;
+	}
 
-    public void setDiaDiem(String diaDiem) {
-        this.DiaDiem = diaDiem;
+	public void setDiaChi(String diaChi) {
+		DiaChi = diaChi;
+	}
+	
+	@Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((MaNhaGa == null) ? 0 : MaNhaGa.hashCode());
+        return result;
     }
 
     @Override
@@ -48,11 +59,18 @@ public class NhaGa {
         if (getClass() != obj.getClass())
             return false;
         NhaGa other = (NhaGa) obj;
-        return MaNhaGa.equals(other.MaNhaGa);
+        if (MaNhaGa == null) {
+            if (other.MaNhaGa != null)
+                return false;
+        } else if (!MaNhaGa.equals(other.MaNhaGa))
+            return false;
+        return true;
     }
 
-    @Override
-    public String toString() {
-        return "NhaGa [MaNhaGa=" + MaNhaGa + ", TenNhaGa=" + TenNhaGa + ", DiaDiem=" + DiaDiem + "]";
-    }
+	@Override
+	public String toString() {
+		return "NhaGa [MaNhaGa=" + MaNhaGa + ", TenNhaGa=" + TenNhaGa + ", DiaChi=" + DiaChi + "]";
+	}
+
+	
 }

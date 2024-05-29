@@ -5,10 +5,10 @@ import javax.swing.border.*;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import DAO.*;
 import connectDB.ConnectDB;
 import entity.*;
-import java.util.List;
 
 public class ThongTinTau extends JPanel implements ActionListener, MouseListener {
 
@@ -16,6 +16,7 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
     private final JPanel contentPanel = new JPanel();
     private JTable table;
     private JTextField txtMaTau;
+    private JTextField txtTenTau;
     private DefaultTableModel modelTau;
     private JButton btnThem;
     private JButton btnSua;
@@ -24,16 +25,14 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
     private JPanel pNorth;
     private JLabel lblTieuDe;
     private JComboBox<String> cboLoaiTau;
-    private JComboBox<String> cboMaNhaGa;
-    private TitledBorder inputPanelBorder;
-    private NhaGaDAO nhagaDAO;
-    private JSpinner SLToa;
-    private JSpinner SLGhe;
+    private JComboBox<String> cboNhaGa;
+    private JButton btnTim;
+    private NhaGaDAO nhaGaDAO;
 
     public ThongTinTau() {
         ConnectDB.getInstance().connect();
         tauDAO = new TauDAO();
-        nhagaDAO = new NhaGaDAO();
+        nhaGaDAO = new NhaGaDAO();
 
         setLayout(new BorderLayout());
 
@@ -47,83 +46,43 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
         lblTieuDe.setForeground(Color.blue);
 
         JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new GridLayout(5, 2, 5, 15)); // Updated GridLayout
+        inputPanel.setLayout(new GridLayout(2, 4, 20, 15));
         inputPanel.setBorder(new EmptyBorder(10, 20, 30, 20));
         contentPanel.add(inputPanel);
 
         JLabel lblMaTau = new JLabel("Mã tàu:");
-        lblMaTau.setFont(lblMaTau.getFont().deriveFont(Font.BOLD, 14));
         inputPanel.add(lblMaTau);
-
         txtMaTau = new JTextField();
         inputPanel.add(txtMaTau);
         txtMaTau.setColumns(10);
 
+        JLabel lblTenTau = new JLabel("Tên tàu:");
+        inputPanel.add(lblTenTau);
+        txtTenTau = new JTextField();
+        inputPanel.add(txtTenTau);
+        txtTenTau.setColumns(10);
+
         JLabel lblLoaiTau = new JLabel("Loại tàu:");
-        lblLoaiTau.setFont(lblLoaiTau.getFont().deriveFont(Font.BOLD, 14));
         inputPanel.add(lblLoaiTau);
-        cboLoaiTau = new JComboBox<>(new String[]{"Tàu cao tốc", "Tàu hỏa"});
+        cboLoaiTau = new JComboBox<>(new String[]{"Tất cả", "Tàu cao tốc", "Tàu hỏa"});
         inputPanel.add(cboLoaiTau);
 
-        JLabel lblMaNhaGa = new JLabel("Mã nhà ga:");
-        lblMaNhaGa.setFont(lblMaNhaGa.getFont().deriveFont(Font.BOLD, 14));
-        inputPanel.add(lblMaNhaGa);
-        cboMaNhaGa = new JComboBox<>();
-        cboMaNhaGa.setEditable(false);
-        List<NhaGa> listNG = nhagaDAO.layThongTin();
-        for (NhaGa ng : listNG) {
-            cboMaNhaGa.addItem(ng.getMaNhaGa());
+        JLabel lblNhaGa = new JLabel("Nhà ga:");
+        inputPanel.add(lblNhaGa);
+        cboNhaGa = new JComboBox<>();
+        cboNhaGa.addItem("Tất cả");
+        ArrayList<NhaGa> dsNG = nhaGaDAO.layThongTin();
+        for (NhaGa ng : dsNG) {
+            cboNhaGa.addItem(ng.getTenNhaGa());
         }
-        inputPanel.add(cboMaNhaGa);
+        inputPanel.add(cboNhaGa);
 
-        JLabel lblSoLuongToa = new JLabel("Số lượng toa:");
-        lblSoLuongToa.setFont(lblSoLuongToa.getFont().deriveFont(Font.BOLD, 14));
-        inputPanel.add(lblSoLuongToa);
-        
-        SLToa = new JSpinner();
-        inputPanel.add(SLToa);
+        inputPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK), "Thông Tin Tàu", TitledBorder.LEFT, TitledBorder.TOP, new Font("Times New Roman", Font.ITALIC, 18)));
 
-        JLabel lblSoLuongGhe = new JLabel("Số lượng ghế:");
-        lblSoLuongGhe.setFont(lblSoLuongGhe.getFont().deriveFont(Font.BOLD, 14));
-        inputPanel.add(lblSoLuongGhe);
-
-        inputPanelBorder = BorderFactory.createTitledBorder("Thông Tin Tàu");
-        inputPanelBorder.setTitleFont(new Font("Times New Roman", Font.ITALIC, 18));
-        inputPanelBorder.setTitleJustification(TitledBorder.LEFT);
-        inputPanelBorder.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        inputPanel.setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(10, 10, 10, 10), inputPanelBorder));
-        inputPanel.setPreferredSize(new Dimension(300, 250));
-        
-        SLGhe = new JSpinner();
-        inputPanel.add(SLGhe);
-
-        String[] columns = {"Mã tàu", "Mã nhà ga", "Loại tàu", "Số lượng toa", "Số lượng ghế"};
-        modelTau = new DefaultTableModel(columns, 0) {
-            private static final long serialVersionUID = 1L;
-			@Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
+        String[] columns = {"Mã tàu", "Tên tàu", "Nhà ga", "Loại tàu"};
+        modelTau = new DefaultTableModel(columns, 0);
         table = new JTable(modelTau);
-        table.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int selectedRow = table.getSelectedRow();
-                if (selectedRow != -1) {
-                    txtMaTau.setText(modelTau.getValueAt(selectedRow, 0).toString());
-                    Object maNhaGaValue = modelTau.getValueAt(selectedRow, 1);
-                    if (maNhaGaValue != null) {
-                        cboMaNhaGa.setSelectedItem(maNhaGaValue.toString());
-                    }
-                    cboLoaiTau.setSelectedItem(modelTau.getValueAt(selectedRow, 2).toString());
-                    SLToa.setValue((int)modelTau.getValueAt(selectedRow, 3));
-                    SLGhe.setValue((int)modelTau.getValueAt(selectedRow, 4));
-                }
-            }
-        });
-        table.setBorder(new EmptyBorder(100, 10, 100, 10));
-        table.setPreferredSize(new Dimension(50, 550));
+        table.addMouseListener(this);
         table.setFont(new Font("Times New Roman", Font.BOLD, 18));
         table.setRowHeight(25);
 
@@ -162,120 +121,154 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
         btnThem.addActionListener(this);
         btnSua.addActionListener(this);
         btnXoa.addActionListener(this);
-        table.addMouseListener(this);
 
         docDuLieuDBVaoTable();
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         Object o = e.getSource();
 
         if (o.equals(btnThem)) {
-            String maTau = txtMaTau.getText().trim();
-            String maNhaGa = cboMaNhaGa.getSelectedItem().toString().trim();
-            String loaiTau = cboLoaiTau.getSelectedItem().toString().trim();
-            int soLuongToa = (int) SLToa.getValue(); 
-            int soLuongGhe = (int) SLGhe.getValue(); 
+            if (ValidData()) {
+                String maTau = txtMaTau.getText().trim();
+                String ten = txtTenTau.getText().trim();
+                NhaGa ng = null;
+                ArrayList<NhaGa> dsNG = nhaGaDAO.layThongTin();
+                for (NhaGa ng1 : dsNG) {
+                    if (cboNhaGa.getSelectedItem().toString().equalsIgnoreCase(ng1.getTenNhaGa())) {
+                        ng = new NhaGa(ng1.getMaNhaGa());
+                    }
+                }
+                String loaiTau = cboLoaiTau.getSelectedItem().toString().trim();
 
-            if (maTau.isEmpty() || loaiTau.isEmpty() || maNhaGa.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+                Tau tau = new Tau(maTau, ten, ng, loaiTau);
 
-            NhaGa ng = new NhaGa(maNhaGa);
-            Tau tau = new Tau(maTau, ng, loaiTau, soLuongToa, soLuongGhe);
-
-            boolean trungMa = false;
-            for (int i = 0; i < modelTau.getRowCount(); i++) {
-                if (maTau.equals(modelTau.getValueAt(i, 0))) {
-                    trungMa = true;
-                    break;
+                boolean trungMa = false;
+                for (int i = 0; i < modelTau.getRowCount(); i++) {
+                    if (maTau.equals(modelTau.getValueAt(i, 0))) {
+                        trungMa = true;
+                        break;
+                    }
+                }
+                if (trungMa) {
+                    JOptionPane.showMessageDialog(this, "Mã tàu đã tồn tại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    tauDAO.addTau(tau);
+                    JOptionPane.showMessageDialog(this, "Thêm thành công");
+                    docDuLieuDBVaoTable();
+                    xoaRong();
                 }
             }
-
-            if (trungMa) {
-                JOptionPane.showMessageDialog(this, "Mã tàu đã tồn tại. Vui lòng chọn mã tàu khác.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            } else {
-                	tauDAO.addTau(tau);
-                    modelTau.addRow(new Object[]{tau.getMaTau(), tau.getNhaGa().getMaNhaGa(), tau.getLoaiTau(), tau.getSoLuongToa(), tau.getSoLuongGhe()});
-                    JOptionPane.showMessageDialog(this, "Thêm thành công");
-                    xoaRong();
-                
-            }    
-
-
         } else if (o.equals(btnSua)) {
             int selectedRow = table.getSelectedRow();
+            if (selectedRow >= 0) {
+                if (ValidData()) {
+                    String maTau = txtMaTau.getText().trim();
+                    String ten = txtTenTau.getText().trim();
+                    NhaGa ng = null;
+                    ArrayList<NhaGa> dsNG = nhaGaDAO.layThongTin();
+                    for (NhaGa ng1 : dsNG) {
+                        if (cboNhaGa.getSelectedItem().toString().equalsIgnoreCase(ng1.getTenNhaGa())) {
+                            ng = new NhaGa(ng1.getMaNhaGa());
+                        }
+                    }
+                    String loaiTau = cboLoaiTau.getSelectedItem().toString().trim();
 
-            if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng muốn sửa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                return;
+                    Tau tau = new Tau(maTau, ten, ng, loaiTau);
+                    int action = JOptionPane.showConfirmDialog(null, "Bạn có muốn cập nhật không?", "Cập nhật", JOptionPane.YES_NO_OPTION);
+                    if (action == JOptionPane.YES_OPTION) {
+                        if (tauDAO.suaTau(tau)) {
+                            JOptionPane.showMessageDialog(null, "Cập nhật thành công");
+                            docDuLieuDBVaoTable();
+                            xoaRong();
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Lỗi khi sửa dữ liệu!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn tàu cần sửa", "Lỗi", JOptionPane.WARNING_MESSAGE);
             }
 
-            String maTau = txtMaTau.getText().trim();
-            String maNhaGa = cboMaNhaGa.getSelectedItem().toString().trim();
-            String loaiTau = cboLoaiTau.getSelectedItem().toString().trim();
-            int soLuongToa = Integer.parseInt((String) SLToa.getValue());
-            int soLuongGhe = Integer.parseInt((String) SLGhe.getValue());
-
-            if (maTau.isEmpty() || loaiTau.isEmpty() || maNhaGa.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            NhaGa ng = new NhaGa(maNhaGa);
-            Tau tau = new Tau(maTau, ng, loaiTau, soLuongToa, soLuongGhe);
-
-            try {
-                tauDAO.suaTau(tau);
-                modelTau.setValueAt(maTau, selectedRow, 0);
-                modelTau.setValueAt(maNhaGa, selectedRow, 1);
-                modelTau.setValueAt(loaiTau, selectedRow, 2);
-                modelTau.setValueAt(soLuongToa, selectedRow, 3);
-                modelTau.setValueAt(soLuongGhe, selectedRow, 4);
-                JOptionPane.showMessageDialog(this, "Sửa thành công");
-            } catch (Exception e2) {
-                e2.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Lỗi khi sửa dữ liệu!");
-            }
-            xoaRong();
         } else if (o.equals(btnXoa)) {
             int selectedRow = table.getSelectedRow();
 
-            if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng muốn xóa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                return;
+            if (selectedRow >= 0) {
+                String maTau = modelTau.getValueAt(selectedRow, 0).toString();
+                int action = JOptionPane.showConfirmDialog(null, "Bạn có muốn xóa?", "Xóa", JOptionPane.YES_NO_OPTION);
+                if (action == JOptionPane.YES_OPTION) {
+                    try {
+                        tauDAO.xoaTau(maTau);
+                        modelTau.removeRow(selectedRow);
+                        JOptionPane.showMessageDialog(this, "Xóa thành công");
+                    } catch (Exception e2) {
+                        e2.printStackTrace();
+                        JOptionPane.showMessageDialog(this, "Lỗi khi xóa dữ liệu!");
+                    }
+                    xoaRong();
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Vui lòng chọn tàu cần xóa", "Lỗi", JOptionPane.WARNING_MESSAGE);
             }
-
-            String maTau = modelTau.getValueAt(selectedRow, 0).toString();
-
-            try {
-                tauDAO.xoaTau(maTau);
-                modelTau.removeRow(selectedRow);
-                JOptionPane.showMessageDialog(this, "Xóa thành công");
-            } catch (Exception e2) {
-                e2.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Lỗi khi xóa dữ liệu!");
-            }
-            xoaRong();
-        } 
+        }
     }
 
-    private void docDuLieuDBVaoTable() {
-    	List<Tau> listTau = tauDAO.layThongTin();
-    	for (Tau tau : listTau) {
-    	    cboMaNhaGa.addItem(tau.getNhaGa().getMaNhaGa());
-    	    modelTau.addRow(new Object[]{tau.getMaTau(), tau.getNhaGa().getMaNhaGa(), tau.getLoaiTau(), tau.getSoLuongToa(), tau.getSoLuongGhe()});
-    
+    private boolean ValidData() {
+        if (txtMaTau.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Mã tàu không được để trống");
+            txtMaTau.selectAll();
+            txtMaTau.requestFocus();
+            return false;
+        }
+
+        if (!txtMaTau.getText().matches("[a-zA-Z0-9]{1,10}")) {
+            JOptionPane.showMessageDialog(null, "Mã tàu có tối đa 10 ký tự và không chứa ký tự đặc biệt");
+            txtMaTau.selectAll();
+            txtMaTau.requestFocus();
+            return false;
+        }
+
+        if (txtTenTau.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Tên tàu không được để trống");
+            txtTenTau.selectAll();
+            txtTenTau.requestFocus();
+            return false;
+        }
+
+        if (!txtTenTau.getText().matches("^[a-zA-Z ]+$")) {
+            JOptionPane.showMessageDialog(null, "Tên tàu không chứa số và ký tự đặc biệt");
+            txtTenTau.selectAll();
+            txtTenTau.requestFocus();
+            return false;
+        }
+
+        if (cboNhaGa.getSelectedItem().toString().equalsIgnoreCase("Tất cả")) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn nhà ga");
+            return false;
+        }
+
+        if (cboLoaiTau.getSelectedItem().toString().equalsIgnoreCase("Tất cả")) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn loại tàu");
+            return false;
+        }
+        return true;
+    }
+
+    public void docDuLieuDBVaoTable() {
+        ArrayList<Tau> listTau = tauDAO.layThongTin();
+        ArrayList<NhaGa> listNG = nhaGaDAO.layThongTin();
+        modelTau.setRowCount(0);
+        for (Tau tau : listTau) {
+            modelTau.addRow(new Object[]{tau.getMaTau(), tau.getTenTau(), tau.getNhaGa().getMaNhaGa(), tau.getLoaiTau()});
         }
     }
 
     public void xoaRong() {
         txtMaTau.setText("");
-        cboLoaiTau.setSelectedIndex(0);
-        cboMaNhaGa.setSelectedIndex(0);
-        SLToa.setValue(0);
-        SLGhe.setValue(0);
+        txtTenTau.setText("");
+        cboLoaiTau.setSelectedItem("Tất cả");
+        cboNhaGa.setSelectedItem("Tất cả");
     }
 
     @Override
@@ -283,13 +276,12 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
         int selectedRow = table.getSelectedRow();
         if (selectedRow != -1) {
             txtMaTau.setText(modelTau.getValueAt(selectedRow, 0).toString());
-            Object maNhaGaValue = modelTau.getValueAt(selectedRow, 1);
-            if (maNhaGaValue != null) {
-                cboMaNhaGa.setSelectedItem(maNhaGaValue.toString());
+            txtTenTau.setText(modelTau.getValueAt(selectedRow, 1).toString());
+            Object nhaGa = modelTau.getValueAt(selectedRow, 2);
+            if (nhaGa != null) {
+                cboNhaGa.setSelectedItem(nhaGa.toString());
             }
-            cboLoaiTau.setSelectedItem(modelTau.getValueAt(selectedRow, 2).toString());
-            SLToa.setValue((int)modelTau.getValueAt(selectedRow, 3));
-            SLGhe.setValue((int)modelTau.getValueAt(selectedRow, 4));
+            cboLoaiTau.setSelectedItem(modelTau.getValueAt(selectedRow, 3).toString());
         }
     }
 

@@ -4,45 +4,42 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
 
-import DAO.NhanVienDAO;
+import DAO.NhaGaDAO;
 import connectDB.ConnectDB;
-import entity.*;
+import entity.NhaGa;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
 import java.text.*;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import net.miginfocom.swing.MigLayout;
 
 public class ThongTinNG extends JPanel implements ActionListener {
 
     private static final long serialVersionUID = 1L;
     private final JPanel contentPanel = new JPanel();
     private JTable table;
-    private JTextField txtMaNV;
-    private DefaultTableModel modelNV;
+    private DefaultTableModel modelNG;
     private JButton btnThem;
     private JButton btnSua;
     private JButton btnXoa;
     private JButton btnXoaTrang;
-    private NhanVienDAO nvDAO;
+    private NhaGaDAO ngDAO;
     private JPanel pNorth;
     private JLabel lblTieuDe;
-    private JComboBox<String> cboGioiTinh;
-    private JComboBox<String> cboTrinhDo;
-    private JTextField txtHoTen;
-    private JTextField txtCCCD;
-    private JTextField txtSDT;
-    private JTextField txtEmail;
-    private JTextField txtMaNhaGa;
-    private TitledBorder inputPanelBorder;
-    private JSpinner spinNgaySinh;
+    private JTextField txt_MaNG;
+    private JLabel lbl_TenNG;
+    private JTextField txt_TenNG;
+    private JLabel lbl_DiaChi;
+    private JComboBox<String> cbo_DiaDiem;
 
     public ThongTinNG() throws SQLException {
 
         ConnectDB.getInstance().connect();
-        nvDAO = new NhanVienDAO();
+        ngDAO = new NhaGaDAO();
 
         setLayout(new BorderLayout());
 
@@ -51,121 +48,59 @@ public class ThongTinNG extends JPanel implements ActionListener {
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
         add(pNorth = new JPanel(), BorderLayout.NORTH);
-        pNorth.add(lblTieuDe = new JLabel("THÔNG TIN NHÂN VIÊN"));
+        pNorth.add(lblTieuDe = new JLabel("THÔNG TIN NHÀ GA"));
         lblTieuDe.setFont(new Font("Times New Roman", Font.BOLD, 40));
         lblTieuDe.setForeground(Color.blue);
 
         JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new GridLayout(3, 6, 50, 15));
         inputPanel.setBorder(new EmptyBorder(10, 20, 30, 20));
         contentPanel.add(inputPanel);
-
-        // Add input fields to the panel
-        JLabel lblMaNV = new JLabel("Mã nhân viên");
-        lblMaNV.setFont(lblMaNV.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
-        inputPanel.add(lblMaNV);
-
-        txtMaNV = new JTextField();
-        txtMaNV.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        inputPanel.add(txtMaNV);
-        txtMaNV.setColumns(10);
-
-        JLabel lblHoTen = new JLabel("Họ tên");
-        lblHoTen.setFont(lblHoTen.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
-        inputPanel.add(lblHoTen);
-        txtHoTen = new JTextField();
-        txtHoTen.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        inputPanel.add(txtHoTen);
-
-        JLabel lblGioiTinh = new JLabel("Giới tính");
-        lblGioiTinh.setFont(lblGioiTinh.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
-        inputPanel.add(lblGioiTinh);
-        cboGioiTinh = new JComboBox<>(new String[]{"Nam", "Nữ"});
-        cboGioiTinh.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        inputPanel.add(cboGioiTinh);
-
-        JLabel lblCCCD = new JLabel("CCCD");
-        lblCCCD.setFont(lblCCCD.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
-        inputPanel.add(lblCCCD);
-        txtCCCD = new JTextField();
-        txtCCCD.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        inputPanel.add(txtCCCD);
-
-        JLabel lblSDT = new JLabel("Số điện thoại");
-        lblSDT.setFont(lblSDT.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
-        inputPanel.add(lblSDT);
-        txtSDT = new JTextField();
-        txtSDT.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        inputPanel.add(txtSDT);
-
-        JLabel lblEmail = new JLabel("Email");
-        lblEmail.setFont(lblEmail.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
-        inputPanel.add(lblEmail);
-        txtEmail = new JTextField();
-        txtEmail.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        inputPanel.add(txtEmail);
-
-        JLabel lblNgaySinh = new JLabel("Ngày sinh");
-        lblNgaySinh.setFont(lblNgaySinh.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
-        inputPanel.add(lblNgaySinh);
+        inputPanel.setLayout(new GridLayout(0, 1, 0, 0));
         
-        SpinnerDateModel model = new SpinnerDateModel();
-        spinNgaySinh = new JSpinner(model);
-        spinNgaySinh.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        JSpinner.DateEditor editor = new JSpinner.DateEditor(spinNgaySinh, "yyyy-MM-dd");
-        spinNgaySinh.setEditor(editor);
-        inputPanel.add(spinNgaySinh);
-
-        JLabel lblTrinhDo = new JLabel("Trình độ");
-        lblTrinhDo.setFont(lblTrinhDo.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
-        inputPanel.add(lblTrinhDo);
-        cboTrinhDo = new JComboBox<>(new String[]{"Đại học", "Cử nhân", "Cao đẳng"});
-        cboTrinhDo.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        inputPanel.add(cboTrinhDo);
-
-        JLabel lblMaNhaGa = new JLabel("Mã nhà ga");
-        lblMaNhaGa.setFont(lblMaNhaGa.getFont().deriveFont(Font.BOLD, 14)); // Set font size and style
-        inputPanel.add(lblMaNhaGa);
-        txtMaNhaGa = new JTextField();
-        txtMaNhaGa.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        inputPanel.add(txtMaNhaGa);
-
-        inputPanelBorder = BorderFactory.createTitledBorder("Thông Tin Nhân Viên");
-        inputPanelBorder.setTitleFont(new Font("Times New Roman", Font.ITALIC, 18));
-        inputPanelBorder.setTitleJustification(TitledBorder.LEFT);
-        inputPanelBorder.setBorder(BorderFactory.createLineBorder(Color.BLACK)); // Thay đổi màu của LineBorder thành đen
-        inputPanel.setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(10, 10, 10, 10), inputPanelBorder));
-
+        JLabel lbl_MaNG = new JLabel("Mã nhà ga");
+        inputPanel.add(lbl_MaNG);
+        
+        txt_MaNG = new JTextField();
+        inputPanel.add(txt_MaNG);
+        txt_MaNG.setColumns(10);
+        
+        lbl_TenNG = new JLabel("Tên nhà ga");
+        inputPanel.add(lbl_TenNG);
+        
+        txt_TenNG = new JTextField();
+        inputPanel.add(txt_TenNG);
+        txt_TenNG.setColumns(10);
+        
+        lbl_DiaChi = new JLabel("Địa chỉ");
+        inputPanel.add(lbl_DiaChi);
+        
+        cbo_DiaDiem = new JComboBox<String>();
+        ArrayList<NhaGa> listNhaGa = ngDAO.layThongTin();
+        for (NhaGa ng : listNhaGa) {
+            cbo_DiaDiem.addItem(ng.getDiaChi());
+        }
+        inputPanel.add(cbo_DiaDiem);
         // Table
         String[] columns = {
-                "Mã nhân viên", "Họ tên", "CCCD", "Giới tính", "Số điện thoại", "Email", "Ngày sinh", "Trình độ", "Mã nhà ga"
+                "Mã nhà ga", "Tên nhà ga", "Địa chỉ"
         };
-        modelNV = new DefaultTableModel(columns, 0);
-        table = new JTable(modelNV);
+        modelNG = new DefaultTableModel(columns, 0);
+        table = new JTable(modelNG);
         table.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent e) {
-        		int SelectedRows = table.getSelectedRow(); // Get the selected row index
-                if (SelectedRows != -1) { // Check if a row is selected
-                	txtMaNV.setText(modelNV.getValueAt(SelectedRows, 0).toString());
-                	txtHoTen.setText(modelNV.getValueAt(SelectedRows, 1).toString());
-                	txtCCCD.setText(modelNV.getValueAt(SelectedRows, 2).toString());
-                	cboGioiTinh.setSelectedItem(modelNV.getValueAt(SelectedRows, 3).toString());
-                	txtSDT.setText(modelNV.getValueAt(SelectedRows, 4).toString());
-                	txtEmail.setText(modelNV.getValueAt(SelectedRows, 5).toString());
+        		int SelectedRows = table.getSelectedRow(); 
+                if (SelectedRows != -1) {
+                	String maNhaGa = (String) modelNG.getValueAt(SelectedRows, 0);
+                    String tenNhaGa = (String) modelNG.getValueAt(SelectedRows, 1);
+                    String diaChi = (String) modelNG.getValueAt(SelectedRows, 2);
 
-                	try {
-                        java.util.Date utilDate = new SimpleDateFormat("yyyy-MM-dd").parse(modelNV.getValueAt(SelectedRows, 6).toString());
-                        java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-                        spinNgaySinh.setValue(sqlDate);
-                    } catch (ParseException ex) {
-                        ex.printStackTrace();
-                    }
-
-                	cboTrinhDo.setSelectedItem(modelNV.getValueAt(SelectedRows, 7).toString());
-                	txtMaNhaGa.setText(modelNV.getValueAt(SelectedRows, 8).toString());
+                    // Set the values to the input fields
+                    txt_MaNG.setText(maNhaGa);
+                    txt_TenNG.setText(tenNhaGa);
+                    cbo_DiaDiem.setSelectedItem(diaChi);
                 }
-        	}
+            }
         });
         table.setBorder(new EmptyBorder(100, 10, 100, 10));
         table.setPreferredSize(new Dimension(50, 550));
@@ -212,126 +147,89 @@ public class ThongTinNG extends JPanel implements ActionListener {
     }
 
     private void docDuLieuVaoTable() {
-        modelNV.setRowCount(0); // Clear table
-        List<NhanVien> listNV = nvDAO.layThongTin();
-        for (NhanVien nv : listNV) {
-            Object[] rowData = {
-                    nv.getMaNV(), nv.getHoTen(), nv.getCCCD(), nv.getGioiTinh(), nv.getSDT(), nv.getEmail(), nv.getNgaySinh(), nv.getTrinhDo(), nv.getNhaGa().getMaNhaGa()};
-            modelNV.addRow(rowData);
-        }
+        modelNG.setRowCount(0); // Clear table
+        List<NhaGa> listNG = ngDAO.layThongTin();
+        for (NhaGa ng : listNG) {
+            modelNG.addRow(new Object[]{	
+            		ng.getMaNhaGa(),ng.getTenNhaGa(),ng.getDiaChi()
+            });      
+        };
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
     	Object o = e.getSource();
 	    	if (o.equals(btnThem)) {
-	    		 // Get the information from the input fields
-	    	    String maNV = txtMaNV.getText().trim();
-	    	    String hoTen = txtHoTen.getText().trim();
-	    	    String gioiTinh = cboGioiTinh.getSelectedItem().toString().trim();
-	    	    String cccd = txtCCCD.getText().trim();
-	    	    String sdt = txtSDT.getText().trim();
-	    	    String email = txtEmail.getText().trim();
-	    	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	    	    String ngaySinhstr = sdf.format((java.util.Date) spinNgaySinh.getValue());
-	    	    String trinhDo = cboTrinhDo.getSelectedItem().toString().trim();
-	    	    String maNhaGa = txtMaNhaGa.getText().trim();
-	
-	    	    // Check for empty inputs
-	    	    if (maNV.isEmpty() || hoTen.isEmpty() || cccd.isEmpty() || sdt.isEmpty() || email.isEmpty() || trinhDo.isEmpty() || maNhaGa.isEmpty()) {
-	    	        JOptionPane.showMessageDialog(this, "Please fill in all fields!");
-	    	        return;
-	    	    }
-	
-	    	    NhaGa ng = new NhaGa(maNhaGa);
-	
-	    	    // Create a NhanVien object from the input information
-	    	    NhanVien nv = new NhanVien(maNV, hoTen, cccd, gioiTinh, sdt, email, ngaySinhstr, trinhDo, ng);
-	
-	    	    // Add the NhanVien to the database
-	    	    try {
-	    	        boolean isAdded = nvDAO.addNV(nv);
-	    	        if (isAdded) {
-	    	            modelNV.addRow(new Object[]{maNV, hoTen, gioiTinh, cccd, sdt, email, ngaySinhstr, trinhDo, ng});
-	    	            JOptionPane.showMessageDialog(this, "Dữ liệu của nhân viên được thêm thành công");
-	    	        } 
-	    	    } catch (Exception e2) {
-	    	        e2.printStackTrace();
-	    	        JOptionPane.showMessageDialog(this, "Quá trình sửa dữ liệu đã xảy ra lỗi");
-	    	    } finally {
-	    	        // Reload the table after adding
-	    	        docDuLieuVaoTable();
-	    	    }
+	    		String maNG = txt_MaNG.getText().trim();
+	    		String tenNG = txt_TenNG.getText().trim();
+	    		String diadiem = (String) cbo_DiaDiem.getSelectedItem();
+	    		 if (maNG.isEmpty() || tenNG.isEmpty() || diadiem.isEmpty()) {;
+		    	        JOptionPane.showMessageDialog(this, "Please fill in all fields!");
+		    	        return;
+		    	    }
+	    		 try {
+	    			 NhaGa ng = new NhaGa(maNG, tenNG, diadiem);
+		    	        boolean isAdded = ngDAO.addNhaGa(ng);
+		    	        if (isAdded) {
+		    	            modelNG.addRow(new Object[]{maNG,tenNG,diadiem});
+		    	            JOptionPane.showMessageDialog(this, "Dữ liệu của nhà ga được thêm thành công");
+		    	        } 
+		    	    } catch (Exception e2) {
+		    	        e2.printStackTrace();
+		    	        JOptionPane.showMessageDialog(this, "Quá trình sửa dữ liệu đã xảy ra lỗi");
+		    	    } finally {
+		    	        // Reload the table after adding
+		    	        docDuLieuVaoTable();
+		    	    }
 
         } else if (o.equals(btnSua)) {
-            // Code xử lý sự kiện sửa nhân viên
-        	int selectedRow = table.getSelectedRow();
-        	if (selectedRow != -1) {
-        	    String maNV = txtMaNV.getText();
-        	    String hoTen = txtHoTen.getText();
-        	    String gioiTinh = cboGioiTinh.getSelectedItem().toString();
-        	    String cccd = txtCCCD.getText();
-        	    String sdt = txtSDT.getText();
-        	    String email = txtEmail.getText();
-        	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        	    String ngaySinhstr = sdf.format((java.util.Date) spinNgaySinh.getValue());
-        	    String trinhDo = cboTrinhDo.getSelectedItem().toString();
-        	    String maNhaGa = txtMaNhaGa.getText();
+        	 int selectedRow = table.getSelectedRow();
+        	    if (selectedRow != -1) {
+        	        String maNhaGa = txt_MaNG.getText();
+        	        String tenNhaGa = txt_TenNG.getText();
+        	        String diaChi = (String) cbo_DiaDiem.getSelectedItem();
+        	        NhaGa ng = new NhaGa(maNhaGa, tenNhaGa, diaChi);
+        	        try {
+        	            // Update data in the database
+        	            boolean isUpdated = ngDAO.suaNhaGa(ng);
+        	            if (isUpdated) {
+        	                // Update data in the table
+        	                modelNG.setValueAt(maNhaGa, selectedRow, 0);
+        	                modelNG.setValueAt(tenNhaGa, selectedRow, 1);
+        	                modelNG.setValueAt(diaChi, selectedRow, 2);
+        	            JOptionPane.showMessageDialog(this, "Dữ liệu của nhà ga đã được sửa thành công");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "");
+                    }
+                } catch (Exception e2) {
+                    e2.printStackTrace();
+                    JOptionPane.showMessageDialog(this, "Quá trình cập nhật thông tin xảy ra lỗi");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn một hàng để sửa");
+            }
 
-        	    NhaGa ng = new NhaGa(maNhaGa);
-        	    NhanVien nv = new NhanVien(maNV, hoTen, cccd, gioiTinh, sdt, email, ngaySinhstr, trinhDo, ng);
-
-        	    try {
-        	        // Update data in the database
-        	        boolean isUpdated = nvDAO.SuaNV(nv);
-
-        	        if (isUpdated) {
-        	            // Update data in the table
-        	            modelNV.setValueAt(maNV, selectedRow, 0);
-        	            modelNV.setValueAt(hoTen, selectedRow, 1);
-        	            modelNV.setValueAt(gioiTinh, selectedRow, 2);
-        	            modelNV.setValueAt(cccd, selectedRow, 3);
-        	            modelNV.setValueAt(sdt, selectedRow, 4);
-        	            modelNV.setValueAt(email, selectedRow, 5);
-        	            modelNV.setValueAt(ngaySinhstr, selectedRow, 6);
-        	            modelNV.setValueAt(trinhDo, selectedRow, 7);
-        	            modelNV.setValueAt(maNhaGa, selectedRow, 8);
-
-        	            JOptionPane.showMessageDialog(this, "Dữ liệu của nhân viên đã được sửa thành công");
-        	        } else {
-        	            JOptionPane.showMessageDialog(this, "");
-        	        }
-        	    } catch (Exception e2) {
-        	        e2.printStackTrace();
-        	        JOptionPane.showMessageDialog(this, "Quá trình cập nhật thông tin xảy ra lỗi");
-        	    }
-        	} else {
-        	    JOptionPane.showMessageDialog(this, "Vui lòng chọn một hàng để sửa");
-        	}
-
-            // Cập nhật thông tin của nhân viên được chọn trong bảng
         } else if (o.equals(btnXoa)) {
-        	// Code xử lý sự kiện xóa nhân viên
-        	int selectedRow = table.getSelectedRow();
-        	if (selectedRow != -1) {
-        	    String maNV = txtMaNV.getText();
-        	    try {
-        	        // Delete the NhanVien object from the database
-        	        boolean isDeleted = nvDAO.xoaNV(maNV);
+        	 int selectedRow = table.getSelectedRow();
+        	    if (selectedRow != -1) {
+        	        String maNhaGa = txt_MaNG.getText();
+        	        try {
+        	            // Delete the NhaGa object from the database
+        	            boolean isDeleted = ngDAO.xoaNhaGa(maNhaGa);
 
-        	        if (isDeleted) {
-        	            // Remove the row from the table
-        	            modelNV.removeRow(selectedRow);
-        	            JOptionPane.showMessageDialog(this, "NhanVien data deleted successfully!");
+        	            if (isDeleted) {
+        	                // Remove the row from the table
+        	                modelNG.removeRow(selectedRow);
+        	                JOptionPane.showMessageDialog(this, "Dữ liệu của nhà ga đã được xóa thành công!");
+        	            }
+        	        } catch (Exception e2) {
+        	            e2.printStackTrace();
+        	            JOptionPane.showMessageDialog(this, "Lỗi xảy ra khi xóa dữ liệu của nhà ga!");
+        	        } finally {
+        	            docDuLieuVaoTable();
         	        }
-        	    } catch (Exception e2) {
-        	        e2.printStackTrace();
-        	        JOptionPane.showMessageDialog(this, "Error deleting NhanVien data!");
-        	    } finally {
-        	    	docDuLieuVaoTable();
-        	       
         	    }
-        	}
         }
     }
 }
+    

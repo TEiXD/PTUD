@@ -1,5 +1,4 @@
-/gui/
-/connectDB/
 /DAO/
+/SQL/
+/gui/
 /META-INF/
-/entity/

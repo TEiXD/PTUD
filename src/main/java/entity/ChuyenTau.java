@@ -1,84 +1,128 @@
 package entity;
 
-import java.sql.Date;
+
+import java.util.Date;
+import java.sql.Time;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class ChuyenTau {
-    private String MaChuyenTau;
-    private Tau MaTau;
-    private String GaDi, GaDen;
-    private String GioDi, GioDen;
+    private String maChuyenTau;
+    private Tau tau;
+    private NhaGa gaDi;
+    private NhaGa gaDen;
+    private Date ngayDi;
+    private Time gioDi;
+    private Date ngayDen;
+    private Time gioDen;
     
-    public ChuyenTau(String maCT) {
-		// TODO Auto-generated constructor stub
-    	this.MaChuyenTau=maCT;
-	}
-
-	public ChuyenTau(String maChuyenTau, Tau MaTau, String gaDi, String gaDen, String gioDi,
-			String gioDen) {
+    public ChuyenTau(String maChuyenTau, Tau tau, NhaGa gaDi, NhaGa gaDen, Date ngayDi, Time gioDi, Date ngayDen,
+			Time gioDen) {
 		super();
-		MaChuyenTau = maChuyenTau;
-		this.MaTau = MaTau;
-		GaDi = gaDi;
-		GaDen = gaDen;
-		GioDi = gioDi;
-		GioDen = gioDen;
+		this.maChuyenTau = maChuyenTau;
+		this.tau = tau;
+		this.gaDi = gaDi;
+		this.gaDen = gaDen;
+		this.ngayDi = ngayDi;
+		this.gioDi = gioDi;
+		this.ngayDen = ngayDen;
+		this.gioDen = gioDen;
 	}
 
+	public ChuyenTau() {
+		// TODO Auto-generated constructor stub
+	}
+
+    public ChuyenTau(String maCT) {
+        this.maChuyenTau = maCT;
+    }
+    
+    
 	public String getMaChuyenTau() {
-		return MaChuyenTau;
+		return maChuyenTau;
 	}
 
 	public void setMaChuyenTau(String maChuyenTau) {
-		MaChuyenTau = maChuyenTau;
+		this.maChuyenTau = maChuyenTau;
 	}
 
-	public Tau getMaTau() {
-		return MaTau;
+	public Tau getTau() {
+		return tau;
 	}
 
-	public void setMaTau(Tau MaTau) {
-		this.MaTau = MaTau;
+	public void setTau(Tau tau) {
+		this.tau = tau;
 	}
 
-	public String getGaDi() {
-		return GaDi;
+	public NhaGa getGaDi() {
+		return gaDi;
 	}
 
-	public void setGaDi(String gaDi) {
-		GaDi = gaDi;
+	public void setGaDi(NhaGa gaDi) {
+		this.gaDi = gaDi;
 	}
 
-	public String getGaDen() {
-		return GaDen;
+	public NhaGa getGaDen() {
+		return gaDen;
 	}
 
-	public void setGaDen(String gaDen) {
-		GaDen = gaDen;
+	public void setGaDen(NhaGa gaDen) {
+		this.gaDen = gaDen;
 	}
 
-	public String getGioDi() {
-		return GioDi;
+	public Date getNgayDi() {
+		return ngayDi;
 	}
 
-	public void setGioDi(String gioDi) {
-		GioDi = gioDi;
+	public void setNgayDi(Date ngayDi) {
+		this.ngayDi = ngayDi;
 	}
 
-	public String getGioDen() {
-		return GioDen;
+	public Time getGioDi() {
+		return gioDi;
 	}
 
-	public void setGioDen(String gioDen) {
-		GioDen = gioDen;
+	public void setGioDi(Time gioDi) {
+		this.gioDi = gioDi;
+	}
+
+	public Date getNgayDen() {
+		return ngayDen;
+	}
+
+	public void setNgayDen(Date ngayDen) {
+		this.ngayDen = ngayDen;
+	}
+
+	public Time getGioDen() {
+		return gioDen;
+	}
+
+	public void setGioDen(Time gioDen) {
+		this.gioDen = gioDen;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(maChuyenTau);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ChuyenTau other = (ChuyenTau) obj;
+		return Objects.equals(maChuyenTau, other.maChuyenTau);
 	}
 
 	@Override
 	public String toString() {
-		return "ChuyenTau [MaChuyenTau=" + MaChuyenTau + ", MaTau=" + MaTau + ", GaDi=" + GaDi + ", GaDen=" + GaDen
-				+ ", GioDi=" + GioDi + ", GioDen=" + GioDen + "]";
+		return "ChuyenTau [maChuyenTau=" + maChuyenTau + ", tau=" + tau + ", gaDi=" + gaDi + ", gaDen=" + gaDen
+				+ ", ngayDi=" + ngayDi + ", gioDi=" + gioDi + ", ngayDen=" + ngayDen + ", gioDen=" + gioDen + "]";
 	}
-    
-	
-    
+
 }

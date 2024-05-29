@@ -8,28 +8,31 @@ import java.awt.event.*;
 import DAO.*;
 import connectDB.*;
 import entity.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class TimKiemTau extends JPanel implements ActionListener {
     private static final long serialVersionUID = 1L;
     private final JPanel contentPanel = new JPanel();
     private JTable table;
+    private JTextField txtMaTau;
     private DefaultTableModel modelTau;
     private JButton btnTimKiem;
     private JButton btnLamMoi;
     private TauDAO tauDAO;
     private JPanel pNorth;
     private JLabel lblTieuDe;
-    private JComboBox<String> cboLoaiTau; 	
-    private JComboBox<String> cboMaNhaGa;
-    private JTextField txtMaTau;
-    private JTextField txtSoLuongToa;
-    private JTextField txtSoLuongGhe;					 
-    private TitledBorder inputPanelBorder;
+    private JComboBox<String> cboLoaiTau;
+    private JComboBox<String> cboNhaGa;
+    private NhaGaDAO nhaGaDAO;
+    private JTextField txtTenTau;
 
     public TimKiemTau() {
         ConnectDB.getInstance().connect();
         tauDAO = new TauDAO();
+        nhaGaDAO = new NhaGaDAO();
+
         setLayout(new BorderLayout());
 
         contentPanel.setBorder(new EmptyBorder(30, 20, 0, 20));
@@ -40,91 +43,47 @@ public class TimKiemTau extends JPanel implements ActionListener {
         pNorth.add(lblTieuDe = new JLabel("TÌM KIẾM TÀU"));
         lblTieuDe.setFont(new Font("Times New Roman", Font.BOLD, 40));
         lblTieuDe.setForeground(Color.blue);
-        
+
         JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new GridBagLayout());
+        inputPanel.setLayout(new GridLayout(2, 4, 20, 15));
         inputPanel.setBorder(new EmptyBorder(10, 20, 30, 20));
         contentPanel.add(inputPanel);
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(10, 10, 10, 10);
-
-        JLabel lblMaTau = new JLabel("Mã tàu");
-        lblMaTau.setFont(lblMaTau.getFont().deriveFont(Font.BOLD, 14));
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        inputPanel.add(lblMaTau, gbc);
+        JLabel lblMaTau = new JLabel("Mã tàu:");
+        inputPanel.add(lblMaTau);
         txtMaTau = new JTextField();
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        inputPanel.add(txtMaTau, gbc);
-        txtMaTau.setColumns(20);
+        inputPanel.add(txtMaTau);
+        txtMaTau.setColumns(10);
 
-        JLabel lblSoLuongToa = new JLabel("Số lượng toa");
-        lblSoLuongToa.setFont(lblSoLuongToa.getFont().deriveFont(Font.BOLD, 14));
-        gbc.gridx = 3;
-        gbc.gridy = 0;
-        inputPanel.add(lblSoLuongToa, gbc);
-        txtSoLuongToa = new JTextField(20);
-        gbc.gridx = 4;
-        gbc.gridy = 0;
-        inputPanel.add(txtSoLuongToa, gbc);
-        
-        JLabel lblSoLuongGhe = new JLabel("Số lượng ghế");
-        lblSoLuongGhe.setFont(lblSoLuongGhe.getFont().deriveFont(Font.BOLD, 14));
-        gbc.gridx = 6;
-        gbc.gridy = 0;
-        inputPanel.add(lblSoLuongGhe, gbc);
-        txtSoLuongGhe = new JTextField(20);
-        gbc.gridx = 7;
-        gbc.gridy = 0;
-        inputPanel.add(txtSoLuongGhe, gbc);
-        
-        JLabel lblLoaiTau = new JLabel("Loại tàu");
-        lblLoaiTau.setFont(lblLoaiTau.getFont().deriveFont(Font.BOLD, 14));
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        inputPanel.add(lblLoaiTau, gbc);
-        cboLoaiTau = new JComboBox<>(new String[]{"Tàu cao tốc", "Tàu hỏa"});
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        inputPanel.add(cboLoaiTau, gbc);
+        JLabel lblTenTau = new JLabel("Tên tàu:");
+        inputPanel.add(lblTenTau);
+        txtTenTau = new JTextField();
+        inputPanel.add(txtTenTau);
+        txtTenTau.setColumns(10);
 
-        JLabel lblMaNhaGa = new JLabel("Mã nhà ga");
-        lblMaNhaGa.setFont(lblMaNhaGa.getFont().deriveFont(Font.BOLD, 14));
-        gbc.gridx = 3;
-        gbc.gridy = 1;
-        inputPanel.add(lblMaNhaGa, gbc);
-        cboMaNhaGa = new JComboBox<>();
-        gbc.gridx = 4;
-        gbc.gridy = 1;
-        inputPanel.add(cboMaNhaGa, gbc);
-        
-        inputPanelBorder = BorderFactory.createTitledBorder("Tìm kiếm tàu");
-        inputPanelBorder.setTitleFont(new Font("Times New Roman", Font.ITALIC, 18));
-        inputPanelBorder.setTitleJustification(TitledBorder.LEFT);
-        inputPanelBorder.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        inputPanel.setBorder(BorderFactory.createCompoundBorder(new EmptyBorder(10, 10, 10, 10), inputPanelBorder));
-        
-        
-        String[] columns = {
-        	    "Mã tàu", "Loại tàu", "Mã nhà ga", "Số lượng toa", "Số lượng ghế"
-        	};
-        	modelTau = new DefaultTableModel(columns, 0) {
-        	    private static final long serialVersionUID = 1L;
-        	    //no no chỉnh bảng :D
-				@Override
-        	    public boolean isCellEditable(int row, int column) {
-        	        return false;
-        	    }
-        	};
-        	table = new JTable(modelTau);
-        table.setBorder(new EmptyBorder(100, 10, 100, 10));
-        table.setPreferredSize(new Dimension(50, 550));
+        JLabel lblLoaiTau = new JLabel("Loại tàu:");
+        inputPanel.add(lblLoaiTau);
+        cboLoaiTau = new JComboBox<>(new String[]{"Tất cả", "Tàu cao tốc", "Tàu hỏa"});
+        inputPanel.add(cboLoaiTau);
+
+        JLabel lblNhaGa = new JLabel("Nhà ga:");
+        inputPanel.add(lblNhaGa);
+        cboNhaGa = new JComboBox<>();
+        cboNhaGa.addItem("Tất cả");
+        ArrayList<NhaGa> dsNG = nhaGaDAO.layThongTin();
+        for (NhaGa ng : dsNG) {
+            cboNhaGa.addItem(ng.getTenNhaGa());
+        }
+        inputPanel.add(cboNhaGa);
+
+        inputPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK), "Thông Tin Tàu", TitledBorder.LEFT, TitledBorder.TOP, new Font("Times New Roman", Font.ITALIC, 18)));
+
+        String[] columns = {"Mã tàu", "Tên tàu", "Nhà ga", "Loại tàu"};
+        modelTau = new DefaultTableModel(columns, 0);
+        table = new JTable(modelTau);
         table.setFont(new Font("Times New Roman", Font.BOLD, 18));
         table.setRowHeight(25);
-        
+
         JTableHeader header = table.getTableHeader();
         header.setPreferredSize(new Dimension(header.getPreferredSize().width, 30));
         header.setBackground(Color.lightGray);
@@ -136,74 +95,67 @@ public class TimKiemTau extends JPanel implements ActionListener {
 
         JPanel panelButton = new JPanel();
         panelButton.setBackground(new Color(173, 216, 230));
-        panelButton.setBorder(new EmptyBorder(10, 20, 10, 20));
-        contentPanel.add(panelButton);
+        panelButton.setLayout(new BoxLayout(panelButton, BoxLayout.X_AXIS));
 
+        panelButton.add(Box.createHorizontalGlue());
         btnTimKiem = new JButton("Tìm kiếm");
-        btnTimKiem.addActionListener(this);
         panelButton.add(btnTimKiem);
+        panelButton.add(Box.createHorizontalStrut(10));
         btnLamMoi = new JButton("Làm mới");
-        btnLamMoi.addActionListener(this);
         panelButton.add(btnLamMoi);
+        panelButton.add(Box.createHorizontalStrut(80));
+        panelButton.add(Box.createHorizontalGlue());
 
-        docDuLieuVaoTable();
+        Font textFieldFont = new Font("Times New Roman", Font.PLAIN, 18);
+        btnTimKiem.setFont(textFieldFont);
+        btnLamMoi.setFont(textFieldFont);
+
+        add(panelButton, BorderLayout.SOUTH);
+
+        btnTimKiem.addActionListener(this);
+        btnLamMoi.addActionListener(this);
         
-        List<String> danhSachMaNhaGa = tauDAO.layDanhSachMaNhaGa();
-        for (String maNhaGa : danhSachMaNhaGa) {
-            cboMaNhaGa.addItem(maNhaGa);
-        }
-    }
-    
-    private void docDuLieuVaoTable() {
-        modelTau.setRowCount(0);
-        List<Tau> listTau = tauDAO.layThongTin();
-        for (Tau tau : listTau) {
-            Object[] rowData = {
-                tau.getMaTau(), tau.getLoaiTau(), tau.getNhaGa().getMaNhaGa(), tau.getSoLuongToa(), tau.getSoLuongGhe()};
-            modelTau.addRow(rowData);
-        }
+        docDuLieuDBVaoTable();
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btnTimKiem) {
-            timKiemTau();
-        } else if (e.getSource() == btnLamMoi) {
+        Object o = e.getSource();
+
+        if (o.equals(btnTimKiem)) {
+            String maTau = txtMaTau.getText().trim();
+            String tenTau = txtTenTau.getText().trim();
+            String nhaGa = cboNhaGa.getSelectedItem().toString();
+            String loaiTau = cboLoaiTau.getSelectedItem().toString();
+            Tau t = new Tau(maTau, tenTau, new NhaGa(nhaGa), loaiTau);
+            List<Tau> listTau = tauDAO.timKiemTau(t);
+            modelTau.setRowCount(0);
+            if (listTau.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy tàu nào!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                for (Tau tau : listTau) {
+                    modelTau.addRow(new Object[]{tau.getMaTau(), tau.getTenTau(), tau.getNhaGa().getTenNhaGa(), tau.getLoaiTau()});
+                }
+                JOptionPane.showMessageDialog(this, "Đã tìm thấy " + listTau.size() + " tàu!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else if (o.equals(btnLamMoi)) {
             lamMoi();
-        }
-    }
-
-    private void timKiemTau() {
-        String maTau = txtMaTau.getText().trim();
-        String loaiTau = (String) cboLoaiTau.getSelectedItem();
-        String maNhaGa = (String) cboMaNhaGa.getSelectedItem();
-        
-        int soLuongToa = 0;
-        int soLuongGhe = 0;
-        if (!txtSoLuongToa.getText().trim().isEmpty()) {
-            soLuongToa = Integer.parseInt(txtSoLuongToa.getText().trim());
-        }
-        if (!txtSoLuongGhe.getText().trim().isEmpty()) {
-            soLuongGhe = Integer.parseInt(txtSoLuongGhe.getText().trim());
-        }
-
-        Tau tau = new Tau(maTau, null, loaiTau, soLuongToa, soLuongGhe);
-        List<Tau> dsTau = tauDAO.timKiemTau(tau);
-
-        modelTau.setRowCount(0);
-
-        for (Tau t : dsTau) {
-            modelTau.addRow(new Object[]{t.getMaTau(), t.getLoaiTau(), t.getNhaGa().getMaNhaGa(),
-                t.getSoLuongToa(), t.getSoLuongGhe()});
+            docDuLieuDBVaoTable();
         }
     }
 
     private void lamMoi() {
         txtMaTau.setText("");
-        cboLoaiTau.setSelectedIndex(0);
-        cboMaNhaGa.setSelectedIndex(0);
-        txtSoLuongToa.setText("");
-        txtSoLuongGhe.setText("");
+        txtTenTau.setText("");
+        cboLoaiTau.setSelectedItem("Tất cả");
+        cboNhaGa.setSelectedItem("Tất cả");
+    }
+
+    private void docDuLieuDBVaoTable() {
+        ArrayList<Tau> listTau = tauDAO.layThongTin();
         modelTau.setRowCount(0);
-        docDuLieuVaoTable();
+        for (Tau tau : listTau) {
+            modelTau.addRow(new Object[]{tau.getMaTau(), tau.getTenTau(), tau.getNhaGa().getMaNhaGa(), tau.getLoaiTau()});
+        }
     }
 }

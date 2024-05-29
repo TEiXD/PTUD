@@ -1,106 +1,169 @@
 package entity;
 
+import java.sql.Date;
+import java.util.Objects;
 
 public class Ve {
-    private String maVe, tenVe, loaiVe;
-    private String ngayDi, ngayVe;
-    private KhachHang maKH;
+    private String MaVe;
+    private String GaDi, GaDen;
+    private Date NgayDi;
+    private String GioDi;
+    private Date NgayVe;
+    private String GioVe;
+    private String Toa;
+    private String LoaiCho;
+    private int choNgoi;
+    private float giaVe;
+    private KhachHang khachHang;
     private NhanVien nhanVien;
-    private ChuyenTau maCT;
-
-    public Ve(String maVe, String tenVe, String loaiVe, String ngayDistr, String ngayVestr, KhachHang maKH,
-			NhanVien nhanVien, ChuyenTau maCT) {
-		super();
-		this.maVe = maVe;
-		this.tenVe = tenVe;
-		this.loaiVe = loaiVe;
-		this.ngayDi = ngayDistr;
-		this.ngayVe = ngayVestr;
-		this.maKH = maKH;
-		this.nhanVien = nhanVien;
-		this.maCT = maCT;
-	}
     
+    public Ve(String maVe, String tenVe, String loaiVe, String ngayDistr, String ngayVestr, KhachHang kh, NhanVien nv, ChuyenTau ct) {
+		// TODO Auto-generated constructor stub
+	}
+
+	public Ve(String maVe, String gaDi, String gaDen, Date ngayDi, String gioDi, Date ngayVe, String gioVe, String toa,
+			String loaiCho, int choNgoi, float giaVe, KhachHang khachHang, NhanVien nhanVien) {
+		super();
+		MaVe = maVe;
+		GaDi = gaDi;
+		GaDen = gaDen;
+		NgayDi = ngayDi;
+		GioDi = gioDi;
+		NgayVe = ngayVe;
+		GioVe = gioVe;
+		Toa = toa;
+		LoaiCho = loaiCho;
+		this.choNgoi = choNgoi;
+		this.giaVe = giaVe;
+		this.khachHang = khachHang;
+		this.nhanVien = nhanVien;
+	}
+
 	public String getMaVe() {
-		return maVe;
+		return MaVe;
 	}
 
 	public void setMaVe(String maVe) {
-		this.maVe = maVe;
+		MaVe = maVe;
 	}
 
-	public String getTenVe() {
-		return tenVe;
+	public String getGaDi() {
+		return GaDi;
 	}
 
-	public void setTenVe(String tenVe) {
-		this.tenVe = tenVe;
+	public void setGaDi(String gaDi) {
+		GaDi = gaDi;
 	}
 
-	public String getLoaiVe() {
-		return loaiVe;
+	public String getGaDen() {
+		return GaDen;
 	}
 
-	public void setLoaiVe(String loaiVe) {
-		this.loaiVe = loaiVe;
+	public void setGaDen(String gaDen) {
+		GaDen = gaDen;
 	}
 
-	public String getNgayDi() {
-		return ngayDi;
+	public Date getNgayDi() {
+		return NgayDi;
 	}
 
-	public void setNgayDi(String ngayDi) {
-		this.ngayDi = ngayDi;
+	public void setNgayDi(Date ngayDi) {
+		NgayDi = ngayDi;
 	}
 
-	public String getNgayVe() {
-		return ngayVe;
+	public String getGioDi() {
+		return GioDi;
 	}
 
-	public void setNgayVe(String ngayVe) {
-		this.ngayVe = ngayVe;
+	public void setGioDi(String gioDi) {
+		GioDi = gioDi;
 	}
 
-	public KhachHang getMaKH() {
-		return maKH;
+	public Date getNgayVe() {
+		return NgayVe;
 	}
 
-	public void setMaKH(KhachHang maKH) {
-		this.maKH = maKH;
+	public void setNgayVe(Date ngayVe) {
+		NgayVe = ngayVe;
 	}
 
-	public NhanVien getnhanVien() {
+	public String getGioVe() {
+		return GioVe;
+	}
+
+	public void setGioVe(String gioVe) {
+		GioVe = gioVe;
+	}
+
+	public String getToa() {
+		return Toa;
+	}
+
+	public void setToa(String toa) {
+		Toa = toa;
+	}
+
+	public String getLoaiCho() {
+		return LoaiCho;
+	}
+
+	public void setLoaiCho(String loaiCho) {
+		LoaiCho = loaiCho;
+	}
+
+	public int getChoNgoi() {
+		return choNgoi;
+	}
+
+	public void setChoNgoi(int choNgoi) {
+		this.choNgoi = choNgoi;
+	}
+
+	public float getGiaVe() {
+		return giaVe;
+	}
+
+	public void setGiaVe(float giaVe) {
+		this.giaVe = giaVe;
+	}
+
+	public KhachHang getKhachHang() {
+		return khachHang;
+	}
+
+	public void setKhachHang(KhachHang khachHang) {
+		this.khachHang = khachHang;
+	}
+
+	public NhanVien getNhanVien() {
 		return nhanVien;
 	}
 
-	public void setnhanVien(NhanVien nhanVien) {
+	public void setNhanVien(NhanVien nhanVien) {
 		this.nhanVien = nhanVien;
 	}
 
-	public ChuyenTau getMaCT() {
-		return maCT;
-	}
-
-	public void setMaCT(ChuyenTau maCT) {
-		this.maCT = maCT;
+	@Override
+	public int hashCode() {
+		return Objects.hash(MaVe);
 	}
 
 	@Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Ve other = (Ve) obj;
-        return maVe.equals(other.maVe);
-    }
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Ve other = (Ve) obj;
+		return Objects.equals(MaVe, other.MaVe);
+	}
 
 	@Override
 	public String toString() {
-		return "Ve [maVe=" + maVe + ", tenVe=" + tenVe + ", loaiVe=" + loaiVe + ", ngayDi=" + ngayDi + ", ngayVe="
-				+ ngayVe + ", maKH=" + maKH + ", nhanVien=" + nhanVien + ", maCT=" + maCT + "]";
+		return "Ve [MaVe=" + MaVe + ", GaDi=" + GaDi + ", GaDen=" + GaDen + ", NgayDi=" + NgayDi + ", GioDi=" + GioDi
+				+ ", NgayVe=" + NgayVe + ", GioVe=" + GioVe + ", Toa=" + Toa + ", LoaiCho=" + LoaiCho + ", choNgoi="
+				+ choNgoi + ", giaVe=" + giaVe + ", khachHang=" + khachHang + ", nhanVien=" + nhanVien + "]";
 	}
-	
 }
