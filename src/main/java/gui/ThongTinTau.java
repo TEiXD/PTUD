@@ -46,7 +46,7 @@ public class ThongTinTau extends JPanel implements ActionListener, MouseListener
         lblTieuDe.setForeground(Color.blue);
 
         JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new GridLayout(2, 4, 20, 15));
+        inputPanel.setLayout(new GridLayout(2, 4, 30, 15));
         inputPanel.setBorder(new EmptyBorder(10, 20, 30, 20));
         contentPanel.add(inputPanel);
 

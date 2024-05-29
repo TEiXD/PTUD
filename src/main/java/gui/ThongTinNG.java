@@ -145,9 +145,14 @@ public class ThongTinNG extends JPanel implements ActionListener {
         docDuLieuVaoTable();
 
     }
+    
+    private void xoaRong() {
+		txt_MaNG.setText("");
+		txt_TenNG.setText("");
+	}
 
     private void docDuLieuVaoTable() {
-        modelNG.setRowCount(0); // Clear table
+        modelNG.setRowCount(0);
         List<NhaGa> listNG = ngDAO.layThongTin();
         for (NhaGa ng : listNG) {
             modelNG.addRow(new Object[]{	
@@ -229,7 +234,9 @@ public class ThongTinNG extends JPanel implements ActionListener {
         	            docDuLieuVaoTable();
         	        }
         	    }
-        }
+        } else if (o.equals(btnXoaTrang)) {
+			
+		}
     }
 }
     

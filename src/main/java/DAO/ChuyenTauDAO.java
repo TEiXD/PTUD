@@ -30,8 +30,7 @@ public class ChuyenTauDAO {
             			"FROM ChuyenTau ct " +
             			"INNER JOIN Tau t ON ct.MaTau = t.MaTau " +
                         "INNER JOIN NhaGa ngDi ON ct.GaDi = ngDi.MaNhaGa " +
-                        "INNER JOIN NhaGa ngDen ON ct.GaDen = ngDen.MaNhaGa " +
-                        "WHERE ngDi.TenNhaGa <> ngDen.TenNhaGa";
+                        "INNER JOIN NhaGa ngDen ON ct.GaDen = ngDen.MaNhaGa ";
             
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(SQL);

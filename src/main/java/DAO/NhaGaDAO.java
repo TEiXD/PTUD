@@ -70,7 +70,6 @@ public class NhaGaDAO {
         }
         return null;
     }
-//
     public boolean addNhaGa(NhaGa nhaGa) {
         try {
             Connection conn = ConnectDB.getConnection();
@@ -104,15 +103,7 @@ public class NhaGaDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Lỗi khi sửa thông tin nhà ga trong cơ sở dữ liệu!");
-        } finally {
-            try {
-                if (st != null) st.close();
-                if (conn != null) conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
-
         return n > 0;
     }
 
@@ -131,53 +122,7 @@ public class NhaGaDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Lỗi khi xóa nhà ga khỏi cơ sở dữ liệu!");
-        } finally {
-            try {
-                if (st != null) st.close();
-                if (conn != null) conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
-
         return n > 0;
     }
-//    public ArrayList<NhaGa> layTenNhaGaTheoTuyen(String tuyen) {
-//        ArrayList<NhaGa> dsNG = new ArrayList<>();
-//        try {
-//            ConnectDB.getInstance().connect();
-//            Connection conn = ConnectDB.getConnection();
-//            
-//            // Find the index of " – "
-//            int index = tuyen.indexOf(" – ");
-//            
-//            // Check if " – " is found
-//            if (index != -1) {
-//                // Extract substrings before and after " – "
-//                String part1 = tuyen.substring(0, index).trim();
-//                String part2 = tuyen.substring(index + 3).trim();
-//                
-//                // Create SQL query to retrieve NhaGa records based on diaChi
-//                String SQL = "SELECT * FROM NhaGa WHERE diaChi LIKE '%" + part1 + "%' OR diaChi LIKE '%" + part2 + "%'";
-//                
-//                Statement st = conn.createStatement();
-//                ResultSet rs = st.executeQuery(SQL);
-//                
-//                // Iterate over the result set and add NhaGa objects to the list
-//                while (rs.next()) {
-//                    String maNhaGa = rs.getString("maNhaGa");
-//                    String tenNhaGa = rs.getString("tenNhaGa");
-//                    String diaChi = rs.getString("diaChi");
-//                    NhaGa nhaGa = new NhaGa(maNhaGa, tenNhaGa, diaChi);
-//                    dsNG.add(nhaGa);
-//                }
-//            } else {
-//                // Handle case when " – " is not found
-//                System.out.println("Separator ' – ' not found in the input string.");
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return dsNG;
-//    }
 }

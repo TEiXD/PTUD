@@ -141,7 +141,7 @@ INSERT INTO NhanVien (MaNV, HoTen, CCCD, GioiTinh, SDT, Email, NgaySinh, TrinhDo
     ('NV06', N'Nguyễn Thị Thu Hà', '098345678906', N'Nữ', '0901234567', 'ntth@gmail.com', '1991-06-06', N'Cao đẳng', N'GST'),
     ('NV07', N'Lê Văn Huy', '098345678907', N'Nam', '0123456890', 'lvh@gmail.com', '1998-07-07', N'Trung cấp', N'GTL'),
     ('NV08', N'Trần Thị Linh', '098345678908', N'Nữ', '0235678901', 'ttl@gmail.com', '1993-08-08', N'Cử nhân', N'GHD'),
-    ('NV09', N'Phạm Văn Khang', '098345678909', N'Nam', '0347890123', 'pvk@gmail.com', '1996-09-09', N'Đại học', N'GVX'),
+    ('NV09', N'Phạm Văn Khang', '098345678909', N'Nam', '0347890123'	, 'pvk@gmail.com', '1996-09-09', N'Đại học', N'GVX'),
     ('NV10', N'Cao Thị Yến', '098345678910', N'Nữ', '0889012345', 'cty@gmail.com', '1999-10-10', N'Cao đẳng', N'GHP');
 
 SELECT * FROM [dbo].[NhanVien];

@@ -1,6 +1,7 @@
 package DAO;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,7 +21,7 @@ public class NhanVienDAO {
 	    try {
 	    	ConnectDB.getInstance().connect();
 	        Connection conn = ConnectDB.getConnection();
-	        String SQL = "SELECT nv.MaNV, nv.HoTen, nv.CCCD, nv.GioiTinh, nv.SDT, nv.Email, nv.NgaySinh, nv.TrinhDo, ng.MaNhaGa " +
+	        String SQL = "SELECT nv.MaNV, nv.HoTen, nv.CCCD, nv.GioiTinh, nv.SDT, nv.Email, nv.NgaySinh, nv.TrinhDo, ng.TenNhaGa " +
 	                     "FROM NhanVien nv INNER JOIN NhaGa ng ON nv.MaNhaGa = ng.MaNhaGa";
 	        Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(SQL);
@@ -31,7 +32,7 @@ public class NhanVienDAO {
 	            String gioiTinh = rs.getString(4);
 	            String SDT = rs.getString(5);
 	            String email = rs.getString(6);
-	            String ngaySinh = rs.getString(7);
+	            Date ngaySinh = rs.getDate(7);
 	            String trinhDo = rs.getString(8);
 	            String maNhaGa = rs.getString(9);
 	            NhaGa ng = new NhaGa(maNhaGa);
@@ -44,48 +45,40 @@ public class NhanVienDAO {
 	    return dsNhanVien;
 	}
 
-	public String getLastMaNV() {
-	    String lastMaNV = null;
-	    ConnectDB.getInstance();
-	    try (Connection con = ConnectDB.getConnection();
-	         PreparedStatement statement = con.prepareStatement("SELECT MaNV FROM NhanVien ORDER BY MaNV DESC LIMIT 1")) {
-	        ResultSet rs = statement.executeQuery();
-	        if (rs.next()) {
-	            lastMaNV = rs.getString("MaNV");
+	public String layMaMoiNhat() {
+	    String ma = null;
+	    try {
+	        Connection connection = ConnectDB.getInstance().getConnection();
+	        Statement statement = connection.createStatement();
+	        ResultSet resultSet = statement.executeQuery("SELECT MAX(MaNV) AS ma FROM NhanVien");
+	        if (resultSet.next()) {
+	            ma = resultSet.getString(1);
 	        }
+
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
-	    return lastMaNV;
+	    return ma;
 	}
-	
-	public synchronized String generateMaNV() {
-	    // Giả sử mã nhân viên cuối cùng là NV999, bạn muốn mã tiếp theo là NV1000
-	    String lastMaNV = getLastMaNV(); // Phương thức này cần truy vấn CSDL để lấy mã NV lớn nhất
-	    String prefix = lastMaNV.substring(0, 2); // NV
-	    int number = Integer.parseInt(lastMaNV.substring(2)) + 1; // 999 + 1 = 1000
-	    return prefix + number; // NV1000
-	}
-
 	
 	//Them NV
 	public boolean addNV(NhanVien nhanVien) {
-	    ConnectDB.getInstance();
-	    Connection conn = ConnectDB.getConnection();
-	    PreparedStatement st = null;
-	    String SQL = "INSERT INTO dbo.NhanVien (MaNV, HoTen, CCCD, GioiTinh, SDT, Email, NamSinh, TrinhDo, MaNhaGa)" +
-	                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	    int n = 0;
+		ConnectDB.getInstance();
+        Connection conn = ConnectDB.getConnection();
+        PreparedStatement st = null;
+        String SQL = "INSERT INTO dbo.NhanVien (MaNV, HoTen, CCCD, GioiTinh, SDT, Email, NgaySinh, TrinhDo, MaNhaGa)" +
+        	    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        int n = 0;
 	    try {
 	        st = conn.prepareStatement(SQL);
-	        String newMaNV = generateMaNV(); // Sinh mã nhân viên mới
-	        st.setString(1, newMaNV);
+	        st.setString(1, nhanVien.getMaNV().trim());
 	        st.setString(2, nhanVien.getHoTen().trim());
 	        st.setString(3, nhanVien.getCCCD().trim());
 	        st.setString(4, nhanVien.getGioiTinh().trim());
 	        st.setString(5, nhanVien.getSDT().trim());
 	        st.setString(6, nhanVien.getEmail().trim());
-	        st.setObject(7, nhanVien.getNgaySinh());
+	        st.setDate(7, new Date(nhanVien.getNgaySinh().getTime()));
 	        st.setString(8, nhanVien.getTrinhDo().trim());
 	        st.setString(9, nhanVien.getNhaGa().getMaNhaGa().trim());
 	        n = st.executeUpdate();
@@ -96,7 +89,6 @@ public class NhanVienDAO {
 	    }
 	    return n > 0;
 	}
-
 	//xoa NV
 	public boolean xoaNV(String maNV) {
 		ConnectDB.getInstance();
@@ -123,13 +115,14 @@ public class NhanVienDAO {
         PreparedStatement st = null;
         int n = 0;
 	    try {
-	    	String SQL = "UPDATE dbo.NhanVien SET MaNV = ?, HoTen = ?, CCCD = ?, GioiTinh = ?, SDT = ?, Email = ?, NgaySinh = ?, TrinhDo = ?, MaNhaGa = ? WHERE MaNV = ?";
-	        st.setString(1, nhanVien.getHoTen());
+	    	String SQL = "UPDATE dbo.NhanVien SET HoTen = ?, CCCD = ?, GioiTinh = ?, SDT = ?, Email = ?, NgaySinh = ?, TrinhDo = ?, MaNhaGa = ? WHERE MaNV = ?";
+	    	st = conn.prepareStatement(SQL);
+	    	st.setString(1, nhanVien.getHoTen());
 	        st.setString(2, nhanVien.getCCCD());
 	        st.setString(3, nhanVien.getGioiTinh());
 	        st.setString(4, nhanVien.getSDT());
 	        st.setString(5, nhanVien.getEmail());
-	        st.setObject(6, nhanVien.getNgaySinh());
+	        st.setDate(6, new Date(nhanVien.getNgaySinh().getTime()));
 	        st.setString(7, nhanVien.getTrinhDo());
 	        st.setString(8, nhanVien.getNhaGa().getMaNhaGa().trim());
 	        st.setString(9, nhanVien.getMaNV());
@@ -166,7 +159,7 @@ public class NhanVienDAO {
 	                    String gioiTinh = rs.getString(4);
 	                    String SDT = rs.getString(5);
 	                    String email = rs.getString(6);
-	                    String ngaySinh = rs.getString(7);
+	                    Date ngaySinh = rs.getDate(7);
 	                    String trinhDo = rs.getString(8);
 	                    String maNhaGa = rs.getString(9);
 	                    NhaGa ng = new NhaGa(maNhaGa);
@@ -180,6 +173,4 @@ public class NhanVienDAO {
 	    }
 	    return dsNhanVien;
 	}
-
 }
-	

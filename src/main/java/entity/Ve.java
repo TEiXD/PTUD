@@ -17,7 +17,7 @@ public class Ve {
     private KhachHang khachHang;
     private NhanVien nhanVien;
     
-    public Ve(String maVe, String tenVe, String loaiVe, String ngayDistr, String ngayVestr, KhachHang kh, NhanVien nv, ChuyenTau ct) {
+    public Ve() {
 		// TODO Auto-generated constructor stub
 	}
 

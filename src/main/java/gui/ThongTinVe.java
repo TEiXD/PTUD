@@ -259,7 +259,7 @@ public class ThongTinVe extends javax.swing.JPanel implements ActionListener, Mo
 		        modelVe.addRow(new Object[]{maVe,tenVe,loaiVe,ngayDistr,ngayVestr,maKH,maNV,maCT});
 		        // Thêm nhân viên vào cơ sở dữ liệu
 		        try {
-		        	veDAO.them(v);
+		        	veDAO.themVe(v);
 				} catch (Exception ex) {
 					ex.printStackTrace();
 	                // Xử lý nếu có lỗi khi thêm vào cơ sở dữ liệu

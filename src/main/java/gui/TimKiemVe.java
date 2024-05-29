@@ -43,7 +43,6 @@ import connectDB.ConnectDB;
 import entity.ChuyenTau;
 import entity.NhaGa;
 import entity.Tau;
-import javax.swing.JTextField;
 
 public class TimKiemVe extends javax.swing.JPanel implements ActionListener, MouseListener {
     private static final long serialVersionUID = 1L;
@@ -63,19 +62,6 @@ public class TimKiemVe extends javax.swing.JPanel implements ActionListener, Mou
     private JButton btnTim;
     private JButton btnLamMoi;
     private JCheckBox chkKhuHoi;
-    private JPanel panel;
-    private JPanel panel_1;
-    private JLabel lbl_HoTen;
-    private JLabel lbl_CCCD;
-    private JComboBox<String> cboGaDi_1;
-    private JLabel lbl_GioiTinh;
-    private JTextField txt_HoTen;
-    private JComboBox cbo_GioiTinh;
-    private JLabel lbl_SDT;
-    private JTextField txt_SDT;
-    private JLabel lbl_Email;
-    private JTextField txt_Email;
-    private JTextField txt_CCCD;
 
     public TimKiemVe() {
         ConnectDB.getInstance().connect();
@@ -183,60 +169,6 @@ public class TimKiemVe extends javax.swing.JPanel implements ActionListener, Mou
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         contentPanel.add(scrollPane);
-        
-        panel = new JPanel();
-        contentPanel.add(panel);
-        panel.setLayout(new GridLayout(1, 0, 0, 0));
-        
-     // Tạo panel
-     // Tạo panel
-        JPanel panel_1 = new JPanel();
-        panel.add(panel_1);
-        panel_1.setLayout(new GridLayout(8, 2, 0, 0)); // Sửa số hàng và số cột
-
-        // Thêm label và text field cho Họ tên
-        JLabel lbl_HoTen = new JLabel("Họ tên");
-        lbl_HoTen.setFont(lbl_HoTen.getFont().deriveFont(16f));
-        panel_1.add(lbl_HoTen);
-
-        JTextField txt_HoTen = new JTextField();
-        txt_HoTen.setColumns(10);
-        panel_1.add(txt_HoTen);
-
-        // Thêm label và text field cho CCCD
-        JLabel lbl_CCCD = new JLabel("CCCD:");
-        lbl_CCCD.setFont(lbl_CCCD.getFont().deriveFont(16f));
-        panel_1.add(lbl_CCCD);
-
-        JTextField txt_CCCD = new JTextField();
-        txt_CCCD.setColumns(10);
-        panel_1.add(txt_CCCD);
-
-        // Thêm label và combo box cho Giới tính
-        JLabel lbl_GioiTinh = new JLabel("Giới tính:");
-        panel_1.add(lbl_GioiTinh);
-
-        JComboBox<String> cbo_GioiTinh = new JComboBox<String>();
-        cbo_GioiTinh.addItem("Nam");
-        cbo_GioiTinh.addItem("Nữ");
-        panel_1.add(cbo_GioiTinh);
-
-        // Thêm label và text field cho SDT
-        JLabel lbl_SDT = new JLabel("SDT:");
-        panel_1.add(lbl_SDT);
-
-        JTextField txt_SDT = new JTextField();
-        txt_SDT.setColumns(10);
-        panel_1.add(txt_SDT);
-
-        // Thêm label và text field cho Email
-        JLabel lbl_Email = new JLabel("Email:");
-        panel_1.add(lbl_Email);
-
-        JTextField txt_Email = new JTextField();
-        txt_Email.setColumns(10);
-        panel_1.add(txt_Email);
-
 
         JPanel panelButton = new JPanel();
         panelButton.setBackground(new Color(173, 216, 230));
@@ -295,7 +227,6 @@ public class TimKiemVe extends javax.swing.JPanel implements ActionListener, Mou
             }
         } else if (o.equals(btnLamMoi)) {
             xoaRong();
-            docDuLieuDBVaoTable();
         }
     }
 

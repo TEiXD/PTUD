@@ -62,20 +62,20 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
         lblTieuDe.setForeground(Color.blue);
 
         JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new GridLayout(2, 8, 2, 15));
+        inputPanel.setLayout(new GridLayout(2, 8, 20, 15));
         inputPanel.setBorder(new EmptyBorder(10, 20, 30, 20));
         contentPanel.add(inputPanel);
 
         // Add input fields to the panel
         JLabel lblMaChuyenTau = new JLabel("Mã chuyến tàu:");
-        lblMaChuyenTau.setFont(lblMaChuyenTau.getFont().deriveFont(Font.BOLD, 14));
+        lblMaChuyenTau.setFont(lblMaChuyenTau.getFont().deriveFont(Font.BOLD, 16));
         inputPanel.add(lblMaChuyenTau);
-
         txtMaChuyenTau = new JTextField();
         inputPanel.add(txtMaChuyenTau);
         txtMaChuyenTau.setColumns(10);
 
         JLabel lblGaDi = new JLabel("Ga đi:");
+        lblGaDi.setFont(lblGaDi.getFont().deriveFont(Font.BOLD,16));
         inputPanel.add(lblGaDi);
         cboGaDi = new JComboBox<>();
         cboGaDi.addItem("Tất cả");
@@ -83,7 +83,7 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
 
         
         JLabel lblNgayDi = new JLabel("Ngày đi:");
-        lblNgayDi.setFont(lblNgayDi.getFont().deriveFont(Font.BOLD, 14));
+        lblNgayDi.setFont(lblNgayDi.getFont().deriveFont(Font.BOLD, 16));
         inputPanel.add(lblNgayDi);
         dateNgayDi = new JDateChooser();
         dateNgayDi.setDateFormatString("yyyy-MM-dd");
@@ -94,7 +94,7 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
         dateModelGioDi.setCalendarField(Calendar.MINUTE);
 
         JLabel lblGioDi = new JLabel("Giờ đi:");
-        lblGioDi.setFont(lblGioDi.getFont().deriveFont(Font.BOLD, 14));
+        lblGioDi.setFont(lblGioDi.getFont().deriveFont(Font.BOLD, 16));
         inputPanel.add(lblGioDi);
         spinGioDi = new JSpinner(dateModelGioDi);
         spinGioDi.setEditor(new JSpinner.DateEditor(spinGioDi, "HH:mm:ss"));
@@ -107,13 +107,14 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
         inputPanel.add(cboTau);
 
         JLabel lblGaDen = new JLabel("Ga đến:");
+        lblGaDen.setFont(lblGaDen.getFont().deriveFont(Font.BOLD,16));
         inputPanel.add(lblGaDen);
         cboGaDen = new JComboBox<>();
         cboGaDen.addItem("Tất cả");
         inputPanel.add(cboGaDen);
         
         JLabel lblNgayDen = new JLabel("Ngày đến:");
-        lblNgayDen.setFont(lblNgayDen.getFont().deriveFont(Font.BOLD, 14));
+        lblNgayDen.setFont(lblNgayDen.getFont().deriveFont(Font.BOLD, 16));
         inputPanel.add(lblNgayDen);
         dateNgayDen = new JDateChooser();
         dateNgayDen.setDateFormatString("yyyy-MM-dd");
@@ -121,7 +122,7 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
         
 
         JLabel lblGioDen = new JLabel("Giờ đến:");
-        lblGioDen.setFont(lblGioDen.getFont().deriveFont(Font.BOLD, 14));
+        lblGioDen.setFont(lblGioDen.getFont().deriveFont(Font.BOLD, 16));
         inputPanel.add(lblGioDen);
         dateModelGioDen = new SpinnerDateModel();
         dateModelGioDen.setCalendarField(Calendar.MINUTE);
@@ -258,7 +259,7 @@ public class ThongTinChuyenTau extends JPanel implements ActionListener, MouseLi
                     }
                 }
                 NhaGa ngDen = null;
-                ArrayList<NhaGa> dsNG1 = nhaGaDAO.layThongTin();
+//                ArrayList<NhaGa> dsNG1 = nhaGaDAO.layThongTin();
                 for (NhaGa ngDen1 : dsNG) {
                     if (cboGaDen.getSelectedItem().toString().equalsIgnoreCase(ngDen1.getTenNhaGa())) {
                         ngDen = new NhaGa(ngDen1.getMaNhaGa());
